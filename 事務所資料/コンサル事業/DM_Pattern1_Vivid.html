@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>弁護士事務所向け経営コンサルティングDM</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=Noto+Serif+JP:wght@400;600;700;900&family=Cormorant+Garamond:wght@400;600;700&display=swap');
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+
+  @page { size: A4; margin: 0; }
+
+  @media print {
+    html, body { width: 210mm; }
+    body { margin: 0; background: none; }
+    .page { margin: 0; box-shadow: none; overflow: visible; page-break-after: always; break-after: page; page-break-inside: avoid; }
+    .page:last-child { page-break-after: avoid; break-after: avoid; }
+    .flip-arrow { display: none; }
+  }
+
+  body {
+    font-family: 'Noto Sans JP', 'Yu Gothic', 'Hiragino Kaku Gothic ProN', sans-serif;
+    background: #e8e8e8;
+    color: #1a1a2e;
+    line-height: 1.6;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .page {
+    width: 210mm;
+    height: 297mm;
+    margin: 8mm auto;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.18);
+  }
+
+  /* ═══════════════════════════════════════════════
+     PAGE 1 — FRONT (Dark Premium — VIVID)
+     ═══════════════════════════════════════════════ */
+  .page-1 {
+    background: #070d1f;
+    color: #ffffff;
+  }
+
+  /* Background layers — deeper navy with blue tint */
+  .bg-gradient {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 75% 20%, rgba(212,160,23,0.1) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 80% at 10% 90%, rgba(212,160,23,0.07) 0%, transparent 50%),
+      linear-gradient(165deg, #070d1f 0%, #0e1538 35%, #142050 65%, #0a1028 100%);
+  }
+
+  /* Top gold stripe — thicker 7mm, more vivid */
+  .top-stripe {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 7mm;
+    background: linear-gradient(90deg, #9a7a1a, #d4a017 25%, #ffd700 50%, #d4a017 75%, #9a7a1a);
+  }
+
+  /* Diagonal accent line */
+  .diagonal-line {
+    position: absolute;
+    top: 30mm; right: -20mm;
+    width: 120mm; height: 0.3mm;
+    background: linear-gradient(90deg, transparent, rgba(212,160,23,0.35), transparent);
+    transform: rotate(-25deg);
+  }
+
+  .diagonal-line-2 {
+    position: absolute;
+    top: 35mm; right: -20mm;
+    width: 80mm; height: 0.15mm;
+    background: linear-gradient(90deg, transparent, rgba(212,160,23,0.25), transparent);
+    transform: rotate(-25deg);
+  }
+
+  /* Corner ornament */
+  .corner-ornament {
+    position: absolute;
+    bottom: 12mm; right: 12mm;
+    width: 25mm; height: 25mm;
+    border-right: 1px solid rgba(212,160,23,0.3);
+    border-bottom: 1px solid rgba(212,160,23,0.3);
+  }
+
+  .corner-ornament::before {
+    content: '';
+    position: absolute;
+    bottom: 3mm; right: 3mm;
+    width: 12mm; height: 12mm;
+    border-right: 1px solid rgba(212,160,23,0.2);
+    border-bottom: 1px solid rgba(212,160,23,0.2);
+  }
+
+  /* Front content */
+  .front-content {
+    position: relative;
+    z-index: 2;
+    padding: 15mm 18mm 14mm;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Header */
+  .front-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-top: 3mm;
+    margin-bottom: 10mm;
+  }
+
+  .front-label {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 7pt;
+    letter-spacing: 4pt;
+    color: #d4a017;
+    font-weight: 600;
+    text-transform: uppercase;
+    border: 1px solid rgba(212,160,23,0.45);
+    padding: 2mm 5mm;
+  }
+
+  .front-dest {
+    font-size: 7.5pt;
+    color: rgba(255,255,255,0.45);
+    text-align: right;
+    line-height: 1.7;
+    letter-spacing: 0.5pt;
+  }
+
+  /* Main Headline */
+  .headline-block {
+    margin-bottom: 8mm;
+  }
+
+  .headline-eyecatch {
+    font-size: 8.5pt;
+    color: #d4a017;
+    font-weight: 500;
+    letter-spacing: 3pt;
+    margin-bottom: 5mm;
+    display: flex;
+    align-items: center;
+    gap: 3mm;
+  }
+
+  .headline-eyecatch::before,
+  .headline-eyecatch::after {
+    content: '';
+    height: 0.5px;
+    flex: 0 0 8mm;
+    background: rgba(212,160,23,0.6);
+  }
+
+  .headline-main {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 26pt;
+    font-weight: 900;
+    line-height: 1.55;
+    letter-spacing: 1.5pt;
+    margin-bottom: 5mm;
+  }
+
+  .headline-main .em {
+    color: #ffd700;
+    position: relative;
+  }
+
+  .headline-main .em::after {
+    content: '';
+    position: absolute;
+    bottom: -1mm;
+    left: 0; right: 0;
+    height: 0.8mm;
+    background: linear-gradient(90deg, #d4a017, transparent);
+    border-radius: 1mm;
+  }
+
+  .headline-sub-text {
+    font-size: 9.5pt;
+    color: rgba(255,255,255,0.6);
+    line-height: 1.9;
+    font-weight: 300;
+    padding-left: 1mm;
+  }
+
+  /* Divider */
+  .gold-divider {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, #d4a017, rgba(212,160,23,0.2), transparent);
+    margin-bottom: 7mm;
+  }
+
+  /* Pain Points — border opacity 0.12 → 0.25 */
+  .pain-section {
+    background: rgba(255,255,255,0.025);
+    border: 1px solid rgba(212,160,23,0.25);
+    border-radius: 2.5mm;
+    padding: 6mm 7mm 5mm;
+    margin-bottom: 7mm;
+  }
+
+  .section-title {
+    font-size: 11.5pt;
+    font-weight: 700;
+    margin-bottom: 4mm;
+    color: #ffd700;
+    display: flex;
+    align-items: center;
+    gap: 3mm;
+  }
+
+  .section-title .diamond {
+    width: 3mm; height: 3mm;
+    background: #d4a017;
+    transform: rotate(45deg);
+    flex-shrink: 0;
+  }
+
+  .pain-grid {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 2mm;
+  }
+
+  .pain-grid li {
+    font-size: 9pt;
+    line-height: 1.65;
+    padding: 1.5mm 0 1.5mm 6mm;
+    position: relative;
+    color: rgba(255,255,255,0.82);
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+  }
+
+  .pain-grid li:last-child { border-bottom: none; }
+
+  .pain-grid li::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 50%;
+    transform: translateY(-50%);
+    width: 2.5mm; height: 2.5mm;
+    border: 1.5px solid #d4a017;
+    border-radius: 0.5mm;
+  }
+
+  /* Numbers Bar — increased gold background opacity 0.08/0.02 → 0.15/0.08 */
+  .numbers-bar {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2.5mm;
+    margin-bottom: 7mm;
+  }
+
+  .num-item {
+    text-align: center;
+    padding: 4.5mm 2mm;
+    background: linear-gradient(180deg, rgba(212,160,23,0.15), rgba(212,160,23,0.08));
+    border: 1px solid rgba(212,160,23,0.25);
+    border-radius: 2mm;
+    position: relative;
+  }
+
+  .num-item::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 50%; transform: translateX(-50%);
+    width: 60%;
+    height: 0.5px;
+    background: linear-gradient(90deg, transparent, #ffd700, transparent);
+  }
+
+  .num-value {
+    font-family: 'Cormorant Garamond', 'Noto Serif JP', serif;
+    font-size: 24pt;
+    font-weight: 700;
+    color: #ffd700;
+    line-height: 1.1;
+  }
+
+  .num-unit {
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 8pt;
+    color: #d4a017;
+  }
+
+  .num-desc {
+    font-size: 6pt;
+    color: rgba(255,255,255,0.5);
+    margin-top: 1.5mm;
+    line-height: 1.45;
+    letter-spacing: 0.3pt;
+  }
+
+  /* Profile Card — left border 2.5px → 3.5px, background 0.04 → 0.1 */
+  .profile-card {
+    display: flex;
+    gap: 5mm;
+    align-items: flex-start;
+    background: rgba(212,160,23,0.1);
+    border-left: 3.5px solid #d4a017;
+    padding: 5mm 6mm;
+    border-radius: 0 2.5mm 2.5mm 0;
+    margin-bottom: auto;
+  }
+
+  .profile-icon {
+    width: 18mm;
+    height: 18mm;
+    border-radius: 50%;
+    border: 1.5px solid rgba(212,160,23,0.6);
+    flex-shrink: 0;
+    overflow: hidden;
+    background: rgba(212,160,23,0.15);
+  }
+
+  .profile-icon img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .profile-text .profile-name {
+    font-size: 10.5pt;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 0.5mm;
+  }
+
+  .profile-text .profile-title {
+    font-size: 7pt;
+    color: #d4a017;
+    letter-spacing: 0.5pt;
+    margin-bottom: 2mm;
+  }
+
+  .profile-text .profile-body {
+    font-size: 7.8pt;
+    line-height: 1.85;
+    color: rgba(255,255,255,0.7);
+  }
+
+  /* Front Footer */
+  .front-footer {
+    text-align: center;
+    padding-top: 5mm;
+    border-top: 1px solid rgba(212,160,23,0.2);
+  }
+
+  .front-footer p {
+    font-size: 7.5pt;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 1.5pt;
+  }
+
+  .flip-arrow {
+    display: inline-block;
+    margin-top: 2mm;
+    color: #d4a017;
+    font-size: 8pt;
+    letter-spacing: 2pt;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+  }
+
+
+  /* ═══════════════════════════════════════════════
+     PAGE 2 — BACK (Light Premium — VIVID)
+     ═══════════════════════════════════════════════ */
+  .page-2 {
+    background: #fcfaf5;
+    color: #1a1a2e;
+  }
+
+  .page-2::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3.5mm;
+    background: linear-gradient(90deg, #9a7a1a, #d4a017 25%, #ffd700 50%, #d4a017 75%, #9a7a1a);
+  }
+
+  /* Subtle background pattern */
+  .page-2::after {
+    content: '';
+    position: absolute;
+    bottom: 0; right: 0;
+    width: 80mm; height: 80mm;
+    background: radial-gradient(circle, rgba(212,160,23,0.07) 0%, transparent 70%);
+  }
+
+  .back-content {
+    position: relative;
+    z-index: 2;
+    padding: 12mm 16mm 10mm;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Back Header */
+  .back-header {
+    text-align: center;
+    margin-bottom: 6mm;
+    padding-bottom: 4mm;
+  }
+
+  .back-header h2 {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 17pt;
+    font-weight: 900;
+    color: #1a1a2e;
+    letter-spacing: 3pt;
+    margin-bottom: 1.5mm;
+  }
+
+  .back-header h2 .gold { color: #b8952e; }
+
+  .back-header .en-sub {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 7.5pt;
+    color: #b8952e;
+    letter-spacing: 3pt;
+    text-transform: uppercase;
+  }
+
+  .back-divider {
+    width: 15mm;
+    height: 2px;
+    background: linear-gradient(90deg, #d4a017, #ffd700);
+    margin: 0 auto 6mm;
+    border-radius: 1px;
+  }
+
+  /* Service Cards — top bar 1.2mm → 2mm, more saturated gold */
+  .service-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3mm;
+    margin-bottom: 5mm;
+  }
+
+  .s-card {
+    border: 1px solid #e5dcc8;
+    border-radius: 2.5mm;
+    padding: 5mm 5mm 4.5mm;
+    position: relative;
+    background: #fff;
+    overflow: hidden;
+  }
+
+  .s-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 2mm;
+    background: linear-gradient(90deg, #d4a017, #ffd700);
+  }
+
+  .s-card-number {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 32pt;
+    font-weight: 700;
+    color: rgba(212,160,23,0.15);
+    position: absolute;
+    top: 1mm; right: 3mm;
+    line-height: 1;
+  }
+
+  .s-card h3 {
+    font-size: 9.5pt;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin-bottom: 2mm;
+    position: relative;
+    z-index: 2;
+  }
+
+  .s-card h3::after {
+    content: '';
+    display: block;
+    width: 12mm;
+    height: 1.5px;
+    background: #d4a017;
+    margin-top: 1.5mm;
+  }
+
+  .s-card p {
+    font-size: 7pt;
+    line-height: 1.75;
+    color: #666;
+    position: relative;
+    z-index: 2;
+  }
+
+  /* Why Section — deeper navy-blue background */
+  .why-section {
+    background: linear-gradient(135deg, #0a1230, #132050);
+    color: #fff;
+    border-radius: 3mm;
+    padding: 5mm 6mm;
+    margin-bottom: 5mm;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .why-section::after {
+    content: '';
+    position: absolute;
+    top: -15mm; right: -15mm;
+    width: 50mm; height: 50mm;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(212,160,23,0.15), transparent 70%);
+  }
+
+  .why-title {
+    font-size: 9.5pt;
+    font-weight: 700;
+    color: #ffd700;
+    margin-bottom: 3.5mm;
+    text-align: center;
+    position: relative;
+    z-index: 2;
+    letter-spacing: 1pt;
+  }
+
+  .why-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 2.5mm;
+    position: relative;
+    z-index: 2;
+  }
+
+  .why-item {
+    text-align: center;
+    padding: 3.5mm 2mm 3mm;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(212,160,23,0.25);
+    border-radius: 2mm;
+  }
+
+  /* Why-icon circles — background opacity 0.15 → 0.3 */
+  .why-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 10mm;
+    height: 10mm;
+    margin: 0 auto 1.5mm;
+    border-radius: 50%;
+    background: rgba(212,160,23,0.3);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 12pt;
+    font-weight: 700;
+    color: #ffd700;
+    line-height: 1;
+  }
+
+  .why-item h4 {
+    font-size: 8pt;
+    font-weight: 700;
+    color: #ffd700;
+    margin-bottom: 1mm;
+  }
+
+  .why-item p {
+    font-size: 6.2pt;
+    color: rgba(255,255,255,0.65);
+    line-height: 1.55;
+  }
+
+  /* Exclusivity Banner — more vivid and saturated gold gradient */
+  .excl-banner {
+    position: relative;
+    background: linear-gradient(90deg, #a07d10, #d4a017 35%, #ffd700 50%, #d4a017 65%, #a07d10);
+    color: #fff;
+    text-align: center;
+    padding: 3.5mm 5mm;
+    border-radius: 2mm;
+    margin-bottom: 5mm;
+    overflow: hidden;
+  }
+
+  .excl-banner::before {
+    content: '';
+    position: absolute;
+    inset: 1px;
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 1.8mm;
+  }
+
+  .excl-main {
+    font-size: 11pt;
+    font-weight: 900;
+    letter-spacing: 2pt;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3mm;
+  }
+
+  .excl-main .ornament {
+    font-size: 6pt;
+    opacity: 0.7;
+  }
+
+  .excl-sub {
+    font-size: 6.5pt;
+    font-weight: 400;
+    opacity: 0.85;
+    margin-top: 0.5mm;
+  }
+
+  /* CTA Section — border 2px → 3px, more vivid gold */
+  .cta-box {
+    border: 3px solid #d4a017;
+    border-radius: 3.5mm;
+    padding: 5.5mm 7mm 5mm;
+    text-align: center;
+    background: #fff;
+    margin-bottom: 4mm;
+    position: relative;
+  }
+
+  .cta-box::before {
+    content: 'CONTACT';
+    position: absolute;
+    top: -2.5mm; left: 50%; transform: translateX(-50%);
+    background: #d4a017;
+    color: #fff;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 6pt;
+    letter-spacing: 3pt;
+    padding: 0.8mm 5mm;
+    border-radius: 1mm;
+    font-weight: 600;
+  }
+
+  .cta-heading {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 14pt;
+    font-weight: 900;
+    color: #1a1a2e;
+    margin-bottom: 1mm;
+    margin-top: 1mm;
+  }
+
+  .cta-sub {
+    font-size: 7.5pt;
+    color: #999;
+    margin-bottom: 4mm;
+  }
+
+  .cta-row {
+    display: flex;
+    justify-content: center;
+    gap: 10mm;
+    margin-bottom: 2mm;
+  }
+
+  .cta-item {
+    display: flex;
+    align-items: center;
+    gap: 2.5mm;
+  }
+
+  .cta-icon {
+    width: 9mm; height: 9mm;
+    border-radius: 50%;
+    background: #0a1230;
+    color: #ffd700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11pt;
+    flex-shrink: 0;
+  }
+
+  .cta-detail { text-align: left; }
+
+  .cta-label {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 5.5pt;
+    color: #aaa;
+    letter-spacing: 2pt;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+
+  .cta-value {
+    font-size: 9.5pt;
+    font-weight: 700;
+    color: #1a1a2e;
+    letter-spacing: 0.3pt;
+  }
+
+  .cta-note {
+    font-size: 6.5pt;
+    color: #bbb;
+    margin-top: 1.5mm;
+  }
+
+  /* Target Note */
+  .target-note {
+    font-size: 6pt;
+    color: #bbb;
+    text-align: center;
+    padding: 2mm 4mm;
+    border: 1px solid #ece6d5;
+    border-radius: 1.5mm;
+    line-height: 1.65;
+    margin-bottom: 4mm;
+    background: #fdfcf8;
+  }
+
+  /* Back Footer */
+  .back-footer {
+    margin-top: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding-top: 3.5mm;
+    border-top: 1px solid #e5dcc8;
+  }
+
+  .footer-left {
+    font-size: 6.5pt;
+    color: #999;
+    line-height: 1.8;
+  }
+
+  .footer-left .firm {
+    font-size: 9pt;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin-bottom: 0.5mm;
+  }
+
+  .footer-right {
+    text-align: right;
+  }
+
+  .footer-right .url {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 8pt;
+    color: #b8952e;
+    font-weight: 600;
+    letter-spacing: 0.5pt;
+  }
+
+  .footer-right .copyright {
+    font-size: 5pt;
+    color: #ccc;
+    letter-spacing: 1pt;
+    margin-top: 1mm;
+  }
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════════════════════
+     PAGE 1 — 表面（ダークネイビー × ゴールド — VIVID）
+     ════════════════════════════════════════════════════════════ -->
+<div class="page page-1">
+  <div class="bg-gradient"></div>
+  <div class="top-stripe"></div>
+  <div class="diagonal-line"></div>
+  <div class="diagonal-line-2"></div>
+  <div class="corner-ornament"></div>
+
+  <div class="front-content">
+
+    <!-- Header -->
+    <div class="front-header">
+      <div class="front-label">Special Proposal</div>
+      <div class="front-dest">
+        弁護士法人　○○法律事務所<br>
+        代表弁護士　○○ ○○ 先生
+      </div>
+    </div>
+
+    <!-- Headline -->
+    <div class="headline-block">
+      <div class="headline-eyecatch">
+        弁護士事務所の経営者様へ
+      </div>
+      <h1 class="headline-main">
+        売上・集客・組織を、<br>
+        <span class="em">弁護士の実体験</span>で変える。
+      </h1>
+      <p class="headline-sub-text">
+        人脈ゼロ・経験ゼロから6年で弁護士9名・スタッフ20名超の事務所を築いた<br>
+        現役弁護士が、貴事務所の経営課題にともに取り組みます。
+      </p>
+    </div>
+
+    <div class="gold-divider"></div>
+
+    <!-- Pain Points -->
+    <div class="pain-section">
+      <div class="section-title">
+        <span class="diamond"></span>
+        こんなお悩み、ありませんか？
+      </div>
+      <ul class="pain-grid">
+        <li>売上をもう少し伸ばしたいが、具体的な方法がわからない</li>
+        <li>WEB集客に興味はあるが、何から始めればよいかわからない</li>
+        <li>広告代理店・業者への依頼は不安。非弁との関係も気になる</li>
+        <li>事務員をもっと活用したいが、業務システム化・AI導入の進め方がわからない</li>
+        <li>問い合わせはあるが、受任につながらないケースが多い</li>
+      </ul>
+    </div>
+
+    <!-- Numbers -->
+    <div class="numbers-bar">
+      <div class="num-item">
+        <div class="num-value">6<span class="num-unit">年</span></div>
+        <div class="num-desc">即独開業からの<br>経営実績</div>
+      </div>
+      <div class="num-item">
+        <div class="num-value">9<span class="num-unit">名</span></div>
+        <div class="num-desc">所属弁護士数<br>（現在）</div>
+      </div>
+      <div class="num-item">
+        <div class="num-value">20<span class="num-unit">名超</span></div>
+        <div class="num-desc">スタッフ<br>体制</div>
+      </div>
+      <div class="num-item">
+        <div class="num-value">0<span class="num-unit">→</span></div>
+        <div class="num-desc">会食・紹介<br>一切なし</div>
+      </div>
+    </div>
+
+    <!-- Profile -->
+    <div class="profile-card">
+      <div class="profile-icon"><img src="maeda.jpg" alt="前田 祥夢"></div>
+      <div class="profile-text">
+        <div class="profile-name">前田 祥夢</div>
+        <div class="profile-title">東京新橋法律事務所｜代表弁護士</div>
+        <div class="profile-body">
+          弁護士1年目に東京・港区で即独開業。会食や紹介には一切頼らず、リスティング広告・SEO・MEO等を自社で設計・運用。東証プライム上場企業を含む法人顧客を獲得。リクルート出身。WEBサイト制作・システム開発も自ら実施。
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="front-footer">
+      <p>裏面にて、具体的なご支援内容をご案内しております</p>
+      <span class="flip-arrow">▽ ▽ ▽</span>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════════════════════
+     PAGE 2 — 裏面（ライトプレミアム — VIVID）
+     ════════════════════════════════════════════════════════════ -->
+<div class="page page-2">
+
+  <div class="back-content">
+
+    <!-- Header -->
+    <div class="back-header">
+      <h2>ご支援<span class="gold">内容</span>のご案内</h2>
+      <div class="en-sub">Consulting Service for Law Firms</div>
+    </div>
+    <div class="back-divider"></div>
+
+    <!-- Service Cards -->
+    <div class="service-grid">
+      <div class="s-card">
+        <div class="s-card-number">01</div>
+        <h3>WEB・アナログ集客の設計</h3>
+        <p>リスティング・SEO・MEO・SMS広告・郵送DMなど、貴事務所の取扱分野と予算に合った集客チャネルの選定と設計を行います。</p>
+      </div>
+      <div class="s-card">
+        <div class="s-card-number">02</div>
+        <h3>反響導線・受任工程の整備</h3>
+        <p>問い合わせから受任までの各工程にKPIを設定。どこで機会損失が起きているかを可視化し、受任率を改善します。</p>
+      </div>
+      <div class="s-card">
+        <div class="s-card-number">03</div>
+        <h3>CRM・顧客関係の仕組み化</h3>
+        <p>既存顧客・紹介者・見込み客との継続的な関係構築を仕組みとして設計。紹介増・再受任につなげます。</p>
+      </div>
+      <div class="s-card">
+        <div class="s-card-number">04</div>
+        <h3>スタッフ活用・業務システム化</h3>
+        <p>事務員・パラリーガルの役割整理と業務標準化。AI活用による効率改善の具体的な導入支援を行います。</p>
+      </div>
+    </div>
+
+    <!-- Why Section -->
+    <div class="why-section">
+      <div class="why-title">なぜ、弁護士による経営支援なのか</div>
+      <div class="why-grid">
+        <div class="why-item">
+          <span class="why-icon">§</span>
+          <h4>同じ目線</h4>
+          <p>弁護士業の特性を熟知した<br>当事者視点でのアドバイス</p>
+        </div>
+        <div class="why-item">
+          <span class="why-icon">✓</span>
+          <h4>非弁リスクなし</h4>
+          <p>弁護士が直接支援するため<br>非弁行為の懸念が不要</p>
+        </div>
+        <div class="why-item">
+          <span class="why-icon">▲</span>
+          <h4>実証済みの手法</h4>
+          <p>自らの事務所で検証済みの<br>再現性ある施策のみご提案</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Exclusivity -->
+    <div class="excl-banner">
+      <div class="excl-main">
+        <span class="ornament">◆ ◆</span>
+        各エリア1事務所限定
+        <span class="ornament">◆ ◆</span>
+      </div>
+      <div class="excl-sub">同一エリアの複数事務所への同時ご提供は行いません</div>
+    </div>
+
+    <!-- CTA -->
+    <div class="cta-box">
+      <div class="cta-heading">まずは60分の無料面談から</div>
+      <p class="cta-sub">オンラインでも対面でも可能です。その場での売り込みは一切いたしません。</p>
+      <div class="cta-row">
+        <div class="cta-item">
+          <div class="cta-icon">✉</div>
+          <div class="cta-detail">
+            <div class="cta-label">E-mail</div>
+            <div class="cta-value">info@tslaw.or.jp</div>
+          </div>
+        </div>
+        <div class="cta-item">
+          <div class="cta-icon">⊕</div>
+          <div class="cta-detail">
+            <div class="cta-label">Website</div>
+            <div class="cta-value">tslaw.or.jp</div>
+          </div>
+        </div>
+      </div>
+      <p class="cta-note">※ お問い合わせフォームからもご連絡いただけます</p>
+    </div>
+
+    <!-- Target Note -->
+    <div class="target-note">
+      対象分野：離婚・交通事故・相続・刑事・債務整理・一般企業法務等の領域でご活躍されている事務所様｜※ 高度なニッチ分野・特殊専門領域は対象外となります
+    </div>
+
+    <!-- Footer -->
+    <div class="back-footer">
+      <div class="footer-left">
+        <div class="firm">東京新橋法律事務所</div>
+        代表弁護士　前田 祥夢<br>
+        〒105-XXXX　東京都港区新橋X-X-X
+      </div>
+      <div class="footer-right">
+        <div class="url">tslaw.or.jp</div>
+        <div class="copyright">TOKYO SHIMBASHI LAW OFFICE</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

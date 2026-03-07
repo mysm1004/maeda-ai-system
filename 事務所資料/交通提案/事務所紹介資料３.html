@@ -1,0 +1,666 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>弁護士法人 東京新橋法律事務所｜事務所案内</title>
+  <style>
+    :root{
+      --bg:#ffffff;
+      --txt:#0f172a;
+      --muted:#475569;
+      --soft:#64748b;
+      --line:#e2e8f0;
+      --card:#ffffff;
+      --shadow: 0 18px 40px rgba(15,23,42,.08);
+
+      --a:#4f46e5;
+      --b:#06b6d4;
+      --c:#22c55e;
+      --radius: 22px;
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+                   "Hiragino Kaku Gothic ProN","Noto Sans JP","Yu Gothic","Meiryo", sans-serif;
+      color:var(--txt);
+      background:
+        radial-gradient(900px 650px at 10% 8%, rgba(79,70,229,.08), transparent 60%),
+        radial-gradient(900px 650px at 90% 10%, rgba(6,182,212,.07), transparent 60%),
+        radial-gradient(900px 650px at 80% 95%, rgba(34,197,94,.06), transparent 60%),
+        var(--bg);
+      overflow:hidden;
+    }
+
+    .topbar{
+      display:flex; align-items:center; justify-content:space-between;
+      padding:14px 18px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255,255,255,.86);
+      backdrop-filter: blur(8px);
+    }
+    .brand{ display:flex; align-items:center; gap:12px; }
+    .mark{
+      width:34px; height:34px; border-radius:12px;
+      background: linear-gradient(135deg, var(--a), var(--b));
+      box-shadow: 0 12px 26px rgba(79,70,229,.18);
+      position:relative; overflow:hidden;
+    }
+    .mark:after{
+      content:""; position:absolute; inset:-30%;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.9), transparent 45%);
+      transform: rotate(18deg); opacity:.6;
+    }
+    .b1{ font-weight:900; letter-spacing:.01em; }
+    .b2{ font-size:12px; color:var(--soft); margin-top:2px; }
+
+    .controls{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; justify-content:flex-end; }
+    .btn{
+      border:1px solid var(--line);
+      background:#fff;
+      color: var(--txt);
+      padding:10px 12px;
+      border-radius: 14px;
+      font-weight:700;
+      cursor:pointer;
+      user-select:none;
+      transition: transform .08s ease, background .18s ease, border-color .18s ease;
+      box-shadow: 0 10px 20px rgba(15,23,42,.05);
+    }
+    .btn:hover{ background:#f8fafc; }
+    .btn:active{ transform: translateY(1px); }
+
+    .kbd{
+      font-size:12px;
+      padding:6px 10px;
+      border:1px solid var(--line);
+      border-bottom-width:2px;
+      background:#fff;
+      border-radius: 12px;
+      color: var(--soft);
+    }
+    .progress{ min-width: 220px; display:flex; gap:10px; align-items:center; }
+    .bar{
+      flex:1; height:10px; border-radius: 999px;
+      border:1px solid var(--line);
+      background:#f1f5f9;
+      overflow:hidden;
+    }
+    .bar > i{
+      display:block; height:100%; width:0%;
+      background: linear-gradient(90deg, var(--a), var(--b), var(--c));
+      border-radius:999px;
+      transition: width .25s ease;
+    }
+    .ptext{ font-size:12px; color: var(--soft); min-width:74px; text-align:right; }
+
+    .stage{
+      height: calc(100% - 62px);
+      display:flex; align-items:center; justify-content:center;
+      padding: 26px;
+    }
+    .canvas{
+      width:min(1600px, 98vw);
+      aspect-ratio: 16 / 9;
+      border-radius: 26px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.92);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      position:relative;
+    }
+    .slides{ position:absolute; inset:0; }
+    .slide{
+      position:absolute; inset:0;
+      padding: 54px 62px;
+      display:none;
+    }
+    .slide.active{ display:block; }
+
+    h1,h2,h3{ margin:0; }
+    .h0{ font-size: 54px; line-height: 1.10; letter-spacing:.01em; }
+    .h1{ font-size: 40px; line-height: 1.16; }
+    .h2{ font-size: 24px; line-height: 1.25; }
+    .lead{ font-size: 18px; line-height: 1.75; color: var(--muted); max-width: 1020px; }
+    .small{ font-size: 14px; color: var(--soft); line-height:1.7; }
+    .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+
+    .pill{
+      display:inline-flex; align-items:center; gap:8px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--soft);
+      font-size: 12px;
+    }
+    .accentLine{
+      width: 92px; height: 10px; border-radius: 999px;
+      background: linear-gradient(90deg, var(--a), var(--b), var(--c));
+      margin-top: 16px;
+    }
+    .divider{ height:1px; background: var(--line); margin: 14px 0; }
+
+    .grid2{ display:grid; grid-template-columns: 1.05fr .95fr; gap: 18px; margin-top: 22px; }
+    .grid2eq{ display:grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 18px; }
+    .grid3{ display:grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin-top: 18px; }
+
+    .card{
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 22px;
+      box-shadow: 0 14px 34px rgba(15,23,42,.06);
+    }
+    .card.soft{
+      background: #f8fafc;
+      border-color: #e5e7eb;
+      box-shadow: none;
+    }
+
+    .bullets{ margin:0; padding-left: 18px; color: var(--muted); line-height:1.85; }
+    .bullets li{ margin: 8px 0; }
+
+    .mini{
+      padding: 16px;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: #fff;
+    }
+    .mini .k{ font-size:12px; color: var(--soft); }
+    .mini .v{ font-size:22px; font-weight:900; margin-top:6px; }
+
+    .quote{
+      border-left: 4px solid rgba(79,70,229,.35);
+      color: var(--muted);
+      line-height: 1.85;
+      font-size: 16px;
+      margin-top: 10px;
+      background: rgba(79,70,229,.04);
+      border-radius: 14px;
+      padding: 12px 12px 12px 14px;
+    }
+
+    .people{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-top: 16px;
+    }
+    .person{
+      border-radius: 22px;
+      border: 1px solid var(--line);
+      background: #fff;
+      overflow:hidden;
+      min-height: 265px;
+      display:flex; flex-direction:column;
+      box-shadow: 0 14px 30px rgba(15,23,42,.05);
+    }
+    .ph{
+      height: 124px;
+      background:
+        radial-gradient(180px 140px at 20% 20%, rgba(79,70,229,.18), transparent 62%),
+        radial-gradient(180px 140px at 80% 20%, rgba(6,182,212,.16), transparent 62%),
+        #f1f5f9;
+      border-bottom: 1px solid var(--line);
+      display:flex; align-items:center; justify-content:center;
+      color: #64748b;
+      font-size: 12px;
+    }
+    .pbody{ padding: 16px 16px 18px; }
+    .pname{ font-weight:900; font-size:18px; }
+    .pmeta{ color: var(--soft); font-size:12px; margin-top:4px; }
+    .pintro{
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.7;
+      margin-top: 10px;
+      min-height: 72px;
+    }
+
+    .footer{
+      position:absolute; left: 62px; right: 62px; bottom: 28px;
+      display:flex; align-items:center; justify-content:space-between;
+      color: var(--soft);
+      font-size: 12px;
+    }
+
+    @media print{
+      body{ overflow: visible; background:#fff; }
+      .topbar,.stage{ display:none; }
+      .printDeck{ display:block; }
+      .printSlide{
+        width: 297mm; height: 167mm;
+        page-break-after: always;
+        position: relative;
+        overflow:hidden;
+        background: #ffffff;
+        color: #0f172a;
+        padding: 18mm 20mm;
+      }
+      .printSlide:last-child{ page-break-after: auto; }
+      .printSlide .canvasLike{
+        border: 1px solid #e2e8f0;
+        border-radius: 18px;
+        padding: 0;
+      }
+    }
+    .printDeck{ display:none; }
+  </style>
+</head>
+
+<body>
+  <div class="topbar">
+    <div class="brand">
+      <div class="mark" aria-hidden="true"></div>
+      <div>
+        <div class="b1">弁護士法人 東京新橋法律事務所</div>
+        <div class="b2">事務所案内（法人のお客様向け／事務所を知っていただくための資料）</div>
+      </div>
+    </div>
+
+    <div class="controls">
+      <button class="btn" id="prevBtn">← 前へ</button>
+      <button class="btn" id="nextBtn">次へ →</button>
+      <button class="btn" id="printBtn">PDFにする（印刷）</button>
+      <span class="kbd">← / →</span>
+      <div class="progress">
+        <div class="bar"><i id="barFill"></i></div>
+        <div class="ptext" id="ptext">1 / 8</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="stage">
+    <div class="canvas">
+      <div class="slides">
+
+        <section class="slide active">
+          <div class="pill">Office Introduction</div>
+          <div style="height:14px"></div>
+          <div class="h0">事務所のご紹介</div>
+          <div class="accentLine"></div>
+
+          <p class="lead" style="margin-top:18px;">
+            初めまして。弁護士法人 東京新橋法律事務所です。<br/>
+            本資料は、弊所の概要や雰囲気を知っていただくための簡単なご案内です。
+          </p>
+
+          <div class="grid2" style="margin-top:22px;">
+            <div class="card">
+              <div class="h2">構成（4テーマ）</div>
+              <div class="divider"></div>
+              <ul class="bullets">
+                <li>事務所概要（所在地・体制・基本情報）</li>
+                <li>分野・こだわり（経験分野／コンセプト／品質づくり）</li>
+                <li>弁護士紹介（写真・自己紹介は後ほど追加予定）</li>
+                <li>代表挨拶（Word原文に忠実な全文）</li>
+              </ul>
+              <div class="divider"></div>
+              <div class="small">※この資料で“強みを売り込む”というより、事務所を知っていただくことを目的としています。</div>
+            </div>
+
+            <div class="card soft">
+              <div class="h2">ご担当者様へ</div>
+              <div class="divider"></div>
+              <p class="lead" style="max-width:unset; font-size:16px;">
+                貴社とは個人的なご縁もございますが、業務としては「事務所として」窓口を持ち、
+                相談しやすい形でご一緒できればと考えております。<br/>
+                資料送付後、代表より改めてご挨拶の機会も頂戴できれば幸いです。
+              </p>
+              <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
+                <span class="pill">白背景・明るめ</span>
+                <span class="pill">16:9 / PDF化想定</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="footer">
+            <div>© Tokyo Shimbashi Law Office</div>
+            <div>1 / 8</div>
+          </div>
+        </section>
+
+        <section class="slide">
+          <div class="pill">Theme 01</div>
+          <div style="height:14px"></div>
+          <div class="h0">事務所概要</div>
+          <div class="accentLine"></div>
+          <p class="lead" style="margin-top:18px;">
+            所在地・アクセス・体制など、まずは基本情報のご案内です。
+          </p>
+          <div class="footer">
+            <div>Theme 01｜Overview</div>
+            <div>2 / 8</div>
+          </div>
+        </section>
+
+        <section class="slide">
+          <div class="h1">事務所概要（基本情報）</div>
+          <p class="lead" style="margin-top:10px;">
+            銀座8丁目を拠点に、弁護士・スタッフのチームで案件対応しています。
+          </p>
+
+          <div class="grid2">
+            <div class="card">
+              <div class="h2">基本情報</div>
+              <div class="divider"></div>
+              <div class="small" style="line-height:1.95;">
+                <strong>事務所名</strong>：弁護士法人 東京新橋法律事務所<br/>
+                <strong>電話番号</strong>：03-6273-3254<br/>
+                <strong>所在地</strong>：東京都中央区銀座8丁目20-33　ACN銀座8ビル3階<br/>
+                <strong>最寄駅</strong>：新橋駅（徒歩8分）、東銀座駅（徒歩6分）、築地市場駅等（徒歩3分）等<br/>
+                <strong>法律相談料</strong>：30分無料　以後30分5,000円
+              </div>
+              <div class="divider"></div>
+              <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                <span class="pill">銀座8丁目</span>
+                <span class="pill">新橋／東銀座／築地市場</span>
+              </div>
+            </div>
+
+            <div class="card soft">
+              <div class="h2">体制（Word記載）</div>
+              <div class="divider"></div>
+              <div class="grid3">
+                <div class="mini">
+                  <div class="k mono">Term</div>
+                  <div class="v">6期目</div>
+                  <div class="small">若い事務所</div>
+                </div>
+                <div class="mini">
+                  <div class="k mono">Lawyers</div>
+                  <div class="v">8名</div>
+                  <div class="small">（4月より9名）</div>
+                </div>
+                <div class="mini">
+                  <div class="k mono">Staff</div>
+                  <div class="v">約30名</div>
+                  <div class="small">中規模体制</div>
+                </div>
+              </div>
+              <div class="divider"></div>
+              <div class="small">お陰様で数多くのご依頼を賜り、本日まで何とか一歩一歩成長して参りました。</div>
+            </div>
+          </div>
+
+          <div class="footer">
+            <div>Theme 01｜Overview</div>
+            <div>3 / 8</div>
+          </div>
+        </section>
+
+        <section class="slide">
+          <div class="pill">Theme 02</div>
+          <div style="height:14px"></div>
+          <div class="h0">分野・こだわり</div>
+          <div class="accentLine"></div>
+          <p class="lead" style="margin-top:18px;">
+            Word原文に沿って、経験分野と、仕事の向き合い方（コンセプト／品質づくり）をご紹介します。
+          </p>
+          <div class="footer">
+            <div>Theme 02｜Focus</div>
+            <div>4 / 8</div>
+          </div>
+        </section>
+
+        <section class="slide">
+          <div class="h1">分野・こだわり（原文に忠実）</div>
+          <p class="lead" style="margin-top:10px;">
+            交通事故分野をはじめ、複数分野でのノウハウを積んで参りました。
+          </p>
+
+          <div class="grid2eq">
+            <div class="card">
+              <div class="h2">交通事故分野（実績）</div>
+              <div class="divider"></div>
+              <div class="small" style="line-height:1.95;">
+                交通事故分野においては、専門性の高い弁護士も複数人在籍し、<br/>
+                <strong>類型で500件ほど受任実績</strong>がございます。<br/>
+                軽微なものから、後遺障害1級に至るような事案まで、様々経験して参りました。
+              </div>
+              <div class="divider"></div>
+              <div class="pill"><strong style="color:#0f172a;">受任実績</strong>：類型 約500件</div>
+            </div>
+
+            <div class="card soft">
+              <div class="h2">コンセプト／品質づくり</div>
+              <div class="divider"></div>
+              <div class="small" style="line-height:1.95;">
+                <strong>コンセプト</strong>：「顧客提案力で負けない事務所」<br/>
+                端なる法律屋になるのではなく、顧客の要望をしっかり理解するというアナログ的要素に注力しつつ、<br/>
+                適切な論点設定のうえ、明確かつ「刺さる」打ち手を提案することに拘っています。<br/>
+                法人のお客様では当然そうですが、個人のお客様であっても、同様のコンセプト、心がけの基、全分野一貫して、
+                かかる力点を重視した業務遂行に努めています。
+              </div>
+              <div class="quote">
+                サービス品質面では、属人化の解消による業務品質の標準化に努めています。<br/>
+                案件管理担当（いわゆる「PM」に近い役割）のもと、自社オリジナルのシステム導入や、
+                直近はAIによるアップデートを図り、より迅速かつ安定したサービス提供を心掛けています。
+              </div>
+            </div>
+          </div>
+
+          <div class="footer">
+            <div>Theme 02｜Focus</div>
+            <div>5 / 8</div>
+          </div>
+        </section>
+
+        <section class="slide">
+          <div class="pill">Theme 03</div>
+          <div style="height:14px"></div>
+          <div class="h0">弁護士紹介</div>
+          <div class="accentLine"></div>
+          <p class="lead" style="margin-top:18px;">
+            ここは<strong>写真</strong>と<strong>短い自己紹介（2〜3行）</strong>を後から追加できるよう、枠だけ用意しています。
+          </p>
+          <div class="footer">
+            <div>Theme 03｜People</div>
+            <div>6 / 8</div>
+          </div>
+        </section>
+
+        <section class="slide">
+          <div class="h1">弁護士紹介（後から編集）</div>
+          <p class="lead" style="margin-top:10px;">
+            上段：写真（差し替え）／下段：一言自己紹介（追記）<br/>
+            ※カードは複製して増やせます。
+          </p>
+
+          <div class="people">
+            <div class="person">
+              <div class="ph">PHOTO（後から差し替え）</div>
+              <div class="pbody">
+                <div class="pname">前田 祥夢（代表）</div>
+                <div class="pmeta">所属：東京弁護士会（追記可）</div>
+                <div class="pintro">一言自己紹介（2〜3行）を後から追加してください。</div>
+              </div>
+            </div>
+
+            <div class="person">
+              <div class="ph">PHOTO（後から差し替え）</div>
+              <div class="pbody">
+                <div class="pname">弁護士名（追加）</div>
+                <div class="pmeta">所属会・肩書など</div>
+                <div class="pintro">一言自己紹介（2〜3行）を後から追加してください。</div>
+              </div>
+            </div>
+
+            <div class="person">
+              <div class="ph">PHOTO（後から差し替え）</div>
+              <div class="pbody">
+                <div class="pname">弁護士名（追加）</div>
+                <div class="pmeta">所属会・肩書など</div>
+                <div class="pintro">一言自己紹介（2〜3行）を後から追加してください。</div>
+              </div>
+            </div>
+
+            <div class="person">
+              <div class="ph">PHOTO（後から差し替え）</div>
+              <div class="pbody">
+                <div class="pname">弁護士名（追加）</div>
+                <div class="pmeta">所属会・肩書など</div>
+                <div class="pintro">一言自己紹介（2〜3行）を後から追加してください。</div>
+              </div>
+            </div>
+
+            <div class="person">
+              <div class="ph">PHOTO（後から差し替え）</div>
+              <div class="pbody">
+                <div class="pname">弁護士名（追加）</div>
+                <div class="pmeta">所属会・肩書など</div>
+                <div class="pintro">一言自己紹介（2〜3行）を後から追加してください。</div>
+              </div>
+            </div>
+
+            <div class="person">
+              <div class="ph">PHOTO（後から差し替え）</div>
+              <div class="pbody">
+                <div class="pname">弁護士名（追加）</div>
+                <div class="pmeta">所属会・肩書など</div>
+                <div class="pintro">一言自己紹介（2〜3行）を後から追加してください。</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="divider" style="margin-top:16px;"></div>
+          <div class="small">
+            画像差し替え：PHOTO部分を
+            &lt;img src="xxxx.jpg" style="width:100%;height:124px;object-fit:cover;display:block;" /&gt;
+            に置き換えるだけでOKです。
+          </div>
+
+          <div class="footer">
+            <div>Theme 03｜People</div>
+            <div>7 / 8</div>
+          </div>
+        </section>
+
+        <section class="slide">
+          <div class="pill">Theme 04</div>
+          <div style="height:14px"></div>
+          <div class="h0">代表挨拶</div>
+          <div class="accentLine"></div>
+
+          <div class="grid2" style="margin-top:22px;">
+            <div class="card">
+              <div class="h2">ご挨拶（Word原文）</div>
+              <div class="divider"></div>
+              <div class="small" style="line-height:1.95; color:var(--muted);">
+                初めまして。東京新橋法律事務所の代表弁護士の前田と申します。<br/>
+                弊所は、６期目を迎えております若い弁護士事務所です。<br/>
+                弁護士８名（４月より９名）、スタッフ３０名程度の中規模事務所です。<br/>
+                お陰様で、数多くのご依頼を賜り、本日迄何とか１歩１歩成長して参りました。<br/><br/>
+                弊所は、交通事故分野をはじめ、複数分野でのノウハウを積んで参りました。<br/>
+                交通事故分野においては、専門性の高い弁護士も複数人在籍し、類型で５００件ほど受任実績がございます。
+                軽微ならものから、後遺障害１級に至るような事案まで、様々経験して参りました。<br/><br/>
+                弊所のコンセプトは、「顧客提案力で負けない事務所」です。<br/>
+                端なる法律屋になるのではなく、顧客の要望をしっかり理解するというアナログ的要素をしっかりと注力しつつ、
+                適切な論点設定をしたうえ、明確かつ「刺さる」打ち手を顧客に提案することに拘っています。<br/>
+                法人のお客様では当然そうですが、個人のお客様であっても、同様のコンセプト、心がけの基、全分野一貫して、
+                かかる力点を重視した業務遂行に努めています。<br/><br/>
+                他方、サービス品質面においては、属人化の解消による業務品質の標準化に努めています。<br/>
+                弊所は、案件管理担当（いわゆる「PM」に近い役割）の基、自社オリジナルのシステム導入や、
+                直近はAIによるシステムのアップデートを図り、より迅速かつ安定したサービス提供を心掛けています。<br/>
+                若い事務所であり、その意味で経験が十二分とは言えない面はあるかと存じますが、
+                確かな顧客理解と提案力を基盤に、相応の事案処理実績を積ませて頂いた現状においては、
+                他事務所様に決して劣らない業務遂行が可能だと思っています。<br/><br/>
+                散文となり、誠に恐縮です。ささやかながら自己紹介としてお目通しいただけましたら幸いです。<br/>
+                今後とも何卒よろしくお願い申し上げます。
+              </div>
+              <div class="divider"></div>
+              <div class="small" style="color:var(--soft);">代表弁護士　前田 祥夢</div>
+            </div>
+
+            <div class="card soft">
+              <div class="h2">お問い合わせ・アクセス</div>
+              <div class="divider"></div>
+              <div class="small" style="line-height:1.95;">
+                弁護士法人 東京新橋法律事務所<br/>
+                TEL：03-6273-3254<br/>
+                東京都中央区銀座8丁目20-33　ACN銀座8ビル3階<br/>
+                新橋駅（徒歩8分）、東銀座駅（徒歩6分）、築地市場駅等（徒歩3分）等
+              </div>
+              <div class="divider"></div>
+              <div class="small">※PDF化の際、ここに地図URLやQRコードを追加すると便利です。</div>
+            </div>
+          </div>
+
+          <div class="footer">
+            <div>Theme 04｜Message</div>
+            <div>8 / 8</div>
+          </div>
+        </section>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="printDeck" id="printDeck" aria-hidden="true"></div>
+
+  <script>
+    (function(){
+      const slides = Array.from(document.querySelectorAll(".slide"));
+      const ptext = document.getElementById("ptext");
+      const barFill = document.getElementById("barFill");
+      const prevBtn = document.getElementById("prevBtn");
+      const nextBtn = document.getElementById("nextBtn");
+      const printBtn = document.getElementById("printBtn");
+      const printDeck = document.getElementById("printDeck");
+      let idx = 0;
+
+      function clamp(n,min,max){ return Math.max(min, Math.min(max, n)); }
+      function render(){
+        slides.forEach((s,i)=> s.classList.toggle("active", i===idx));
+        ptext.textContent = (idx+1) + " / " + slides.length;
+        barFill.style.width = ((idx+1)/slides.length*100).toFixed(1) + "%";
+        prevBtn.disabled = (idx===0);
+        nextBtn.disabled = (idx===slides.length-1);
+        prevBtn.style.opacity = prevBtn.disabled ? .55 : 1;
+        nextBtn.style.opacity = nextBtn.disabled ? .55 : 1;
+      }
+      function go(d){ idx = clamp(idx+d, 0, slides.length-1); render(); }
+
+      prevBtn.addEventListener("click", ()=>go(-1));
+      nextBtn.addEventListener("click", ()=>go(1));
+      window.addEventListener("keydown", (e)=>{
+        if(e.key==="ArrowLeft") go(-1);
+        if(e.key==="ArrowRight") go(1);
+      });
+
+      function buildPrintDeck(){
+        printDeck.innerHTML = "";
+        slides.forEach((s)=>{
+          const page = document.createElement("section");
+          page.className = "printSlide";
+
+          const wrap = document.createElement("div");
+          wrap.className = "canvasLike";
+          wrap.style.position="relative";
+
+          const clone = s.cloneNode(true);
+          clone.classList.remove("slide","active");
+          clone.style.position="static";
+          clone.style.padding="0";
+          clone.style.display="block";
+
+          wrap.appendChild(clone);
+          page.appendChild(wrap);
+          printDeck.appendChild(page);
+        });
+      }
+
+      printBtn.addEventListener("click", ()=>{
+        buildPrintDeck();
+        window.print();
+      });
+
+      render();
+    })();
+  </script>
+</body>
+</html>

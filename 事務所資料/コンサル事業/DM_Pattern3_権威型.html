@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DM Pattern 3 — 権威・信頼型</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Noto+Sans+JP:wght@200;300;400;500;700&family=Noto+Serif+JP:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  :root {
+    --black: #0a0a0a;
+    --charcoal: #1a1a1a;
+    --dark-grey: #2a2a2a;
+    --mid-grey: #4a4a4a;
+    --text-grey: #555555;
+    --light-grey: #888888;
+    --pale-grey: #c8c8c8;
+    --faint-grey: #e8e8e8;
+    --near-white: #f5f5f3;
+    --white: #ffffff;
+    --accent: #1a4a4a;
+    --accent-light: #2d5f5f;
+  }
+
+  @page {
+    size: A4;
+    margin: 0;
+  }
+
+  html {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+
+  body {
+    font-family: 'Noto Sans JP', 'Yu Gothic', 'Hiragino Kaku Gothic ProN', sans-serif;
+    color: var(--charcoal);
+    background: var(--white);
+    line-height: 1.0;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    letter-spacing: 0.02em;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  .page {
+    width: 210mm;
+    height: 297mm;
+    position: relative;
+    overflow: hidden;
+    background: var(--white);
+    page-break-after: always;
+    page-break-inside: avoid;
+  }
+
+  .page:last-child {
+    page-break-after: auto;
+  }
+
+  /* ============================================
+     PAGE 1 — FRONT
+     ============================================ */
+
+  .page-1 {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+  }
+
+  /* Top accent bar — a single, deliberate line */
+  .p1-accent-bar {
+    width: 100%;
+    height: 2.5mm;
+    background: var(--accent);
+  }
+
+  /* Header area */
+  .p1-header {
+    padding: 14mm 18mm 0 18mm;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  .p1-firm-name {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 7pt;
+    font-weight: 400;
+    color: var(--mid-grey);
+    letter-spacing: 0.35em;
+  }
+
+  .p1-label {
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 5.5pt;
+    font-weight: 300;
+    color: var(--light-grey);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    border: 0.3mm solid var(--pale-grey);
+    padding: 1.8mm 4mm;
+  }
+
+  /* Destination block */
+  .p1-destination {
+    padding: 12mm 18mm 0 18mm;
+  }
+
+  .p1-destination-name {
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 10.5pt;
+    font-weight: 400;
+    color: var(--charcoal);
+    letter-spacing: 0.08em;
+    line-height: 1.8;
+  }
+
+  .p1-destination-title {
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 8pt;
+    font-weight: 300;
+    color: var(--mid-grey);
+    letter-spacing: 0.06em;
+    margin-top: 1mm;
+  }
+
+  /* Main headline area */
+  .p1-headline-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0 18mm;
+    position: relative;
+  }
+
+  .p1-headline-pre {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 8pt;
+    font-weight: 300;
+    font-style: italic;
+    color: var(--accent);
+    letter-spacing: 0.3em;
+    margin-bottom: 6mm;
+  }
+
+  .p1-headline {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 26pt;
+    font-weight: 300;
+    color: var(--black);
+    letter-spacing: 0.12em;
+    line-height: 1.65;
+  }
+
+  .p1-headline em {
+    font-style: normal;
+    font-weight: 500;
+  }
+
+  .p1-headline-rule {
+    width: 40mm;
+    height: 0.2mm;
+    background: var(--charcoal);
+    margin-top: 10mm;
+  }
+
+  .p1-headline-sub {
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 8.5pt;
+    font-weight: 300;
+    color: var(--mid-grey);
+    letter-spacing: 0.06em;
+    line-height: 2.0;
+    margin-top: 7mm;
+    max-width: 125mm;
+  }
+
+  /* Numbers section */
+  .p1-numbers {
+    padding: 0 18mm 0 18mm;
+    display: flex;
+    gap: 0;
+    border-top: 0.15mm solid var(--faint-grey);
+    margin: 0 18mm;
+    padding-top: 8mm;
+    margin-bottom: 6mm;
+  }
+
+  .p1-number-item {
+    flex: 1;
+    text-align: left;
+    padding-right: 4mm;
+  }
+
+  .p1-number-item:not(:last-child) {
+    border-right: 0.15mm solid var(--faint-grey);
+    margin-right: 0;
+    padding-right: 5mm;
+  }
+
+  .p1-number-item:not(:first-child) {
+    padding-left: 5mm;
+  }
+
+  .p1-number-value {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28pt;
+    font-weight: 300;
+    color: var(--black);
+    letter-spacing: -0.02em;
+    line-height: 1.0;
+  }
+
+  .p1-number-unit {
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 7pt;
+    font-weight: 300;
+    color: var(--mid-grey);
+    margin-left: 1mm;
+    letter-spacing: 0.05em;
+  }
+
+  .p1-number-desc {
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 6pt;
+    font-weight: 300;
+    color: var(--light-grey);
+    letter-spacing: 0.04em;
+    margin-top: 2.5mm;
+    line-height: 1.5;
+  }
+
+  /* Profile section */
+  .p1-profile {
+    padding: 7mm 18mm 0mm 18mm;
+    margin: 0 18mm;
+    border-top: 0.15mm solid var(--faint-grey);
+    display: flex;
+    align-items: flex-start;
+    gap: 6mm;
+  }
+
+  .p1-profile-photo {
+    width: 18mm;
+    height: 18mm;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+    border: 0.15mm solid var(--faint-grey);
+  }
+
+  .p1-profile-photo img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .p1-profile-accent {
+    width: 1.2mm;
+    height: 22mm;
+    background: var(--accent);
+    flex-shrink: 0;
+    margin-top: 1mm;
+  }
+
+  .p1-profile-content {
+    flex: 1;
+  }
+
+  .p1-profile-name {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 10pt;
+    font-weight: 400;
+    color: var(--charcoal);
+    letter-spacing: 0.15em;
+  }
+
+  .p1-profile-title {
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 6.5pt;
+    font-weight: 300;
+    color: var(--light-grey);
+    letter-spacing: 0.08em;
+    margin-top: 2mm;
+  }
+
+  .p1-profile-bio {
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 6.5pt;
+    font-weight: 300;
+    color: var(--text-grey);
+    letter-spacing: 0.02em;
+    line-height: 1.9;
+    margin-top: 3.5mm;
+    max-width: 140mm;
+  }
+
+  /* Footer */
+  .p1-footer {
+    padding: 6mm 18mm 10mm 18mm;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+
+  .p1-footer-url {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 7pt;
+    font-weight: 400;
+    color: var(--pale-grey);
+    letter-spacing: 0.15em;
+  }
+
+  .p1-footer-page {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 7pt;
+    font-weight: 300;
+    color: var(--pale-grey);
+    letter-spacing: 0.1em;
+  }
+
+
+  /* ============================================
+     PAGE 2 — BACK
+     ============================================ */
+
+  .page-2 {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    background: var(--white);
+  }
+
+  .p2-accent-bar {
+    width: 100%;
+    height: 1.5mm;
+    background: var(--accent);
+  }
+
+  /* Pain points section */
+  .p2-pain-section {
+    padding: 12mm 18mm 0 18mm;
+  }
+
+  .p2-section-label {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 7pt;
+    font-weight: 400;
+    font-style: italic;
+    color: var(--accent);
+    letter-spacing: 0.3em;
+    margin-bottom: 3mm;
+  }
+
+  .p2-section-title {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 13pt;
+    font-weight: 400;
+    color: var(--charcoal);
+    letter-spacing: 0.1em;
+    line-height: 1.6;
+  }
+
+  .p2-section-rule {
+    width: 25mm;
+    height: 0.2mm;
+    background: var(--charcoal);
+    margin-top: 5mm;
+  }
+
+  .p2-pain-list {
+    margin-top: 6mm;
+    list-style: none;
+  }
+
+  .p2-pain-item {
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 7.5pt;
+    font-weight: 300;
+    color: var(--mid-grey);
+    letter-spacing: 0.03em;
+    line-height: 1.7;
+    padding: 3mm 0;
+    border-bottom: 0.1mm solid var(--faint-grey);
+    display: flex;
+    align-items: baseline;
+    gap: 3mm;
+  }
+
+  .p2-pain-item:last-child {
+    border-bottom: none;
+  }
+
+  .p2-pain-marker {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 6pt;
+    font-weight: 400;
+    color: var(--pale-grey);
+    flex-shrink: 0;
+    width: 5mm;
+    text-align: right;
+  }
+
+  /* Services grid */
+  .p2-services-section {
+    padding: 9mm 18mm 0 18mm;
+  }
+
+  .p2-services-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    margin-top: 6mm;
+    border-top: 0.3mm solid var(--charcoal);
+  }
+
+  .p2-service-card {
+    padding: 6mm 5mm 6mm 0;
+    border-bottom: 0.1mm solid var(--faint-grey);
+    position: relative;
+  }
+
+  .p2-service-card:nth-child(odd) {
+    padding-right: 7mm;
+    border-right: 0.1mm solid var(--faint-grey);
+  }
+
+  .p2-service-card:nth-child(even) {
+    padding-left: 7mm;
+  }
+
+  .p2-service-number {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20pt;
+    font-weight: 300;
+    color: var(--faint-grey);
+    line-height: 1.0;
+    margin-bottom: 2.5mm;
+  }
+
+  .p2-service-title {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 9pt;
+    font-weight: 500;
+    color: var(--charcoal);
+    letter-spacing: 0.06em;
+    line-height: 1.5;
+    margin-bottom: 2.5mm;
+  }
+
+  .p2-service-desc {
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 6.5pt;
+    font-weight: 300;
+    color: var(--text-grey);
+    letter-spacing: 0.02em;
+    line-height: 1.85;
+  }
+
+  /* Why section */
+  .p2-why-section {
+    padding: 8mm 18mm 0 18mm;
+  }
+
+  .p2-why-grid {
+    display: flex;
+    gap: 0;
+    margin-top: 5mm;
+    border-top: 0.15mm solid var(--faint-grey);
+    padding-top: 5mm;
+  }
+
+  .p2-why-item {
+    flex: 1;
+    padding-right: 5mm;
+  }
+
+  .p2-why-item:not(:last-child) {
+    border-right: 0.1mm solid var(--faint-grey);
+    margin-right: 0;
+    padding-right: 5mm;
+  }
+
+  .p2-why-item:not(:first-child) {
+    padding-left: 5mm;
+  }
+
+  .p2-why-label {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 8pt;
+    font-weight: 500;
+    color: var(--charcoal);
+    letter-spacing: 0.08em;
+    margin-bottom: 2.5mm;
+  }
+
+  .p2-why-desc {
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 6.5pt;
+    font-weight: 300;
+    color: var(--text-grey);
+    line-height: 1.85;
+    letter-spacing: 0.02em;
+  }
+
+  /* Exclusivity */
+  .p2-exclusivity {
+    margin: 7mm 18mm 0 18mm;
+    padding: 5mm 6mm;
+    border: 0.2mm solid var(--charcoal);
+    text-align: center;
+  }
+
+  .p2-exclusivity-text {
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 7pt;
+    font-weight: 400;
+    color: var(--charcoal);
+    letter-spacing: 0.1em;
+  }
+
+  .p2-exclusivity-sub {
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 6pt;
+    font-weight: 300;
+    color: var(--light-grey);
+    letter-spacing: 0.04em;
+    margin-top: 2mm;
+    line-height: 1.6;
+  }
+
+  /* CTA section */
+  .p2-cta-section {
+    margin: 7mm 18mm 0 18mm;
+    padding: 7mm 0 0 0;
+    border-top: 0.3mm solid var(--charcoal);
+    text-align: center;
+  }
+
+  .p2-cta-headline {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 12pt;
+    font-weight: 400;
+    color: var(--charcoal);
+    letter-spacing: 0.12em;
+    line-height: 1.6;
+  }
+
+  .p2-cta-sub {
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 7pt;
+    font-weight: 300;
+    color: var(--light-grey);
+    letter-spacing: 0.04em;
+    margin-top: 3mm;
+    line-height: 1.7;
+  }
+
+  .p2-cta-contact {
+    display: flex;
+    justify-content: center;
+    gap: 12mm;
+    margin-top: 5mm;
+    align-items: baseline;
+  }
+
+  .p2-cta-contact-item {
+    text-align: center;
+  }
+
+  .p2-cta-contact-label {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 6pt;
+    font-weight: 400;
+    color: var(--light-grey);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 1.5mm;
+  }
+
+  .p2-cta-contact-value {
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 9pt;
+    font-weight: 400;
+    color: var(--charcoal);
+    letter-spacing: 0.08em;
+  }
+
+  .p2-cta-contact-value.accent {
+    color: var(--accent);
+  }
+
+  /* Target note */
+  .p2-target {
+    margin: 6mm 18mm 0 18mm;
+    padding-top: 4mm;
+    border-top: 0.1mm solid var(--faint-grey);
+  }
+
+  .p2-target-text {
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 5.5pt;
+    font-weight: 300;
+    color: var(--pale-grey);
+    letter-spacing: 0.02em;
+    line-height: 1.7;
+    text-align: center;
+  }
+
+  /* Page 2 Footer */
+  .p2-footer {
+    margin-top: auto;
+    padding: 0 18mm 9mm 18mm;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+
+  .p2-footer-info {
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 6pt;
+    font-weight: 300;
+    color: var(--light-grey);
+    letter-spacing: 0.04em;
+    line-height: 2.0;
+  }
+
+  .p2-footer-page {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 7pt;
+    font-weight: 300;
+    color: var(--pale-grey);
+    letter-spacing: 0.1em;
+  }
+
+
+  /* ============================================
+     PRINT STYLES
+     ============================================ */
+
+  @media print {
+    html, body {
+      width: 210mm;
+      margin: 0;
+      padding: 0;
+      background: white;
+    }
+
+    .page {
+      width: 210mm;
+      height: 297mm;
+      margin: 0;
+      padding: 0;
+      overflow: visible;
+      page-break-after: always;
+      break-after: page;
+      page-break-inside: avoid;
+      box-shadow: none;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    .page:last-child {
+      page-break-after: auto;
+    }
+  }
+
+  /* ============================================
+     SCREEN PREVIEW
+     ============================================ */
+
+  @media screen {
+    body {
+      background: #e0e0e0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 30px 0;
+      gap: 40px;
+    }
+
+    .page {
+      box-shadow:
+        0 1px 3px rgba(0,0,0,0.06),
+        0 8px 30px rgba(0,0,0,0.08);
+    }
+  }
+</style>
+</head>
+<body>
+
+  <!-- ============================================
+       PAGE 1 — FRONT (Authority / Minimal)
+       ============================================ -->
+  <div class="page page-1">
+
+    <!-- Accent bar -->
+    <div class="p1-accent-bar"></div>
+
+    <!-- Header -->
+    <div class="p1-header">
+      <div class="p1-firm-name">東京新橋法律事務所</div>
+      <div class="p1-label">弁護士事務所経営支援のご案内</div>
+    </div>
+
+    <!-- Destination -->
+    <div class="p1-destination">
+      <div class="p1-destination-name">弁護士法人　○○法律事務所</div>
+      <div class="p1-destination-title">代表弁護士　○○ ○○ 先生</div>
+    </div>
+
+    <!-- Headline area -->
+    <div class="p1-headline-area">
+      <div class="p1-headline-pre">For Lawyers, by a Lawyer</div>
+      <h1 class="p1-headline">
+        経営の答えは、<br>
+        <em>現場</em>にある。
+      </h1>
+      <div class="p1-headline-rule"></div>
+      <p class="p1-headline-sub">
+        弁護士が、弁護士のために。<br>
+        広告代理店でもコンサルタントでもない——<br>
+        同じ経営者として、再現性のある施策だけをお伝えします。
+      </p>
+    </div>
+
+    <!-- Numbers -->
+    <div class="p1-numbers">
+      <div class="p1-number-item">
+        <span class="p1-number-value">6</span><span class="p1-number-unit">年</span>
+        <div class="p1-number-desc">即独開業からの経営実績</div>
+      </div>
+      <div class="p1-number-item">
+        <span class="p1-number-value">9</span><span class="p1-number-unit">名</span>
+        <div class="p1-number-desc">所属弁護士数（現在）</div>
+      </div>
+      <div class="p1-number-item">
+        <span class="p1-number-value">20</span><span class="p1-number-unit">名超</span>
+        <div class="p1-number-desc">スタッフ体制</div>
+      </div>
+      <div class="p1-number-item">
+        <span class="p1-number-value">0</span><span class="p1-number-unit">→</span>
+        <div class="p1-number-desc">会食・紹介一切なし</div>
+      </div>
+    </div>
+
+    <!-- Profile -->
+    <div class="p1-profile">
+      <div class="p1-profile-photo"><img src="maeda.jpg" alt="前田 祥夢"></div>
+      <div class="p1-profile-accent"></div>
+      <div class="p1-profile-content">
+        <div class="p1-profile-name">前田 祥夢</div>
+        <div class="p1-profile-title">東京新橋法律事務所　代表弁護士</div>
+        <p class="p1-profile-bio">
+          弁護士1年目に東京・港区で即独開業。会食や紹介には一切頼らず、リスティング広告・SEO・MEO等を自社で設計・運用。東証プライム上場企業を含む法人顧客を獲得。リクルート出身。WEBサイト制作・システム開発も自ら実施。
+        </p>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="p1-footer">
+      <div class="p1-footer-url">tslaw.or.jp</div>
+      <div class="p1-footer-page">1 / 2</div>
+    </div>
+
+  </div>
+
+
+  <!-- ============================================
+       PAGE 2 — BACK (Services / CTA)
+       ============================================ -->
+  <div class="page page-2">
+
+    <!-- Accent bar -->
+    <div class="p2-accent-bar"></div>
+
+    <!-- Pain points -->
+    <div class="p2-pain-section">
+      <div class="p2-section-label">Issues</div>
+      <div class="p2-section-title">こんな課題を感じていませんか</div>
+      <div class="p2-section-rule"></div>
+      <ul class="p2-pain-list">
+        <li class="p2-pain-item">
+          <span class="p2-pain-marker">01</span>
+          <span>売上をもう少し伸ばしたいが、具体的な方法がわからない</span>
+        </li>
+        <li class="p2-pain-item">
+          <span class="p2-pain-marker">02</span>
+          <span>WEB集客に興味はあるが、何から始めればよいかわからない</span>
+        </li>
+        <li class="p2-pain-item">
+          <span class="p2-pain-marker">03</span>
+          <span>広告代理店・業者への依頼は不安。非弁との関係も気になる</span>
+        </li>
+        <li class="p2-pain-item">
+          <span class="p2-pain-marker">04</span>
+          <span>事務員をもっと活用したいが、業務システム化・AI導入の進め方がわからない</span>
+        </li>
+        <li class="p2-pain-item">
+          <span class="p2-pain-marker">05</span>
+          <span>問い合わせはあるが、受任につながらないケースが多い</span>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Services -->
+    <div class="p2-services-section">
+      <div class="p2-section-label">Services</div>
+      <div class="p2-section-title">ご提供サービス</div>
+      <div class="p2-services-grid">
+        <div class="p2-service-card">
+          <div class="p2-service-number">01</div>
+          <div class="p2-service-title">WEB・アナログ集客の設計</div>
+          <p class="p2-service-desc">リスティング・SEO・MEO・SMS広告・郵送DMなど、貴事務所の取扱分野と予算に合った集客チャネルの選定と設計を行います。</p>
+        </div>
+        <div class="p2-service-card">
+          <div class="p2-service-number">02</div>
+          <div class="p2-service-title">反響導線・受任工程の整備</div>
+          <p class="p2-service-desc">問い合わせから受任までの各工程にKPIを設定。どこで機会損失が起きているかを可視化し、受任率を改善します。</p>
+        </div>
+        <div class="p2-service-card">
+          <div class="p2-service-number">03</div>
+          <div class="p2-service-title">CRM・顧客関係の仕組み化</div>
+          <p class="p2-service-desc">既存顧客・紹介者・見込み客との継続的な関係構築を仕組みとして設計。紹介増・再受任につなげます。</p>
+        </div>
+        <div class="p2-service-card">
+          <div class="p2-service-number">04</div>
+          <div class="p2-service-title">スタッフ活用・業務システム化</div>
+          <p class="p2-service-desc">事務員・パラリーガルの役割整理と業務標準化。AI活用による効率改善の具体的な導入支援を行います。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Why -->
+    <div class="p2-why-section">
+      <div class="p2-section-label">Why Us</div>
+      <div class="p2-why-grid">
+        <div class="p2-why-item">
+          <div class="p2-why-label">同じ目線</div>
+          <p class="p2-why-desc">弁護士業の特性を熟知した当事者視点でのアドバイス</p>
+        </div>
+        <div class="p2-why-item">
+          <div class="p2-why-label">非弁リスクなし</div>
+          <p class="p2-why-desc">弁護士が直接支援するため非弁行為の懸念が不要</p>
+        </div>
+        <div class="p2-why-item">
+          <div class="p2-why-label">実証済みの手法</div>
+          <p class="p2-why-desc">自らの事務所で検証済みの再現性ある施策のみご提案</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Exclusivity -->
+    <div class="p2-exclusivity">
+      <div class="p2-exclusivity-text">各エリア1事務所限定</div>
+      <div class="p2-exclusivity-sub">同一エリアの複数事務所への同時ご提供は行いません</div>
+    </div>
+
+    <!-- CTA -->
+    <div class="p2-cta-section">
+      <div class="p2-cta-headline">まずは60分の無料面談から</div>
+      <p class="p2-cta-sub">オンラインでも対面でも可能です。売り込みは一切ありません。</p>
+      <div class="p2-cta-contact">
+        <div class="p2-cta-contact-item">
+          <div class="p2-cta-contact-label">Email</div>
+          <div class="p2-cta-contact-value accent">info@tslaw.or.jp</div>
+        </div>
+        <div class="p2-cta-contact-item">
+          <div class="p2-cta-contact-label">Web</div>
+          <div class="p2-cta-contact-value accent">tslaw.or.jp</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Target note -->
+    <div class="p2-target">
+      <p class="p2-target-text">
+        対象分野：離婚・交通事故・相続・刑事・債務整理・一般企業法務等（高度ニッチ・特殊専門は対象外となります）
+      </p>
+    </div>
+
+    <!-- Footer -->
+    <div class="p2-footer">
+      <div class="p2-footer-info">
+        東京新橋法律事務所　代表弁護士　前田 祥夢<br>
+        〒105-XXXX　東京都港区新橋X-X-X<br>
+        https://tslaw.or.jp
+      </div>
+      <div class="p2-footer-page">2 / 2</div>
+    </div>
+
+  </div>
+
+</body>
+</html>

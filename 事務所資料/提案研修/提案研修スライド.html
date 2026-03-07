@@ -1,0 +1,1544 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>提案力 研修スライド（社内）</title>
+  <style>
+    :root{
+      --bg:#0b1020;
+      --card:#121a33;
+      --ink:#eaf0ff;
+      --muted:#b9c4e6;
+      --accent:#7aa2ff;
+      --accent2:#6ee7b7;
+      --warn:#ffb86b;
+      --danger:#ff6b8a;
+      --line:#2a3563;
+      --shadow: 0 18px 40px rgba(0,0,0,.35);
+      --radius: 18px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Yu Gothic", sans-serif;
+      background: radial-gradient(1200px 700px at 20% 15%, rgba(122,162,255,.22), transparent 55%),
+                  radial-gradient(900px 600px at 85% 10%, rgba(110,231,183,.16), transparent 55%),
+                  radial-gradient(900px 700px at 80% 80%, rgba(255,107,138,.12), transparent 60%),
+                  var(--bg);
+      color:var(--ink);
+      overflow:hidden;
+    }
+    .deck{height:100vh; width:100vw; position:relative;}
+    section.slide{
+      position:absolute; inset:0;
+      padding:36px 52px 52px;
+      display:none;
+      overflow-y:auto;
+    }
+    section.slide.active{display:block;}
+    .topbar{
+      display:flex; align-items:center; justify-content:space-between;
+      gap:16px; margin-bottom:14px;
+    }
+    .title{
+      font-size:38px; font-weight:850; letter-spacing:.02em; margin:0;
+    }
+    .subtitle{
+      font-size:16px; color:var(--muted); margin:5px 0 0 0; line-height:1.55;
+    }
+    .badge{
+      display:inline-flex; align-items:center; gap:10px;
+      padding:10px 14px; border:1px solid rgba(122,162,255,.35);
+      background: rgba(18,26,51,.6);
+      border-radius:999px;
+      color:var(--muted);
+      flex-shrink:0;
+    }
+    .kbd{font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:13px; color:var(--ink); opacity:.9;}
+    .grid2{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+    .grid3{display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px;}
+    .card{
+      background: rgba(18,26,51,.78);
+      border:1px solid rgba(42,53,99,.75);
+      border-radius: var(--radius);
+      padding:18px;
+      box-shadow: var(--shadow);
+    }
+    .card h3{margin:0 0 8px 0; font-size:19px;}
+    .card p{margin:0; color:var(--muted); line-height:1.65; font-size:14.5px;}
+    .bullets{margin:6px 0 0 0; padding-left:18px; color:var(--muted); line-height:1.7; font-size:14.5px;}
+    .bullets li{margin:4px 0}
+    .pill{
+      display:inline-block;
+      padding:5px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+      color:var(--ink);
+      font-size:13px;
+    }
+    .accent{color:var(--accent); font-weight:850;}
+    .accent2{color:var(--accent2); font-weight:850;}
+    .warn{color:var(--warn); font-weight:850;}
+    .danger{color:var(--danger); font-weight:850;}
+
+    .hr{height:1px; background:rgba(42,53,99,.75); margin:12px 0;}
+    .tagRow{display:flex; gap:8px; flex-wrap:wrap; margin-top:8px;}
+    .bigQuote{font-size:30px; font-weight:900; line-height:1.25; margin:6px 0 0 0;}
+    .quoteSub{margin-top:8px; color:var(--muted); font-size:16px; line-height:1.65;}
+    .mini{font-size:12.5px; color:rgba(185,196,230,.9); margin-top:6px; line-height:1.55;}
+
+    .arrowRow{
+      display:flex; align-items:center; justify-content:flex-start; gap:8px;
+      margin:8px 0 0 0; flex-wrap:wrap;
+    }
+    .node{
+      background: rgba(11,16,32,.6);
+      border:1px solid rgba(42,53,99,.85);
+      border-radius:14px;
+      padding:10px 12px;
+      min-width: 120px;
+      text-align:center;
+      box-shadow: 0 10px 20px rgba(0,0,0,.25);
+    }
+    .node .n{font-size:11px; color:var(--muted); margin-bottom:3px;}
+    .node .v{font-size:15px; font-weight:850;}
+    .arr{
+      width:38px; height:2px; background:rgba(122,162,255,.7); position:relative; flex:0 0 auto;
+    }
+    .arr::after{
+      content:""; position:absolute; right:-2px; top:-5px;
+      border-left:10px solid rgba(122,162,255,.7);
+      border-top:6px solid transparent; border-bottom:6px solid transparent;
+    }
+
+    /* Matrix */
+    .matrixWrap{
+      display:grid;
+      grid-template-columns: 48px 1fr;
+      grid-template-rows: 1fr 48px;
+      gap:8px;
+      align-items:stretch;
+      margin-top:6px;
+    }
+    .axisY{
+      display:flex; align-items:center; justify-content:space-between; flex-direction:column;
+      color:var(--muted);
+      border:1px solid rgba(122,162,255,.22);
+      border-radius:14px;
+      padding:8px 4px;
+      background: linear-gradient(to top, rgba(122,162,255,.04), rgba(122,162,255,.22));
+      font-weight:800;
+      font-size:13px;
+      letter-spacing:.06em;
+      position:relative;
+    }
+    .axisX{
+      display:flex; align-items:center; justify-content:space-between;
+      color:var(--muted);
+      border:1px solid rgba(110,231,183,.22);
+      border-radius:14px;
+      padding:6px 12px;
+      background: linear-gradient(to right, rgba(110,231,183,.04), rgba(110,231,183,.22));
+      font-weight:800;
+      font-size:13px;
+      letter-spacing:.06em;
+    }
+    .matrix{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      gap:8px;
+    }
+    .quad{
+      border-radius:14px;
+      border:1px solid rgba(42,53,99,.85);
+      background: rgba(11,16,32,.55);
+      padding:12px;
+      min-height:90px;
+    }
+    .quad .qTitle{font-weight:950; margin:0 0 5px 0; font-size:14px;}
+    .quad .qDesc{margin:0; color:var(--muted); line-height:1.55; font-size:13px;}
+    .quad.good{border-color: rgba(110,231,183,.65)}
+    .quad.mid{border-color: rgba(255,184,107,.55)}
+    .quad.bad{border-color: rgba(255,107,138,.55)}
+
+    .layer{
+      position:relative;
+      border-radius: 20px;
+      border: 1px solid rgba(42,53,99,.75);
+      background: rgba(11,16,32,.35);
+      padding:14px;
+      overflow:hidden;
+    }
+    .layerGrid{
+      display:grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap:12px;
+      align-items:stretch;
+    }
+    .panel{
+      border-radius:16px;
+      border:1px solid rgba(42,53,99,.85);
+      background: rgba(18,26,51,.55);
+      padding:12px;
+    }
+    .panelTitle{
+      display:flex; align-items:center; justify-content:space-between;
+      gap:8px;
+      margin-bottom:6px;
+    }
+    .panelTitle h4{margin:0; font-size:16px; font-weight:950;}
+    .chip{
+      display:inline-flex; align-items:center; gap:6px;
+      padding:4px 9px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+      color:var(--muted);
+      font-size:11px;
+      font-weight:800;
+    }
+    .vbar{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:8px;
+      margin-top:6px;
+    }
+    .skillBox{
+      border-radius:14px;
+      border:1px solid rgba(42,53,99,.85);
+      background: rgba(11,16,32,.55);
+      padding:10px;
+      min-height:85px;
+    }
+    .skillBox .t{font-weight:950; margin:0 0 4px 0; font-size:14px;}
+    .skillBox .d{margin:0; color:var(--muted); line-height:1.55; font-size:13px;}
+    .steps4{
+      display:flex; gap:6px; flex-wrap:wrap; margin-top:6px;
+    }
+    .s4{
+      flex:1;
+      min-width: 120px;
+      border-radius:14px;
+      border:1px solid rgba(42,53,99,.85);
+      background: rgba(11,16,32,.55);
+      padding:8px 8px 10px;
+    }
+    .s4 .num{
+      display:inline-flex; align-items:center; justify-content:center;
+      width:24px; height:24px;
+      border-radius:7px;
+      background: rgba(122,162,255,.18);
+      border:1px solid rgba(122,162,255,.45);
+      font-weight:950;
+      font-size:12px;
+      margin-bottom:4px;
+    }
+    .s4 .label{font-weight:950; font-size:14px; margin-bottom:3px;}
+    .s4 .desc{color:var(--muted); line-height:1.5; font-size:12px; margin:0;}
+
+    .triCols{
+      display:grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap:10px;
+      margin-top:6px;
+    }
+    .col{
+      border-radius:16px;
+      border:1px solid rgba(42,53,99,.85);
+      background: rgba(11,16,32,.55);
+      padding:10px;
+      min-height:160px;
+    }
+    .colHead{font-weight:950; margin:0 0 3px 0; font-size:14px;}
+    .colSub{margin:0 0 6px 0; color:var(--muted); font-size:11.5px; line-height:1.45;}
+    .flow{
+      display:grid;
+      gap:5px;
+      margin-top:6px;
+    }
+    .flow .f{
+      border-radius:10px;
+      border:1px solid rgba(185,196,230,.22);
+      background: rgba(255,255,255,.04);
+      padding:7px 9px;
+      font-weight:800;
+      font-size:12.5px;
+    }
+    .flow .f.mid{border-style:dashed; color:var(--muted); font-weight:700;}
+    .flow .f.end{border-color: rgba(255,184,107,.45);}
+
+    .footer{
+      position:fixed; left:0; right:0; bottom:0;
+      padding:10px 18px;
+      display:flex; align-items:center; justify-content:space-between;
+      color:rgba(185,196,230,.92);
+      font-size:13px;
+      background: linear-gradient(to top, rgba(11,16,32,.96), rgba(11,16,32,.75) 60%, transparent);
+      z-index:100;
+    }
+    .progress{
+      width:240px; height:8px; border-radius:999px;
+      border:1px solid rgba(185,196,230,.25);
+      background: rgba(255,255,255,.04);
+      overflow:hidden;
+    }
+    .bar{height:100%; width:0%; background: rgba(122,162,255,.75);}
+    .hint{opacity:.92}
+
+    body.overview{overflow:auto;}
+    body.overview .footer{position:relative;}
+
+    .checklist{margin:8px 0 0 0; padding:0; list-style:none;}
+    .checklist li{
+      padding:9px 12px;
+      border-radius:11px;
+      border:1px solid rgba(42,53,99,.65);
+      background: rgba(11,16,32,.45);
+      margin-bottom:7px;
+      font-size:14px;
+      line-height:1.6;
+      display:flex;
+      align-items:flex-start;
+      gap:9px;
+    }
+    .checklist li .ck{
+      flex-shrink:0;
+      width:20px; height:20px;
+      border-radius:5px;
+      border:2px solid rgba(110,231,183,.6);
+      margin-top:2px;
+    }
+
+    /* callout box */
+    .callout{
+      border-radius:12px;
+      padding:10px 12px;
+      margin-top:8px;
+    }
+    .callout-accent{border:1px solid rgba(122,162,255,.3);background:rgba(122,162,255,.06);}
+    .callout-accent2{border:1px solid rgba(110,231,183,.3);background:rgba(110,231,183,.06);}
+    .callout-warn{border:1px solid rgba(255,184,107,.3);background:rgba(255,184,107,.06);}
+    .callout-danger{border:1px solid rgba(255,107,138,.3);background:rgba(255,107,138,.06);}
+    .callout p{margin:0;font-size:13px;line-height:1.6;color:var(--muted);}
+
+    /* section divider chip */
+    /* ===== Title slide hero ===== */
+    @keyframes heroGlow {
+      0%, 100% { text-shadow: 0 0 20px rgba(255,184,107,.3), 0 0 60px rgba(255,184,107,.1); }
+      50% { text-shadow: 0 0 40px rgba(255,184,107,.65), 0 0 90px rgba(255,184,107,.25), 0 4px 20px rgba(0,0,0,.4); }
+    }
+    @keyframes ringPulse1 {
+      0%, 100% { transform: translate(-50%,-50%) scale(.92); opacity:.5; }
+      50% { transform: translate(-50%,-50%) scale(1.08); opacity:.9; }
+    }
+    @keyframes ringPulse2 {
+      0%, 100% { transform: translate(-50%,-50%) scale(1.05); opacity:.4; }
+      50% { transform: translate(-50%,-50%) scale(.93); opacity:.75; }
+    }
+    @keyframes ringPulse3 {
+      0%, 100% { transform: translate(-50%,-50%) scale(.97); opacity:.3; }
+      50% { transform: translate(-50%,-50%) scale(1.04); opacity:.6; }
+    }
+    @keyframes heroFadeIn {
+      from { opacity:0; transform: translateY(25px); }
+      to { opacity:1; transform: translateY(0); }
+    }
+    @keyframes shimmer {
+      0% { background-position: -200% center; }
+      100% { background-position: 200% center; }
+    }
+    @keyframes dividerExpand {
+      from { width:0; opacity:0; }
+      to { width:120px; opacity:1; }
+    }
+    .hero-title {
+      display:flex; align-items:center; justify-content:flex-start;
+      height:100%; width:100%; position:relative; overflow:hidden;
+      padding-left:5%;
+    }
+    .hero-rings { position:absolute; inset:0; pointer-events:none; }
+    .hero-ring {
+      position:absolute; left:62%; top:48%; border-radius:50%;
+    }
+    .ring1 {
+      width:420px; height:420px;
+      border:2px solid rgba(122,162,255,.15);
+      animation: ringPulse1 4s ease-in-out infinite;
+    }
+    .ring2 {
+      width:600px; height:600px;
+      border:1.5px solid rgba(110,231,183,.1);
+      animation: ringPulse2 5s ease-in-out infinite .7s;
+    }
+    .ring3 {
+      width:780px; height:780px;
+      border:1px solid rgba(255,184,107,.07);
+      animation: ringPulse3 6s ease-in-out infinite 1.2s;
+    }
+    .hero-content {
+      position:relative; z-index:4; text-align:left;
+      animation: heroFadeIn .9s ease-out both;
+      max-width:52%;
+    }
+    .hero-kicker {
+      font-size:56px; font-weight:950; letter-spacing:.06em;
+      color:var(--warn);
+      animation: heroGlow 3s ease-in-out infinite;
+    }
+    .hero-divider {
+      width:120px; height:3px; margin:18px 0;
+      background: linear-gradient(90deg, var(--accent), var(--accent2), transparent);
+      border-radius:999px;
+      animation: dividerExpand 1s ease-out .4s both;
+    }
+    .hero-main {
+      font-size:54px; font-weight:950; letter-spacing:.03em; line-height:1.25;
+      background: linear-gradient(135deg, var(--accent) 0%, #a8c8ff 30%, var(--accent2) 70%, #b4f0d8 100%);
+      background-size: 200% auto;
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+      background-clip:text;
+      animation: shimmer 4s linear infinite;
+    }
+    .hero-sub {
+      margin-top:24px;
+      font-size:18px; font-weight:700; color:var(--muted); letter-spacing:.02em;
+      animation: heroFadeIn .9s ease-out .5s both;
+    }
+
+    .secDivider{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:6px 14px;
+      border-radius:999px;
+      border:1px solid rgba(122,162,255,.4);
+      background: rgba(122,162,255,.1);
+      font-weight:900;
+      font-size:14px;
+      letter-spacing:.04em;
+      margin-bottom:10px;
+      color:var(--accent);
+    }
+    /* ===== Hero character image ===== */
+    .hero-character{
+      position:absolute; right:0; top:0; bottom:0;
+      width:55%; z-index:3; pointer-events:none; overflow:hidden;
+      animation: heroFadeIn 1.2s ease-out .3s both;
+    }
+    .hero-character img{
+      width:100%; height:100%;
+      object-fit:cover; object-position:50% 20%;
+      -webkit-mask-image: linear-gradient(to right, transparent 0%, rgba(0,0,0,.35) 12%, rgba(0,0,0,.8) 30%, black 50%);
+      mask-image: linear-gradient(to right, transparent 0%, rgba(0,0,0,.35) 12%, rgba(0,0,0,.8) 30%, black 50%);
+    }
+    .hero-character::after{
+      content:""; position:absolute; inset:0; pointer-events:none;
+      background:
+        linear-gradient(to top, rgba(11,16,32,1) 0%, rgba(11,16,32,.6) 8%, transparent 22%),
+        linear-gradient(to bottom, rgba(11,16,32,.9) 0%, transparent 16%),
+        linear-gradient(to right, transparent 85%, rgba(11,16,32,.5) 100%);
+    }
+    .hero-eye-glow{
+      position:absolute; z-index:2; pointer-events:none;
+      top:22%; right:16%; width:28vw; height:26vh;
+      background: radial-gradient(ellipse, rgba(122,162,255,.45) 0%, rgba(110,231,183,.08) 45%, transparent 72%);
+      filter:blur(55px);
+      animation: ringPulse1 4s ease-in-out infinite;
+    }
+    @keyframes charFloat {
+      0%,100%{ transform:translateY(0); }
+      50%{ transform:translateY(-8px); }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="deck" id="deck">
+
+    <!-- ====== 0 タイトルスライド（表紙） ====== -->
+    <section class="slide active">
+      <div class="hero-title">
+        <div class="hero-rings">
+          <div class="hero-ring ring1"></div>
+          <div class="hero-ring ring2"></div>
+          <div class="hero-ring ring3"></div>
+        </div>
+        <div class="hero-character">
+          <img src="五条悟.jpg" alt="" />
+        </div>
+        <div class="hero-eye-glow"></div>
+        <div class="hero-content">
+          <div class="hero-kicker">必中必殺！？</div>
+          <div class="hero-divider"></div>
+          <div class="hero-main">絶賛される<br>提案の作り方</div>
+          <div class="hero-sub">提案は「通らない」のが普通。── では、どうするか？</div>
+          <div style="margin-top:36px;animation:heroFadeIn .9s ease-out .7s both;">
+            <span class="pill" style="font-size:15px;padding:10px 24px;border-color:rgba(122,162,255,.45);background:rgba(122,162,255,.08);">社内研修</span>
+          </div>
+        </div>
+      </div>
+      <div class="footer">
+        <div class="hint">表紙</div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div class="progress"><div class="bar"></div></div>
+          <div class="page">1 / 16</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 1 イントロダクション ====== -->
+    <section class="slide">
+      <div class="topbar">
+        <div>
+          <h1 class="title">提案力</h1>
+          <p class="subtitle">社内研修：仕事のあらゆる場面で行う「提案」を通すために</p>
+        </div>
+        <div class="badge">
+          <span>操作：</span>
+          <span class="kbd">&larr;/&rarr;</span>
+          <span class="kbd">Space</span>
+          <span class="kbd">Esc</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <p class="bigQuote">
+          提案は、仕事におけるありとあらゆる場面で行う活動。
+        </p>
+        <p class="quoteSub">
+          本研修は「話し方」より前に、<span class="accent2">説得的な提案内容それ自体</span>を構築する力を鍛える。
+        </p>
+        <div class="hr"></div>
+        <p style="margin:0 0 8px 0;font-weight:850;font-size:15px;">提案の例</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;">
+          <span class="pill">営業先・顧客への提案</span>
+          <span class="pill">社内弁護士への業務確認（「これでいいよね？」という提案）</span>
+          <span class="pill">マネージャーへの手当交渉</span>
+          <span class="pill">上司への方針相談</span>
+        </div>
+        <p style="margin:0;color:var(--muted);line-height:1.65;font-size:14px;">
+          営業先や顧客に対する提案は当然として、社内の弁護士に対する業務確認も、マネージャーへの待遇交渉も、すべて「提案」。<br>
+          説明や提案が下手な場合の多くは、話し方やプレゼン力ではなく、
+          <span class="accent">そもそも何を説明すべきか、頭が整理されていない</span>ことに起因する。<br>
+          「伝え方」よりも、まず説得的な「提案内容」を構築する力を鍛えるのが先決。
+        </p>
+        <div class="tagRow">
+          <span class="pill">考える力 &times; 伝える力</span>
+          <span class="pill">優先順位：まず考える</span>
+          <span class="pill">ゴール：提案を通す</span>
+        </div>
+      </div>
+
+      <div class="footer">
+        <div class="hint">第1：タイトル</div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div class="progress"><div class="bar"></div></div>
+          <div class="page">1 / 15</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 2 提案力の構造 ====== -->
+    <section class="slide">
+      <div class="topbar">
+        <div>
+          <h2 class="title" style="font-size:30px;">提案力の構造</h2>
+          <p class="subtitle">提案力とは、<span class="accent">考える力</span>と<span class="accent2">伝える力</span>の2軸で成り立つ</p>
+        </div>
+        <div class="badge"><span class="kbd">&larr;/&rarr;</span></div>
+      </div>
+
+      <div class="card">
+        <div class="matrixWrap">
+          <!-- Y軸：上向きバロメーター -->
+          <div class="axisY">
+            <span style="font-size:11px;color:rgba(122,162,255,.95);line-height:1.15;text-align:center;">▲<br><span style="font-size:10px;">強</span></span>
+            <span style="writing-mode:vertical-lr;font-size:12px;color:var(--accent);letter-spacing:.1em;">考える力</span>
+            <span style="font-size:10px;color:rgba(185,196,230,.4);">弱</span>
+          </div>
+
+          <div class="matrix">
+            <div class="quad mid">
+              <p class="qTitle">よさそうだが難しすぎて分からない</p>
+              <p class="qDesc">中身はあるが、整理されておらず相手に届かない</p>
+            </div>
+            <div class="quad good">
+              <p class="qTitle">なるほど！素晴らしい！</p>
+              <p class="qDesc">中身がある＋伝わる（理想）</p>
+            </div>
+            <div class="quad bad">
+              <p class="qTitle">なんか話にならないね</p>
+              <p class="qDesc">そもそも検討が足りない／整理できていない</p>
+            </div>
+            <div class="quad mid">
+              <p class="qTitle">言ってることは分かるけど…それが何なの？</p>
+              <p class="qDesc">説明はできるが、中身が薄い（ノイズになる）</p>
+            </div>
+          </div>
+
+          <div></div>
+          <!-- X軸：右向きバロメーター -->
+          <div class="axisX">
+            <span style="font-size:10px;color:rgba(185,196,230,.4);">弱</span>
+            <span style="font-size:12px;color:var(--accent2);letter-spacing:.1em;">伝える力</span>
+            <span style="font-size:11px;color:rgba(110,231,183,.95);">強 ▶</span>
+          </div>
+        </div>
+
+        <div class="hr"></div>
+        <p style="margin:0;color:var(--muted);line-height:1.65;font-size:14px;">
+          中身がなければ良い提案になり得ないし、ノイズばかりになる。中身があっても、伝わらなければ意味がない。<br>
+          本研修の前提：<span class="accent2">"下手"の多くはプレゼン以前に、何を説明すべきかが整理されていないことに起因</span>する。
+        </p>
+        <div class="callout callout-danger" style="margin-top:10px;">
+          <p>
+            <span class="danger">大前提：提案は「通らない」のが普通。</span><br>
+            通すためにはそれなりのスキルと工夫が必要であり、通らなかったときに相手のせいにするのではなく、<span class="accent">自責で磨いていく</span>姿勢が不可欠。
+          </p>
+        </div>
+      </div>
+
+      <div class="footer">
+        <div class="hint">第2：提案力の重要性と構造</div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div class="progress"><div class="bar"></div></div>
+          <div class="page">2 / 15</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 3 考える力＝2つのスキル＋4つのステップ ====== -->
+    <section class="slide">
+      <div class="topbar">
+        <div>
+          <h2 class="title" style="font-size:30px;">考える力＝2つのスキル＋4つのステップ</h2>
+          <p class="subtitle">考える力＝良い提案内容を作る力。スキル（手段）とステップ（工程）の両輪</p>
+        </div>
+        <div class="badge"><span class="kbd">&larr;/&rarr;</span></div>
+      </div>
+
+      <div class="card">
+        <div class="layer">
+          <div class="layerGrid">
+            <div class="panel">
+              <div class="panelTitle">
+                <h4>2つの基本スキル（手段）</h4>
+                <span class="chip">論理的思考力</span>
+              </div>
+
+              <div class="vbar">
+                <div class="skillBox">
+                  <p class="t"><span class="accent">縦の論理</span>（因果）</p>
+                  <p class="d">「AならばB」<br>誰が見ても明確な因果</p>
+                </div>
+                <div class="skillBox">
+                  <p class="t"><span class="accent2">横の論理</span>（網羅）</p>
+                  <p class="d">漏れなくダブりなく<br>（MECE）</p>
+                </div>
+              </div>
+
+              <div class="hr"></div>
+              <p class="mini">
+                「論理的である」＝（どんな背景・立場の人が聞いても）話がつながっていること。<br>
+                論理的かどうかを決めるのは<span class="accent">聞き手（相手）</span>。
+              </p>
+              <div class="callout callout-accent" style="margin-top:6px;">
+                <p style="font-size:12px;">
+                  論理的であることは、提案を通すための要素。提案は常に相手ありきのもの。<br>
+                  だから自己評価としての「論理的」は意味がない。<br>
+                  <span class="accent">「俺の意見は論理的なのにな」と思っている時点で、本質的には論理的ではない。</span>
+                </p>
+              </div>
+            </div>
+
+            <div class="panel">
+              <div class="panelTitle">
+                <h4>4つのステップ（工程）</h4>
+                <span class="chip">仮説検証</span>
+              </div>
+
+              <p class="mini" style="margin-top:0;">
+                2つの論理的思考はスキルであり手段。目的は提案を通すこと。<br>
+                <span class="accent2">提案を通す上で障壁・ネックとなる</span>相手の懸念・疑問を解消するための仮説検証工程が不可欠。
+              </p>
+
+              <div class="steps4">
+                <div class="s4">
+                  <div class="num">1</div>
+                  <div class="label">目的</div>
+                  <p class="desc">何を目的とした提案かを明確化（意思判断）</p>
+                </div>
+                <div class="s4">
+                  <div class="num">2</div>
+                  <div class="label">論点</div>
+                  <p class="desc">判断を左右する検討事項を特定</p>
+                </div>
+                <div class="s4">
+                  <div class="num">3</div>
+                  <div class="label">仮説構築</div>
+                  <p class="desc">根拠つきの「仮の答え」を置く</p>
+                </div>
+                <div class="s4">
+                  <div class="num">4</div>
+                  <div class="label">検証実施</div>
+                  <p class="desc">客観的資料で仮説を裏取り</p>
+                </div>
+              </div>
+
+              <div class="hr"></div>
+              <p style="margin:0;color:var(--muted);line-height:1.55;font-size:12.5px;">
+                相手に「選ばせる」ために全候補を並べて検討させるのは非効率。<br>
+                <span class="accent2">こちらで仮説を作り、相手の思考負担を減らす</span>ことが重要。
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer">
+        <div class="hint">図1-3：2つのスキルと4ステップ</div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div class="progress"><div class="bar"></div></div>
+          <div class="page">3 / 15</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 4 相手のリアクションA/B ====== -->
+    <section class="slide">
+      <div class="topbar">
+        <div>
+          <div class="secDivider">＝ 2つのスキル（論理的思考）＝</div>
+          <h2 class="title" style="font-size:30px;">相手のリアクションは主に2つ</h2>
+          <p class="subtitle">納得感がないとき、相手はこうツッコむ</p>
+        </div>
+        <div class="badge"><span class="kbd">&larr;/&rarr;</span></div>
+      </div>
+
+      <div class="grid2">
+        <div class="card">
+          <h3>A：<span class="accent">「本当にそうか？」</span></h3>
+          <p>＝<span class="accent">縦の論理不足</span>（因果が明確でない／飛躍がある）</p>
+          <div class="arrowRow">
+            <div class="node"><div class="n">因果</div><div class="v">AならばB</div></div>
+            <div class="arr"></div>
+            <div class="node"><div class="n">疑問</div><div class="v danger">本当に？</div></div>
+          </div>
+          <div class="hr"></div>
+          <ul class="bullets">
+            <li>前提は共有されているか？</li>
+            <li>ケースが混ざっていないか？</li>
+            <li>偶然を必然と言っていないか？</li>
+          </ul>
+          <div class="callout callout-accent" style="margin-top:8px;">
+            <p style="font-size:12.5px;">
+              つまり<span class="accent">「説得力がない」「何を言っているかわからない」</span>ということ。因果の飛躍があると、聞き手は理解すらできない。
+            </p>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>B：<span class="accent2">「それだけか？」</span></h3>
+          <p>＝<span class="accent2">横の論理不足</span>（検討対象が網羅されていない）</p>
+          <div class="arrowRow">
+            <div class="node"><div class="n">網羅</div><div class="v">MECE</div></div>
+            <div class="arr"></div>
+            <div class="node"><div class="n">疑問</div><div class="v warn">それだけ？</div></div>
+          </div>
+          <div class="hr"></div>
+          <ul class="bullets">
+            <li>いまの立場で検討すべき観点か？</li>
+            <li>観点の引き出し（知識）が足りているか？</li>
+            <li>重複と漏れがないか？</li>
+          </ul>
+          <div class="callout callout-accent2" style="margin-top:8px;">
+            <p style="font-size:12.5px;">
+              典型例：上司や提案先から<span class="accent2">自分がまったく想定していなかった観点を指摘される</span>パターン。検討の網が粗いと、こうなる。
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer">
+        <div class="hint">第3：2つのスキル（Aは縦／Bは横）</div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div class="progress"><div class="bar"></div></div>
+          <div class="page">4 / 15</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 5 縦の論理とは ====== -->
+    <section class="slide">
+      <div class="topbar">
+        <div>
+          <h2 class="title" style="font-size:30px;">縦の論理とは（因果）</h2>
+          <p class="subtitle">「AならばB」…誰が見ても明確であること</p>
+        </div>
+        <div class="badge"><span class="kbd">&larr;/&rarr;</span></div>
+      </div>
+
+      <div class="card">
+        <p style="margin:0;color:var(--muted);line-height:1.65;font-size:14px;">
+          縦の論理が良い状態＝<span class="accent2">論理的中間項を細かく組み込もうと思えば組み込める力</span>があること。<br>
+          「AならばBである」という因果関係を、細かいステップに分解して理解していることが理想。
+        </p>
+
+        <div class="hr"></div>
+
+        <!-- 対比：中間項が飛んでいる例 -->
+        <div class="grid2" style="gap:10px;">
+          <div style="border-radius:14px;border:1px solid rgba(255,107,138,.35);background:rgba(255,107,138,.05);padding:12px;">
+            <p style="margin:0;font-weight:850;font-size:14px;margin-bottom:6px;"><span class="danger">中間項が飛んでいる例</span></p>
+            <div class="arrowRow" style="margin:0;">
+              <div class="node" style="min-width:auto;padding:8px 10px;"><div class="v" style="font-size:13px;">弁護士が請求書を送る</div></div>
+              <div class="arr" style="width:28px;"></div>
+              <div class="node" style="min-width:auto;padding:8px 10px;border-color:rgba(255,107,138,.5);"><div class="v danger" style="font-size:13px;">回収可能性が上がる</div></div>
+            </div>
+            <p class="mini" style="font-size:11.5px;">なぜ上がるのか？が説明できない状態。聞き手は「本当に？」と思う。</p>
+          </div>
+
+          <div style="border-radius:14px;border:1px solid rgba(110,231,183,.35);background:rgba(110,231,183,.05);padding:12px;">
+            <p style="margin:0;font-weight:850;font-size:14px;margin-bottom:6px;"><span class="accent2">中間項を持っている例</span></p>
+            <div class="arrowRow" style="margin:0;gap:4px;">
+              <div class="node" style="min-width:auto;padding:6px 8px;"><div class="v" style="font-size:11px;">弁護士が請求書</div></div>
+              <div class="arr" style="width:20px;"></div>
+              <div class="node" style="min-width:auto;padding:6px 8px;"><div class="v" style="font-size:11px;">裁判等を想起</div></div>
+              <div class="arr" style="width:20px;"></div>
+              <div class="node" style="min-width:auto;padding:6px 8px;"><div class="v" style="font-size:11px;">畏怖&rarr;支払意思</div></div>
+              <div class="arr" style="width:20px;"></div>
+              <div class="node" style="min-width:auto;padding:6px 8px;border-color:rgba(110,231,183,.5);"><div class="v accent2" style="font-size:11px;">回収可能性&uarr;</div></div>
+            </div>
+            <p class="mini" style="font-size:11.5px;">なぜ上がるかを段階的に説明できる。これが「縦の論理が強い人」。</p>
+          </div>
+        </div>
+
+        <div class="hr"></div>
+        <p style="margin:0;color:var(--muted);line-height:1.65;font-size:14px;">
+          中間項を理解・整理しておくことで、聞き手の疑問に先回りし、必要に応じて説明を足すことができる。
+        </p>
+      </div>
+
+      <div class="footer">
+        <div class="hint">縦の論理：中間項を"持てる"こと</div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div class="progress"><div class="bar"></div></div>
+          <div class="page">5 / 15</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 6 縦の論理：理解度のちがい ====== -->
+    <section class="slide">
+      <div class="topbar">
+        <div>
+          <h2 class="title" style="font-size:30px;">縦の論理：理解度のちがい</h2>
+          <p class="subtitle">"細かく考えられる"と"全部しゃべる"は違う</p>
+        </div>
+        <div class="badge"><span class="kbd">&larr;/&rarr;</span></div>
+      </div>
+
+      <div class="card">
+        <div class="triCols">
+          <div class="col" style="border-color: rgba(255,107,138,.45);">
+            <p class="colHead"><span class="danger">（1）考えていない人</span></p>
+            <p class="colSub">細かい部分がわかっていない</p>
+            <div class="flow">
+              <div class="f">路上駐車は、</div>
+              <div class="f end">迷惑だ</div>
+            </div>
+            <p class="mini" style="font-size:11.5px;">中間項が存在しない＝なぜ迷惑かを説明できない</p>
+          </div>
+          <div class="col" style="border-color: rgba(255,184,107,.45);">
+            <p class="colHead"><span class="warn">（2）考えすぎの人</span></p>
+            <p class="colSub">細かいところまで考え、逐一口に出す</p>
+            <div class="flow">
+              <div class="f">路上駐車は、</div>
+              <div class="f mid">通行車両の妨害&rarr;渋滞</div>
+              <div class="f mid">目的地までの時間が長い</div>
+              <div class="f mid">急いでいる人にとっては</div>
+              <div class="f end">迷惑だ</div>
+            </div>
+          </div>
+          <div class="col" style="border-color: rgba(110,231,183,.6);">
+            <p class="colHead"><span class="accent2">（3）求められれば細かくできる人</span></p>
+            <p class="colSub">細かく考えているが、必要部分だけ表現する</p>
+            <div class="flow">
+              <div class="f">路上駐車は、</div>
+              <div class="f mid" style="border-color: rgba(110,231,183,.35);">（必要なら中間項を提示）</div>
+              <div class="f end">迷惑だ</div>
+            </div>
+            <p class="mini" style="font-size:11.5px;color:var(--accent2);">目指す姿</p>
+          </div>
+        </div>
+
+        <div class="hr"></div>
+        <p style="margin:0;color:var(--muted);line-height:1.65;font-size:14px;">
+          目指す姿：<span class="accent2">思考の解像度は高く、アウトプットは相手に合わせて可変</span>。<br>
+          聞き手にとって過不足のない粒度で説明できることが「縦の論理が強い」状態。
+        </p>
+      </div>
+
+      <div class="footer">
+        <div class="hint">図2-3：縦の論理は"調整可能な解像度"</div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div class="progress"><div class="bar"></div></div>
+          <div class="page">6 / 15</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 7 縦の論理が崩れる3原因 ====== -->
+    <section class="slide">
+      <div class="topbar">
+        <div>
+          <h2 class="title" style="font-size:30px;">縦の論理に問題がある3つの原因</h2>
+          <p class="subtitle">「AならばB」がすっと入らないときの典型パターン</p>
+        </div>
+        <div class="badge"><span class="kbd">&larr;/&rarr;</span></div>
+      </div>
+
+      <div class="grid3">
+        <div class="card">
+          <h3>1）隠れた前提</h3>
+          <p>話者の頭にしかない前提で成り立つ因果。</p>
+          <ul class="bullets">
+            <li>前提を言語化して共有する</li>
+            <li>「A」が小さすぎないか点検</li>
+          </ul>
+          <div class="hr"></div>
+          <p class="mini">例：「ZRさんは重要」&larr;売上の半分を占める等の前提が省略されている</p>
+        </div>
+        <div class="card">
+          <h3>2）異質なものの同質化</h3>
+          <p>「A」の範囲が広すぎ、質的に異なるものが混在。</p>
+          <ul class="bullets">
+            <li>ケース分け／分類する</li>
+            <li>例外条件を置く</li>
+          </ul>
+          <div class="hr"></div>
+          <p class="mini">例：「弁護士事務所は働きやすい」&larr;街弁～企業法務まで混在</p>
+        </div>
+        <div class="card">
+          <h3>3）偶然の必然化</h3>
+          <p>必ずしも成り立たない因果を断言している。</p>
+          <ul class="bullets">
+            <li>相関と因果を分ける</li>
+            <li>確率・条件を明示する</li>
+          </ul>
+          <div class="hr"></div>
+          <p class="mini">例：「毎日10時間勉強すれば必ず合格」</p>
+        </div>
+      </div>
+
+      <div class="callout callout-warn" style="margin-top:10px;">
+        <p>
+          <span class="warn">前提の統一はとくに重要。</span>
+          相手の抱く前提と、自分の持つ前提にズレがないかは常に意識すべきポイント。<br>
+          前提を都度確認しながら話を進めることで、わかりやすさが格段に増す。
+        </p>
+      </div>
+
+      <div class="footer">
+        <div class="hint">第3：縦の論理（問題の原因3つ）</div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div class="progress"><div class="bar"></div></div>
+          <div class="page">7 / 15</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 8 横の論理 定義 ====== -->
+    <section class="slide">
+      <div class="topbar">
+        <div>
+          <h2 class="title" style="font-size:30px;">横の論理とは（MECE）</h2>
+          <p class="subtitle">提案で考えるべきことの全体が、漏れなくダブりなくカバーされている</p>
+        </div>
+        <div class="badge"><span class="kbd">&larr;/&rarr;</span></div>
+      </div>
+
+      <div class="grid2">
+        <div class="card">
+          <h3>定義</h3>
+          <p>
+            横の論理＝網羅。<span class="accent">MECE</span>（Mutually Exclusive, Collectively Exhaustive）ともいう。<br>
+            例：「男と女」「衣食住」など、網羅的構成内容を抽出・整理する力。
+          </p>
+          <div class="hr"></div>
+          <p class="mini">
+            ※縦よりも横が重要になる場面も多い（意思決定で必要項目が抜けると提案が通りにくい）。<br>
+            ※さまざまな立場を理解し知見として組み込むことが重要。
+          </p>
+        </div>
+
+        <div class="card">
+          <h3>相手のツッコミ</h3>
+          <p>横が弱いと、相手はこう言う：</p>
+          <p class="bigQuote" style="font-size:26px;margin-top:6px;">
+            <span class="warn">「（観点や要素は）それだけか？」</span>
+          </p>
+          <div class="hr"></div>
+          <p style="margin:0;color:var(--muted);line-height:1.65;font-size:14px;">
+            ＝検討対象が網羅されていない（論点の漏れ・重複）。<br>
+            意思決定において検討すべき項目が抜けていると、その提案はそもそも土台に乗らない。
+          </p>
+        </div>
+      </div>
+
+      <div class="footer">
+        <div class="hint">第3：横の論理（MECE）</div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div class="progress"><div class="bar"></div></div>
+          <div class="page">8 / 15</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 9 横の論理を作る2つの観点 ====== -->
+    <section class="slide">
+      <div class="topbar">
+        <div>
+          <h2 class="title" style="font-size:30px;">横の論理を"もれなく"作る2つの観点</h2>
+          <p class="subtitle">（1）いま検討すべき観点か？（2）観点・フレームの知識を得る</p>
+        </div>
+        <div class="badge"><span class="kbd">&larr;/&rarr;</span></div>
+      </div>
+
+      <div class="grid2">
+        <div class="card">
+          <h3>（1）いまこの場で検討すべき観点か？</h3>
+          <p>立場・切り口から見て、網羅対象に入れるべきかを判断する。</p>
+          <ul class="bullets">
+            <li>文脈に合わない観点を入れると、議論が散る</li>
+            <li>「何の目的の提案か」に戻って整理する</li>
+          </ul>
+          <div class="hr"></div>
+          <p class="mini">例：生物学的分類の文脈で「同性愛者」を要素に入れるのは不適当</p>
+          <p class="mini">例：債権回収の収支分析で「債務者居住エリア」が収支に影響しないなら不適当</p>
+        </div>
+
+        <div class="card">
+          <h3>（2）観点・フレームの知識を得る</h3>
+          <p>人的立場（上司／責任者／経営）や役割（営業／技術）など多面的理解が必要。</p>
+          <ul class="bullets">
+            <li>広告運用でも「広告内容」だけでなく</li>
+            <li>「どのエリア」「どの媒体」「反響コスト」「いつ出すか」等、検討事項は多数</li>
+          </ul>
+          <div class="hr"></div>
+          <p class="mini">横の論理は、体系的に学び・吸収して鍛える。</p>
+          <div class="callout callout-accent2" style="margin-top:6px;">
+            <p style="font-size:12.5px;">
+              <span class="accent2">MECEなフレームワークの活用例</span><br>
+              <span style="font-weight:850;">SWOT分析</span>：Strength（強み）/ Weakness（弱み）/ Opportunity（機会）/ Threat（脅威）の4象限で、内部環境・外部環境を網羅的に整理できる。<br>
+              こうした既存フレームワークを知っておくと、横の論理の漏れを防ぎやすい。
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer">
+        <div class="hint">第3：横の論理（作り方の2本柱）</div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div class="progress"><div class="bar"></div></div>
+          <div class="page">9 / 15</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 10 仮説検証の全体像 ====== -->
+    <section class="slide">
+      <div class="topbar">
+        <div>
+          <h2 class="title" style="font-size:30px;">仮説検証の全体像：4つのステップ</h2>
+          <p class="subtitle">2つの論理的思考はスキル（手段）。目的は提案を通すこと。以下の4ステップで提案を磨く。</p>
+        </div>
+        <div class="badge"><span class="kbd">&larr;/&rarr;</span></div>
+      </div>
+
+      <div class="card">
+        <div style="display:flex;align-items:stretch;gap:0;margin:6px 0 14px;">
+          <div style="flex:1;border-radius:14px;border:2px solid rgba(122,162,255,.5);background:rgba(122,162,255,.08);padding:14px;text-align:center;">
+            <div style="display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:9px;background:rgba(122,162,255,.22);border:1px solid rgba(122,162,255,.5);font-weight:950;font-size:15px;margin-bottom:6px;">1</div>
+            <div style="font-weight:950;font-size:16px;margin-bottom:3px;">目的</div>
+            <div style="color:var(--muted);font-size:12px;line-height:1.45;">何のための提案か<br>意思判断を明確化</div>
+          </div>
+          <div style="width:26px;flex-shrink:0;display:flex;align-items:center;justify-content:center;">
+            <svg width="18" height="18" viewBox="0 0 20 20"><path d="M4 10h12M12 5l5 5-5 5" fill="none" stroke="rgba(122,162,255,.7)" stroke-width="2" stroke-linecap="round"/></svg>
+          </div>
+          <div style="flex:1;border-radius:14px;border:2px solid rgba(110,231,183,.5);background:rgba(110,231,183,.08);padding:14px;text-align:center;">
+            <div style="display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:9px;background:rgba(110,231,183,.22);border:1px solid rgba(110,231,183,.5);font-weight:950;font-size:15px;margin-bottom:6px;">2</div>
+            <div style="font-weight:950;font-size:16px;margin-bottom:3px;">論点</div>
+            <div style="color:var(--muted);font-size:12px;line-height:1.45;">判断を左右する<br>検討事項を特定</div>
+          </div>
+          <div style="width:26px;flex-shrink:0;display:flex;align-items:center;justify-content:center;">
+            <svg width="18" height="18" viewBox="0 0 20 20"><path d="M4 10h12M12 5l5 5-5 5" fill="none" stroke="rgba(122,162,255,.7)" stroke-width="2" stroke-linecap="round"/></svg>
+          </div>
+          <div style="flex:1;border-radius:14px;border:2px solid rgba(255,184,107,.5);background:rgba(255,184,107,.08);padding:14px;text-align:center;">
+            <div style="display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:9px;background:rgba(255,184,107,.22);border:1px solid rgba(255,184,107,.5);font-weight:950;font-size:15px;margin-bottom:6px;">3</div>
+            <div style="font-weight:950;font-size:16px;margin-bottom:3px;">仮説構築</div>
+            <div style="color:var(--muted);font-size:12px;line-height:1.45;">根拠つきの<br>「仮の答え」を置く</div>
+          </div>
+          <div style="width:26px;flex-shrink:0;display:flex;align-items:center;justify-content:center;">
+            <svg width="18" height="18" viewBox="0 0 20 20"><path d="M4 10h12M12 5l5 5-5 5" fill="none" stroke="rgba(122,162,255,.7)" stroke-width="2" stroke-linecap="round"/></svg>
+          </div>
+          <div style="flex:1;border-radius:14px;border:2px solid rgba(255,107,138,.5);background:rgba(255,107,138,.08);padding:14px;text-align:center;">
+            <div style="display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:9px;background:rgba(255,107,138,.22);border:1px solid rgba(255,107,138,.5);font-weight:950;font-size:15px;margin-bottom:6px;">4</div>
+            <div style="font-weight:950;font-size:16px;margin-bottom:3px;">検証実施</div>
+            <div style="color:var(--muted);font-size:12px;line-height:1.45;">客観的資料で<br>仮説を裏取り</div>
+          </div>
+        </div>
+
+        <div class="hr"></div>
+
+        <div class="grid2" style="gap:10px;">
+          <div style="border-radius:12px;border:1px solid rgba(42,53,99,.85);background:rgba(11,16,32,.55);padding:12px;">
+            <p style="margin:0;font-weight:950;font-size:14px;margin-bottom:4px;">スキル（縦・横の論理）との関係</p>
+            <p style="margin:0;color:var(--muted);font-size:13px;line-height:1.65;">
+              各ステップの中で縦・横の論理を駆使する。<br>
+              <span class="accent">縦</span>：各ステップの因果を精緻にする。<br>
+              <span class="accent2">横</span>：論点・仮説の網羅性を担保する。
+            </p>
+          </div>
+          <div style="border-radius:12px;border:1px solid rgba(42,53,99,.85);background:rgba(11,16,32,.55);padding:12px;">
+            <p style="margin:0;font-weight:950;font-size:14px;margin-bottom:4px;">最終ゴール</p>
+            <p style="margin:0;font-size:20px;font-weight:900;line-height:1.3;">
+              <span class="accent2">「○○なのでAがいいと思います」</span>
+            </p>
+            <p style="margin:4px 0 0 0;color:var(--muted);font-size:13px;line-height:1.6;">
+              根拠つきで自信を持って言い切れる状態が、提案の完成形。
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer">
+        <div class="hint">仮説検証の全体像</div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div class="progress"><div class="bar"></div></div>
+          <div class="page">10 / 15</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 11 ステップ1 目的 ====== -->
+    <section class="slide">
+      <div class="topbar">
+        <div>
+          <h2 class="title" style="font-size:30px;">ステップ1 目的：意思判断を求めるコミュニケーション</h2>
+          <p class="subtitle">目的の明確化＝（1）議論のスタンス（2）相手の要望</p>
+        </div>
+        <div class="badge"><span class="kbd">&larr;/&rarr;</span></div>
+      </div>
+
+      <div class="grid2">
+        <div class="card">
+          <h3>（1）議論のスタンス</h3>
+          <p>
+            仕事上の報告・提案は、<span class="accent">相当な確率で「相手の意思判断を求めている」</span>もの。<br>
+            この点はいくら強調しても足りない。
+          </p>
+          <div class="hr"></div>
+          <p class="bigQuote" style="font-size:22px;">
+            「A or B どっち？」ではなく、<br>
+            <span class="accent2">「○○なのでAがいいと思う」</span>まで必ずセット。
+          </p>
+          <div class="callout callout-danger" style="margin-top:8px;">
+            <p style="font-size:12.5px;">
+              <span class="danger">「なんとなくの報告」「聞いてほしいだけのコミュニケーション」は原則として不適当。</span><br>
+              もしそうしたい場合は「今回は判断を仰ぎたいのではなく共有です」と明示しないと、聞き手にとって非常に不明瞭になる。
+            </p>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>（2）相手の要望（アナログの世界）</h3>
+          <p>
+            提案は相手ありき。<span class="accent2">相手が気にしていること／望んでいること</span>の聴取なしには成立しない。<br>
+            だからヒアリングは極めて重要。
+          </p>
+          <div class="hr"></div>
+          <p class="mini">
+            例：相続の売上拡大で「広告集客」を論理的に提案しても、相手の関心が「紹介メイン」なら、まず「紹介ではなく広告をすべき」から提案が必要。
+          </p>
+          <div class="callout callout-accent2" style="margin-top:8px;">
+            <p style="font-size:12.5px;">
+              <span class="accent2">相手の考えや意向をしっかり聞き、理解しないことには、すべての提案が外れるリスクがある。</span>この自覚が重要。<br>
+              論理性がすべてではない。真摯に話を聞く、理解しようとするスタンスも必須。
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer">
+        <div class="hint">第3：4ステップ（1 目的）</div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div class="progress"><div class="bar"></div></div>
+          <div class="page">11 / 15</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 12 ステップ2 論点 ====== -->
+    <section class="slide">
+      <div class="topbar">
+        <div>
+          <h2 class="title" style="font-size:30px;">ステップ2 論点：判断を左右する検討事項</h2>
+          <p class="subtitle">論点＝意思判断に影響を及ぼす判断項目（検討結果に違いを及ぼす項目）</p>
+        </div>
+        <div class="badge"><span class="kbd">&larr;/&rarr;</span></div>
+      </div>
+
+      <div class="card" style="margin-bottom:12px;">
+        <div class="arrowRow">
+          <div class="node"><div class="n">目的</div><div class="v">相手の意思判断</div></div>
+          <div class="arr"></div>
+          <div class="node"><div class="n">論点</div><div class="v">判断項目の特定</div></div>
+          <div class="arr"></div>
+          <div class="node"><div class="n">例</div><div class="v">広告か紹介か</div></div>
+        </div>
+      </div>
+
+      <div class="grid2" style="gap:12px;">
+        <div class="card">
+          <h3 style="font-size:20px;">論点を外す典型（2つ）</h3>
+          <div style="margin-top:8px;">
+            <div style="border-radius:12px;border:1px solid rgba(255,107,138,.35);background:rgba(255,107,138,.05);padding:12px;margin-bottom:8px;">
+              <p style="margin:0;font-weight:850;font-size:15px;"><span class="danger">&not;</span> 相手の要望の組み違い</p>
+              <p style="margin:4px 0 0;color:var(--muted);font-size:14px;line-height:1.6;">ヒアリング不足、理解不足、業界知識不足により、そもそも相手の求めるものを誤認している</p>
+            </div>
+            <div style="border-radius:12px;border:1px solid rgba(255,184,107,.35);background:rgba(255,184,107,.05);padding:12px;">
+              <p style="margin:0;font-weight:850;font-size:15px;"><span class="warn">&not;</span> 具体的な判断項目を出せていない</p>
+              <p style="margin:4px 0 0;color:var(--muted);font-size:14px;line-height:1.6;">＝横の論理不足。検討すべき項目が漏れており、提案の土台が不十分</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 style="font-size:20px;">例（不動産仲介）</h3>
+          <p style="font-size:15px;line-height:1.7;margin-top:8px;">
+            「通勤時間短縮で引越し」を希望する顧客への提案。<br><br>
+            電車の<span class="accent">乗車時間</span>だけを検討していないか？<br>
+            <span class="accent2">駅での待機時間（電車の本数）</span>、<span class="accent2">駅までの徒歩距離</span>なども論点になり得る。
+          </p>
+          <div class="hr"></div>
+          <p style="margin:0;color:var(--muted);font-size:14px;line-height:1.6;">
+            提案相手を洞察し、論点をもれなく検討する必要がある。
+          </p>
+        </div>
+      </div>
+
+      <div class="footer">
+        <div class="hint">第3：4ステップ（2 論点）</div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div class="progress"><div class="bar"></div></div>
+          <div class="page">12 / 15</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 13 ステップ3-4 仮説構築＋検証 ====== -->
+    <section class="slide">
+      <div class="topbar">
+        <div>
+          <h2 class="title" style="font-size:30px;">ステップ3-4 仮説構築 &rarr; 検証実施</h2>
+          <p class="subtitle">仮説＝論点に対する、一定の根拠を伴う「仮の答え」</p>
+        </div>
+        <div class="badge"><span class="kbd">&larr;/&rarr;</span></div>
+      </div>
+
+      <div class="grid2">
+        <div class="card">
+          <h3>（3）仮説構築：相手の思考負担を減らす</h3>
+          <p>
+            仮説がないと、論点に対する回答候補をすべて検討し、相手に選ばせることになる。<br>
+            それは効率が悪く、<span class="accent">考える手間を相手に投げている</span>。
+          </p>
+          <div class="hr"></div>
+          <p class="mini">
+            例：通勤時間短縮なら「乗車時間／乗換回数／駅徒歩／本数」等から、短縮確率の高い物件を数件提示する方が良い。
+          </p>
+          <div class="callout callout-warn" style="margin-top:8px;">
+            <p>
+              <span class="warn">知識・インプットが仮説の精度を決める</span><br>
+              営業研修とも重複するが、筋の良い仮説構築には知識・インプットが欠かせない。<br>
+              <span style="font-weight:850;">顧客の知識、業界の知識、商品知識</span>など含め、知識の量と仮説の精度には強い相関関係がある。<br>
+              若手ほど「仮説構築のため」と意識して情報を集めることが重要。
+            </p>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>（4）検証実施：客観的資料で裏取り</h3>
+          <p>
+            客観的資料を基に、自己の仮説を検証していく。<br>
+            ここでは情報の<span class="accent2">質</span>が重要（定量データ／第三者データ等）。
+          </p>
+          <div class="hr"></div>
+
+          <div class="arrowRow">
+            <div class="node"><div class="n">論点</div><div class="v">判断項目</div></div>
+            <div class="arr"></div>
+            <div class="node"><div class="n">仮説</div><div class="v">仮の答え</div></div>
+            <div class="arr"></div>
+            <div class="node"><div class="n">検証</div><div class="v">客観データ</div></div>
+          </div>
+
+          <div class="hr"></div>
+
+          <div class="callout callout-accent2">
+            <p>
+              仮説構築には情報の<span class="warn">量</span>、検証には情報の<span class="accent2">質</span>。<br>
+              この2つは別の力だが、どちらも不可欠。
+            </p>
+          </div>
+
+          <div class="hr"></div>
+          <p class="bigQuote" style="font-size:22px;">
+            最終形は、<span class="accent2">「○○なのでA」</span>と言い切れる状態。
+          </p>
+        </div>
+      </div>
+
+      <div class="footer">
+        <div class="hint">第3：4ステップ（3 仮説構築 / 4 検証実施）</div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div class="progress"><div class="bar"></div></div>
+          <div class="page">13 / 15</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 14 まとめ（1）====== -->
+    <section class="slide">
+      <div class="topbar">
+        <div>
+          <h2 class="title" style="font-size:30px;">まとめ（1）提案力の全体構造</h2>
+          <p class="subtitle">本研修で学んだことの振り返り</p>
+        </div>
+        <div class="badge"><span class="kbd">&larr;/&rarr;</span></div>
+      </div>
+
+      <div class="card">
+        <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:0;align-items:stretch;">
+          <div style="border-radius:16px;border:2px solid rgba(122,162,255,.45);background:rgba(122,162,255,.06);padding:14px;">
+            <p style="margin:0;font-weight:950;font-size:17px;text-align:center;margin-bottom:10px;"><span class="accent">考える力</span>（本研修の主軸）</p>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px;">
+              <div style="border-radius:10px;border:1px solid rgba(122,162,255,.35);background:rgba(11,16,32,.5);padding:8px;text-align:center;">
+                <p style="margin:0;font-weight:950;font-size:13px;"><span class="accent">縦の論理</span></p>
+                <p style="margin:3px 0 0;color:var(--muted);font-size:11px;">因果関係</p>
+                <p style="margin:2px 0 0;color:var(--muted);font-size:11px;">「本当にそうか？」</p>
+              </div>
+              <div style="border-radius:10px;border:1px solid rgba(110,231,183,.35);background:rgba(11,16,32,.5);padding:8px;text-align:center;">
+                <p style="margin:0;font-weight:950;font-size:13px;"><span class="accent2">横の論理</span></p>
+                <p style="margin:3px 0 0;color:var(--muted);font-size:11px;">網羅（MECE）</p>
+                <p style="margin:2px 0 0;color:var(--muted);font-size:11px;">「それだけか？」</p>
+              </div>
+            </div>
+
+            <div style="height:1px;background:rgba(42,53,99,.75);margin:8px 0;"></div>
+
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:5px;">
+              <div style="border-radius:8px;border:1px solid rgba(122,162,255,.3);background:rgba(11,16,32,.5);padding:6px;text-align:center;">
+                <p style="margin:0;font-weight:950;font-size:11px;">1. 目的</p>
+              </div>
+              <div style="border-radius:8px;border:1px solid rgba(110,231,183,.3);background:rgba(11,16,32,.5);padding:6px;text-align:center;">
+                <p style="margin:0;font-weight:950;font-size:11px;">2. 論点</p>
+              </div>
+              <div style="border-radius:8px;border:1px solid rgba(255,184,107,.3);background:rgba(11,16,32,.5);padding:6px;text-align:center;">
+                <p style="margin:0;font-weight:950;font-size:11px;">3. 仮説</p>
+              </div>
+              <div style="border-radius:8px;border:1px solid rgba(255,107,138,.3);background:rgba(11,16,32,.5);padding:6px;text-align:center;">
+                <p style="margin:0;font-weight:950;font-size:11px;">4. 検証</p>
+              </div>
+            </div>
+          </div>
+
+          <div style="display:flex;align-items:center;justify-content:center;padding:0 12px;">
+            <span style="font-size:30px;font-weight:900;color:var(--muted);">&plus;</span>
+          </div>
+
+          <div style="border-radius:16px;border:2px solid rgba(110,231,183,.45);background:rgba(110,231,183,.06);padding:14px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;">
+            <p style="margin:0;font-weight:950;font-size:17px;margin-bottom:8px;"><span class="accent2">伝える力</span></p>
+            <p style="margin:0;color:var(--muted);font-size:13px;line-height:1.6;">
+              考えた内容を<br>
+              相手に伝わる形で<br>
+              整理・表現する力
+            </p>
+            <div style="height:1px;background:rgba(42,53,99,.75);margin:10px 0;width:100%;"></div>
+            <p style="margin:0;color:var(--muted);font-size:12px;line-height:1.5;">
+              ※本研修の前提：<br>
+              "下手"の多くは伝え方以前に<br>
+              <span class="accent">考える力の不足</span>に起因する
+            </p>
+          </div>
+        </div>
+
+        <div style="height:1px;background:rgba(42,53,99,.75);margin:12px 0;"></div>
+
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div style="flex:1;text-align:center;">
+            <p style="margin:0;color:var(--muted);font-size:13px;">上記すべてを統合</p>
+          </div>
+          <div class="arr"></div>
+          <div style="border-radius:12px;border:2px solid rgba(110,231,183,.6);background:rgba(110,231,183,.1);padding:12px 20px;text-align:center;">
+            <p style="margin:0;font-weight:950;font-size:18px;"><span class="accent2">「○○なのでAがいいと思います」</span></p>
+            <p style="margin:3px 0 0;color:var(--muted);font-size:12px;">根拠つきで言い切れる状態＝提案の完成形</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer">
+        <div class="hint">まとめ（1）：提案力の全体構造</div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div class="progress"><div class="bar"></div></div>
+          <div class="page">14 / 15</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 15 まとめ（2）====== -->
+    <section class="slide">
+      <div class="topbar">
+        <div>
+          <h2 class="title" style="font-size:30px;">まとめ（2）明日から使える実践チェックリスト</h2>
+          <p class="subtitle">提案を通すために、毎回確認するポイント</p>
+        </div>
+        <div class="badge"><span class="kbd">&larr;/&rarr;</span></div>
+      </div>
+
+      <div class="grid2">
+        <div class="card">
+          <h3 style="font-size:17px;">提案前の自己チェック</h3>
+          <ul class="checklist">
+            <li>
+              <span class="ck"></span>
+              <span><span class="accent">目的</span>は明確か？ 相手に何の意思判断を求めているのか？</span>
+            </li>
+            <li>
+              <span class="ck"></span>
+              <span><span class="accent2">論点</span>は網羅されているか？ 相手が重視するポイントを把握しているか？</span>
+            </li>
+            <li>
+              <span class="ck"></span>
+              <span><span class="warn">仮説</span>を持っているか？ 「AorBどっち？」ではなく「○○なのでA」になっているか？</span>
+            </li>
+            <li>
+              <span class="ck"></span>
+              <span><span class="danger">根拠</span>は客観的か？ 定量データや第三者資料で裏取りしているか？</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3 style="font-size:17px;">論理チェック</h3>
+          <ul class="checklist">
+            <li>
+              <span class="ck"></span>
+              <span><span class="accent">縦</span>：「本当にそうか？」と聞かれて答えられるか？ 中間項を説明できるか？</span>
+            </li>
+            <li>
+              <span class="ck"></span>
+              <span><span class="accent">縦</span>：隠れた前提はないか？ 異質なものを混ぜていないか？ 偶然を必然にしていないか？</span>
+            </li>
+            <li>
+              <span class="ck"></span>
+              <span><span class="accent2">横</span>：「それだけか？」と聞かれて答えられるか？ 検討項目に漏れ・重複はないか？</span>
+            </li>
+            <li>
+              <span class="ck"></span>
+              <span><span class="accent2">横</span>：いまの文脈で検討すべき観点だけに絞れているか？</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div style="margin-top:12px;">
+        <div class="card" style="text-align:center;padding:16px;">
+          <p style="margin:0;font-size:22px;font-weight:900;line-height:1.4;">
+            提案は<span class="accent">考える力</span>が先、<span class="accent2">伝える力</span>はその上に乗る。<br>
+            <span style="font-size:16px;font-weight:700;color:var(--muted);">思考の解像度を上げ、相手の思考負担を減らすことが、提案を通す最短の道。</span>
+          </p>
+        </div>
+      </div>
+
+      <div class="footer">
+        <div class="hint">まとめ（2）：実践チェックリスト</div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div class="progress"><div class="bar"></div></div>
+          <div class="page">15 / 15</div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <script>
+    const slides = Array.from(document.querySelectorAll("section.slide"));
+    let idx = 0;
+
+    function setActive(i){
+      idx = Math.max(0, Math.min(slides.length-1, i));
+      slides.forEach((s,k)=>s.classList.toggle("active", k===idx));
+
+      const pct = ((idx+1)/slides.length)*100;
+      document.querySelectorAll(".bar").forEach(b=>b.style.width = pct + "%");
+      document.querySelectorAll(".page").forEach(el=>{
+        el.textContent = `${idx+1} / ${slides.length}`;
+      });
+    }
+
+    function next(){ setActive(idx+1); }
+    function prev(){ setActive(idx-1); }
+
+    window.addEventListener("keydown",(e)=>{
+      const k = e.key;
+      if(k==="ArrowRight" || k===" " || k==="PageDown"){ e.preventDefault(); next(); }
+      if(k==="ArrowLeft" || k==="PageUp"){ e.preventDefault(); prev(); }
+
+      if(k==="Escape"){
+        e.preventDefault();
+        document.body.classList.toggle("overview");
+        const isOv = document.body.classList.contains("overview");
+        if(isOv){
+          document.getElementById("deck").style.height="auto";
+          slides.forEach((s)=>{
+            s.style.position="relative";
+            s.style.inset="auto";
+            s.style.display="block";
+            s.style.height="auto";
+            s.style.margin="18px";
+            s.style.borderRadius="20px";
+            s.style.border="1px solid rgba(185,196,230,.18)";
+            s.style.background="rgba(0,0,0,.08)";
+            s.style.overflow="visible";
+          });
+        }else{
+          document.getElementById("deck").style.height="100vh";
+          slides.forEach((s,k)=>{
+            s.style.position="";
+            s.style.inset="";
+            s.style.height="";
+            s.style.margin="";
+            s.style.borderRadius="";
+            s.style.border="";
+            s.style.background="";
+            s.style.overflow="";
+            s.style.display = (k===idx) ? "block" : "none";
+          });
+        }
+      }
+    });
+
+    window.addEventListener("click",(e)=>{
+      if(document.body.classList.contains("overview")) return;
+      if(window.getSelection && String(window.getSelection()).length > 0) return;
+      next();
+    });
+
+    setActive(0);
+  </script>
+</body>
+</html>
