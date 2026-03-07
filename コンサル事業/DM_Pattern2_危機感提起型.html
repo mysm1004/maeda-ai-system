@@ -1,0 +1,1143 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DM Pattern 2 — 危機感提起型（White × Red）</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700;900&family=Noto+Serif+JP:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+  /* ========================================
+     RESET & BASE
+     ======================================== */
+  *, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  :root {
+    --red-deep: #9b1b30;
+    --red-primary: #c41e3a;
+    --red-bright: #d93251;
+    --red-light: #f2d4d9;
+    --red-pale: #faf0f2;
+    --red-ultra-pale: #fdf8f9;
+    --black: #1a1a1a;
+    --gray-900: #2d2d2d;
+    --gray-700: #4a4a4a;
+    --gray-500: #767676;
+    --gray-300: #b0b0b0;
+    --gray-100: #f0f0f0;
+    --white: #ffffff;
+  }
+
+  @page {
+    size: A4;
+    margin: 0;
+  }
+
+  html {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+
+  body {
+    font-family: 'Noto Sans JP', 'Yu Gothic', 'Hiragino Kaku Gothic ProN', sans-serif;
+    color: var(--black);
+    background: #e8e8e8;
+    line-height: 1.5;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* ========================================
+     PAGE STRUCTURE
+     ======================================== */
+  .page {
+    width: 210mm;
+    height: 297mm;
+    background: var(--white);
+    margin: 10mm auto;
+    position: relative;
+    overflow: hidden;
+    page-break-after: always;
+    box-shadow: 0 4px 40px rgba(0,0,0,0.15);
+  }
+
+  .page:last-child {
+    page-break-after: avoid;
+  }
+
+  /* ========================================
+     PAGE 1 — FRONT (URGENCY LEAD)
+     ======================================== */
+
+  /* --- Top thin red line --- */
+  .p1-top-line {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3mm;
+    background: var(--red-primary);
+  }
+
+  /* --- Diagonal red accent stripe (top-right) --- */
+  .p1-diagonal {
+    position: absolute;
+    top: -30mm;
+    right: -20mm;
+    width: 80mm;
+    height: 160mm;
+    background: var(--red-primary);
+    transform: rotate(25deg);
+    opacity: 0.06;
+    z-index: 0;
+  }
+
+  /* --- Destination block --- */
+  .p1-destination {
+    position: absolute;
+    top: 10mm;
+    right: 12mm;
+    text-align: right;
+    z-index: 2;
+  }
+
+  .p1-destination .dest-label {
+    font-size: 6.5pt;
+    color: var(--gray-500);
+    letter-spacing: 0.08em;
+    margin-bottom: 2mm;
+  }
+
+  .p1-destination .dest-firm {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 10pt;
+    font-weight: 600;
+    color: var(--black);
+    margin-bottom: 1mm;
+  }
+
+  .p1-destination .dest-name {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 12pt;
+    font-weight: 700;
+    color: var(--black);
+  }
+
+  .p1-destination .dest-name span {
+    font-size: 9pt;
+    font-weight: 400;
+    color: var(--gray-500);
+    margin-left: 1mm;
+  }
+
+  /* --- Category tag --- */
+  .p1-tag {
+    position: absolute;
+    top: 12mm;
+    left: 12mm;
+    z-index: 2;
+  }
+
+  .p1-tag-inner {
+    display: inline-block;
+    background: var(--red-primary);
+    color: var(--white);
+    font-size: 7pt;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    padding: 1.8mm 4mm;
+  }
+
+  /* --- Main headline area --- */
+  .p1-headline-area {
+    position: absolute;
+    top: 32mm;
+    left: 0;
+    right: 0;
+    padding: 0 14mm;
+    z-index: 2;
+  }
+
+  .p1-headline-lead {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 11pt;
+    font-weight: 500;
+    color: var(--red-deep);
+    letter-spacing: 0.06em;
+    line-height: 1.6;
+    margin-bottom: 5mm;
+    padding-left: 4mm;
+    border-left: 2.5px solid var(--red-primary);
+  }
+
+  .p1-headline-main {
+    font-family: 'Noto Serif JP', serif;
+    font-weight: 900;
+    font-size: 28pt;
+    line-height: 1.45;
+    color: var(--black);
+    letter-spacing: -0.02em;
+    margin-bottom: 3mm;
+  }
+
+  .p1-headline-main .hl-red {
+    color: var(--red-primary);
+  }
+
+  .p1-headline-main .hl-underline {
+    background: linear-gradient(transparent 70%, var(--red-light) 70%);
+    padding-bottom: 0.5mm;
+  }
+
+  .p1-headline-sub {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 13pt;
+    font-weight: 600;
+    color: var(--gray-700);
+    line-height: 1.7;
+    letter-spacing: 0.03em;
+  }
+
+  /* --- Red divider --- */
+  .p1-divider {
+    position: absolute;
+    top: 100mm;
+    left: 14mm;
+    right: 14mm;
+    height: 0.3mm;
+    background: linear-gradient(90deg, var(--red-primary), var(--red-light), transparent);
+    z-index: 2;
+  }
+
+  /* --- Pain points section --- */
+  .p1-pain-section {
+    position: absolute;
+    top: 106mm;
+    left: 14mm;
+    right: 14mm;
+    z-index: 2;
+  }
+
+  .p1-pain-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5mm;
+  }
+
+  .p1-pain-header-line {
+    flex: 0 0 5mm;
+    height: 0.5mm;
+    background: var(--red-primary);
+    margin-right: 3mm;
+  }
+
+  .p1-pain-header-text {
+    font-size: 8pt;
+    font-weight: 700;
+    color: var(--red-primary);
+    letter-spacing: 0.2em;
+  }
+
+  .p1-pain-list {
+    list-style: none;
+  }
+
+  .p1-pain-list li {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 3.5mm;
+    line-height: 1.65;
+  }
+
+  .p1-pain-check {
+    flex-shrink: 0;
+    width: 5mm;
+    height: 5mm;
+    border: 0.5mm solid var(--red-primary);
+    margin-right: 3mm;
+    margin-top: 0.5mm;
+    position: relative;
+  }
+
+  .p1-pain-check::after {
+    content: '';
+    position: absolute;
+    top: 0.5mm;
+    left: 1.2mm;
+    width: 1.8mm;
+    height: 3mm;
+    border-right: 0.55mm solid var(--red-primary);
+    border-bottom: 0.55mm solid var(--red-primary);
+    transform: rotate(40deg);
+  }
+
+  .p1-pain-text {
+    font-size: 9pt;
+    font-weight: 500;
+    color: var(--gray-900);
+    flex: 1;
+  }
+
+  .p1-pain-cta {
+    margin-top: 5mm;
+    font-family: 'Noto Serif JP', serif;
+    font-size: 10pt;
+    font-weight: 700;
+    color: var(--red-deep);
+    text-align: center;
+    letter-spacing: 0.08em;
+    line-height: 1.7;
+  }
+
+  /* --- Numbers section --- */
+  .p1-numbers-section {
+    position: absolute;
+    top: 192mm;
+    left: 0;
+    right: 0;
+    z-index: 2;
+  }
+
+  .p1-numbers-bg {
+    background: var(--red-primary);
+    padding: 7mm 14mm 8mm;
+  }
+
+  .p1-numbers-label {
+    font-size: 7pt;
+    font-weight: 700;
+    color: rgba(255,255,255,0.7);
+    letter-spacing: 0.2em;
+    text-align: center;
+    margin-bottom: 5mm;
+  }
+
+  .p1-numbers-grid {
+    display: flex;
+    justify-content: center;
+    gap: 0;
+  }
+
+  .p1-number-card {
+    flex: 1;
+    text-align: center;
+    position: relative;
+  }
+
+  .p1-number-card:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 15%;
+    height: 70%;
+    width: 0.3mm;
+    background: rgba(255,255,255,0.25);
+  }
+
+  .p1-number-value {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 26pt;
+    font-weight: 900;
+    color: var(--white);
+    line-height: 1.1;
+  }
+
+  .p1-number-unit {
+    font-size: 10pt;
+    font-weight: 400;
+  }
+
+  .p1-number-desc {
+    font-size: 6.5pt;
+    font-weight: 400;
+    color: rgba(255,255,255,0.8);
+    margin-top: 2mm;
+    line-height: 1.4;
+    letter-spacing: 0.04em;
+  }
+
+  /* --- Profile section --- */
+  .p1-profile-section {
+    position: absolute;
+    top: 236mm;
+    left: 14mm;
+    right: 14mm;
+    z-index: 2;
+  }
+
+  .p1-profile-inner {
+    display: flex;
+    gap: 5mm;
+    align-items: flex-start;
+  }
+
+  .p1-profile-photo {
+    flex-shrink: 0;
+    width: 22mm;
+    height: 28mm;
+    border: 0.3mm solid var(--gray-300);
+    overflow: hidden;
+  }
+
+  .p1-profile-photo img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .p1-profile-info {
+    flex: 1;
+  }
+
+  .p1-profile-name {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 13pt;
+    font-weight: 700;
+    color: var(--black);
+    margin-bottom: 1mm;
+  }
+
+  .p1-profile-title {
+    font-size: 7.5pt;
+    font-weight: 500;
+    color: var(--red-primary);
+    margin-bottom: 3mm;
+    letter-spacing: 0.04em;
+  }
+
+  .p1-profile-bio {
+    font-size: 7pt;
+    font-weight: 400;
+    color: var(--gray-700);
+    line-height: 1.75;
+    letter-spacing: 0.02em;
+  }
+
+  /* --- Footer bar --- */
+  .p1-footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 8mm;
+    background: var(--black);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6mm;
+    z-index: 2;
+  }
+
+  .p1-footer-text {
+    font-size: 6pt;
+    color: rgba(255,255,255,0.6);
+    letter-spacing: 0.08em;
+  }
+
+  .p1-footer-dot {
+    width: 1mm;
+    height: 1mm;
+    border-radius: 50%;
+    background: var(--red-primary);
+  }
+
+  /* ========================================
+     PAGE 2 — BACK (SOLUTION & CTA)
+     ======================================== */
+
+  /* --- Top red band --- */
+  .p2-top-band {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 25mm;
+    background: var(--red-primary);
+    z-index: 1;
+  }
+
+  .p2-top-band-text {
+    position: absolute;
+    top: 7mm;
+    left: 14mm;
+    right: 14mm;
+    z-index: 2;
+  }
+
+  .p2-top-band-label {
+    font-size: 6.5pt;
+    font-weight: 700;
+    color: rgba(255,255,255,0.65);
+    letter-spacing: 0.25em;
+    margin-bottom: 2mm;
+  }
+
+  .p2-top-band-headline {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 16pt;
+    font-weight: 700;
+    color: var(--white);
+    letter-spacing: 0.04em;
+  }
+
+  /* --- Services section --- */
+  .p2-services {
+    position: absolute;
+    top: 30mm;
+    left: 14mm;
+    right: 14mm;
+    z-index: 2;
+  }
+
+  .p2-services-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3.5mm;
+  }
+
+  .p2-service-card {
+    border: 0.3mm solid var(--gray-100);
+    padding: 4.5mm 4.5mm 4mm;
+    position: relative;
+    background: var(--white);
+  }
+
+  .p2-service-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1.2mm;
+    background: var(--red-primary);
+  }
+
+  .p2-service-num {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 20pt;
+    font-weight: 900;
+    color: var(--red-pale);
+    line-height: 1;
+    margin-bottom: 1mm;
+    letter-spacing: -0.03em;
+  }
+
+  .p2-service-title {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 9.5pt;
+    font-weight: 700;
+    color: var(--black);
+    line-height: 1.45;
+    margin-bottom: 2.5mm;
+  }
+
+  .p2-service-desc {
+    font-size: 6.5pt;
+    font-weight: 400;
+    color: var(--gray-700);
+    line-height: 1.75;
+    letter-spacing: 0.01em;
+  }
+
+  /* --- Target note --- */
+  .p2-target {
+    position: absolute;
+    top: 112mm;
+    left: 14mm;
+    right: 14mm;
+    z-index: 2;
+    padding: 3mm 4mm;
+    background: var(--gray-100);
+    border-left: 1.5mm solid var(--gray-300);
+  }
+
+  .p2-target-text {
+    font-size: 6.5pt;
+    color: var(--gray-700);
+    line-height: 1.65;
+  }
+
+  .p2-target-text strong {
+    font-weight: 600;
+    color: var(--gray-900);
+  }
+
+  /* --- Why section --- */
+  .p2-why-section {
+    position: absolute;
+    top: 125mm;
+    left: 14mm;
+    right: 14mm;
+    z-index: 2;
+  }
+
+  .p2-why-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 4.5mm;
+  }
+
+  .p2-why-header-line {
+    flex: 0 0 5mm;
+    height: 0.5mm;
+    background: var(--red-primary);
+    margin-right: 3mm;
+  }
+
+  .p2-why-header-text {
+    font-size: 7.5pt;
+    font-weight: 700;
+    color: var(--red-primary);
+    letter-spacing: 0.15em;
+  }
+
+  .p2-why-grid {
+    display: flex;
+    gap: 4mm;
+  }
+
+  .p2-why-card {
+    flex: 1;
+    text-align: center;
+    padding: 4mm 3mm;
+    border: 0.3mm solid var(--red-light);
+    background: var(--red-ultra-pale);
+  }
+
+  .p2-why-icon {
+    width: 9mm;
+    height: 9mm;
+    margin: 0 auto 2.5mm;
+    border-radius: 50%;
+    background: var(--red-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .p2-why-icon svg {
+    width: 4.5mm;
+    height: 4.5mm;
+    fill: var(--white);
+  }
+
+  .p2-why-title {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 8.5pt;
+    font-weight: 700;
+    color: var(--red-deep);
+    margin-bottom: 2mm;
+    line-height: 1.4;
+  }
+
+  .p2-why-desc {
+    font-size: 6.5pt;
+    color: var(--gray-700);
+    line-height: 1.7;
+  }
+
+  /* --- Exclusivity banner --- */
+  .p2-exclusivity {
+    position: absolute;
+    top: 172mm;
+    left: 14mm;
+    right: 14mm;
+    z-index: 2;
+  }
+
+  .p2-exclusivity-inner {
+    background: var(--black);
+    padding: 4mm 6mm;
+    display: flex;
+    align-items: center;
+    gap: 4mm;
+  }
+
+  .p2-exclusivity-badge {
+    flex-shrink: 0;
+    width: 14mm;
+    height: 14mm;
+    border: 0.5mm solid var(--red-primary);
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .p2-exclusivity-badge-top {
+    font-size: 5pt;
+    color: var(--red-primary);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    line-height: 1;
+  }
+
+  .p2-exclusivity-badge-num {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 14pt;
+    font-weight: 900;
+    color: var(--white);
+    line-height: 1.1;
+  }
+
+  .p2-exclusivity-text {
+    flex: 1;
+  }
+
+  .p2-exclusivity-title {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 11pt;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 1.5mm;
+    letter-spacing: 0.04em;
+  }
+
+  .p2-exclusivity-desc {
+    font-size: 6.5pt;
+    color: rgba(255,255,255,0.65);
+    line-height: 1.6;
+  }
+
+  /* --- CTA section --- */
+  .p2-cta-section {
+    position: absolute;
+    top: 195mm;
+    left: 0;
+    right: 0;
+    z-index: 2;
+  }
+
+  .p2-cta-bg {
+    background: var(--red-primary);
+    margin: 0 14mm;
+    padding: 6mm 6mm 5mm;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .p2-cta-bg::before {
+    content: '';
+    position: absolute;
+    top: -15mm;
+    right: -10mm;
+    width: 40mm;
+    height: 40mm;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.06);
+  }
+
+  .p2-cta-label {
+    font-size: 7pt;
+    font-weight: 700;
+    color: rgba(255,255,255,0.7);
+    letter-spacing: 0.2em;
+    margin-bottom: 3mm;
+  }
+
+  .p2-cta-headline {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 17pt;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 2mm;
+    letter-spacing: 0.02em;
+    line-height: 1.4;
+    position: relative;
+  }
+
+  .p2-cta-note {
+    font-size: 7.5pt;
+    color: rgba(255,255,255,0.85);
+    margin-bottom: 5mm;
+    line-height: 1.5;
+  }
+
+  .p2-cta-contacts {
+    display: flex;
+    justify-content: center;
+    gap: 8mm;
+    margin-bottom: 3.5mm;
+  }
+
+  .p2-cta-contact-item {
+    display: flex;
+    align-items: center;
+    gap: 2mm;
+  }
+
+  .p2-cta-contact-icon {
+    width: 5mm;
+    height: 5mm;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .p2-cta-contact-icon svg {
+    width: 3mm;
+    height: 3mm;
+    fill: var(--white);
+  }
+
+  .p2-cta-contact-text {
+    font-size: 8.5pt;
+    font-weight: 600;
+    color: var(--white);
+    letter-spacing: 0.02em;
+  }
+
+  .p2-cta-method {
+    font-size: 6.5pt;
+    color: rgba(255,255,255,0.65);
+    letter-spacing: 0.04em;
+  }
+
+  /* --- Footer section --- */
+  .p2-footer-section {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 2;
+  }
+
+  .p2-footer-main {
+    padding: 5mm 14mm 4mm;
+    border-top: 0.3mm solid var(--gray-100);
+  }
+
+  .p2-footer-firm {
+    text-align: center;
+    margin-bottom: 2mm;
+  }
+
+  .p2-footer-firm-name {
+    font-size: 8pt;
+    font-weight: 600;
+    color: var(--gray-900);
+    letter-spacing: 0.06em;
+  }
+
+  .p2-footer-firm-rep {
+    font-size: 7pt;
+    color: var(--gray-500);
+    margin-top: 0.5mm;
+  }
+
+  .p2-footer-address {
+    text-align: center;
+    font-size: 6.5pt;
+    color: var(--gray-500);
+    line-height: 1.6;
+    letter-spacing: 0.02em;
+  }
+
+  .p2-footer-bottom {
+    height: 3mm;
+    background: var(--red-primary);
+  }
+
+  /* ========================================
+     PRINT MEDIA
+     ======================================== */
+  @media print {
+    body {
+      margin: 0;
+      background: none;
+    }
+
+    .page {
+      margin: 0;
+      box-shadow: none;
+      overflow: visible;
+      page-break-inside: avoid;
+      break-after: page;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    .page:last-child {
+      break-after: avoid;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     PAGE 1 — FRONT: URGENCY / PROVOCATION
+     ============================================================ -->
+<div class="page" id="page1">
+
+  <!-- Top accent line -->
+  <div class="p1-top-line"></div>
+
+  <!-- Diagonal background accent -->
+  <div class="p1-diagonal"></div>
+
+  <!-- Tag -->
+  <div class="p1-tag">
+    <div class="p1-tag-inner">弁護士事務所経営者様へ</div>
+  </div>
+
+  <!-- Destination -->
+  <div class="p1-destination">
+    <div class="dest-label">CONFIDENTIAL</div>
+    <div class="dest-firm">弁護士法人　○○法律事務所</div>
+    <div class="dest-name">○○ ○○ <span>先生</span></div>
+  </div>
+
+  <!-- Headline area -->
+  <div class="p1-headline-area">
+    <div class="p1-headline-lead">弁護士事務所の7割が直面している現実 ——</div>
+    <h1 class="p1-headline-main">
+      その集客方法、<br>
+      あと<span class="hl-red hl-underline">何年</span>続けますか？
+    </h1>
+    <p class="p1-headline-sub">
+      紹介頼み・会食営業から脱却できない事務所が、<br>
+      静かに淘汰される時代が始まっています。
+    </p>
+  </div>
+
+  <!-- Divider -->
+  <div class="p1-divider"></div>
+
+  <!-- Pain points -->
+  <div class="p1-pain-section">
+    <div class="p1-pain-header">
+      <div class="p1-pain-header-line"></div>
+      <div class="p1-pain-header-text">こんなお悩みはありませんか</div>
+    </div>
+    <ul class="p1-pain-list">
+      <li>
+        <div class="p1-pain-check"></div>
+        <span class="p1-pain-text">売上をもう少し伸ばしたいが、具体的な方法がわからない</span>
+      </li>
+      <li>
+        <div class="p1-pain-check"></div>
+        <span class="p1-pain-text">WEB集客に興味はあるが、何から始めればよいかわからない</span>
+      </li>
+      <li>
+        <div class="p1-pain-check"></div>
+        <span class="p1-pain-text">広告代理店・業者への依頼は不安。非弁との関係も気になる</span>
+      </li>
+      <li>
+        <div class="p1-pain-check"></div>
+        <span class="p1-pain-text">事務員をもっと活用したいが、業務システム化・AI導入の進め方がわからない</span>
+      </li>
+      <li>
+        <div class="p1-pain-check"></div>
+        <span class="p1-pain-text">問い合わせはあるが、受任につながらないケースが多い</span>
+      </li>
+    </ul>
+    <p class="p1-pain-cta">
+      ひとつでも当てはまるなら、<br>裏面をご覧ください。
+    </p>
+  </div>
+
+  <!-- Numbers band -->
+  <div class="p1-numbers-section">
+    <div class="p1-numbers-bg">
+      <div class="p1-numbers-label">ALL RESULTS, NO INTRODUCTIONS</div>
+      <div class="p1-numbers-grid">
+        <div class="p1-number-card">
+          <div class="p1-number-value">6<span class="p1-number-unit">年</span></div>
+          <div class="p1-number-desc">即独開業からの<br>経営実績</div>
+        </div>
+        <div class="p1-number-card">
+          <div class="p1-number-value">9<span class="p1-number-unit">名</span></div>
+          <div class="p1-number-desc">所属弁護士数<br>（現在）</div>
+        </div>
+        <div class="p1-number-card">
+          <div class="p1-number-value">20<span class="p1-number-unit">名超</span></div>
+          <div class="p1-number-desc">スタッフ体制</div>
+        </div>
+        <div class="p1-number-card">
+          <div class="p1-number-value">0</div>
+          <div class="p1-number-desc">会食・紹介<br>一切なし</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Profile -->
+  <div class="p1-profile-section">
+    <div class="p1-profile-inner">
+      <div class="p1-profile-photo">
+        <img src="maeda.jpg" alt="前田 祥夢">
+      </div>
+      <div class="p1-profile-info">
+        <div class="p1-profile-name">前田 祥夢</div>
+        <div class="p1-profile-title">東京新橋法律事務所　代表弁護士</div>
+        <div class="p1-profile-bio">
+          弁護士1年目に東京・港区で即独開業。会食や紹介には一切頼らず、リスティング広告・SEO・MEO等を自社で設計・運用。東証プライム上場企業を含む法人顧客を獲得。リクルート出身。WEBサイト制作・システム開発も自ら実施。
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="p1-footer">
+    <span class="p1-footer-text">東京新橋法律事務所</span>
+    <span class="p1-footer-dot"></span>
+    <span class="p1-footer-text">tslaw.or.jp</span>
+  </div>
+
+</div>
+
+
+<!-- ============================================================
+     PAGE 2 — BACK: SOLUTION & CTA
+     ============================================================ -->
+<div class="page" id="page2">
+
+  <!-- Top red band -->
+  <div class="p2-top-band"></div>
+  <div class="p2-top-band-text">
+    <div class="p2-top-band-label">SOLUTION</div>
+    <div class="p2-top-band-headline">弁護士による、弁護士事務所のための経営支援</div>
+  </div>
+
+  <!-- Service cards -->
+  <div class="p2-services">
+    <div class="p2-services-grid">
+      <div class="p2-service-card">
+        <div class="p2-service-num">01</div>
+        <div class="p2-service-title">WEB・アナログ集客の設計</div>
+        <div class="p2-service-desc">
+          リスティング・SEO・MEO・SMS広告・郵送DMなど、貴事務所の取扱分野と予算に合った集客チャネルの選定と設計を行います。
+        </div>
+      </div>
+      <div class="p2-service-card">
+        <div class="p2-service-num">02</div>
+        <div class="p2-service-title">反響導線・受任工程の整備</div>
+        <div class="p2-service-desc">
+          問い合わせから受任までの各工程にKPIを設定。どこで機会損失が起きているかを可視化し、受任率を改善します。
+        </div>
+      </div>
+      <div class="p2-service-card">
+        <div class="p2-service-num">03</div>
+        <div class="p2-service-title">CRM・顧客関係の仕組み化</div>
+        <div class="p2-service-desc">
+          既存顧客・紹介者・見込み客との継続的な関係構築を仕組みとして設計。紹介増・再受任につなげます。
+        </div>
+      </div>
+      <div class="p2-service-card">
+        <div class="p2-service-num">04</div>
+        <div class="p2-service-title">スタッフ活用・業務システム化</div>
+        <div class="p2-service-desc">
+          事務員・パラリーガルの役割整理と業務標準化。AI活用による効率改善の具体的な導入支援を行います。
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Target note -->
+  <div class="p2-target">
+    <p class="p2-target-text">
+      <strong>対象分野：</strong>離婚・交通事故・相続・刑事・債務整理・一般企業法務等（高度ニッチ・特殊専門は対象外）
+    </p>
+  </div>
+
+  <!-- Why section -->
+  <div class="p2-why-section">
+    <div class="p2-why-header">
+      <div class="p2-why-header-line"></div>
+      <div class="p2-why-header-text">選ばれる理由</div>
+    </div>
+    <div class="p2-why-grid">
+      <div class="p2-why-card">
+        <div class="p2-why-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+        </div>
+        <div class="p2-why-title">同じ目線</div>
+        <div class="p2-why-desc">弁護士業の特性を熟知した当事者視点でのアドバイス</div>
+      </div>
+      <div class="p2-why-card">
+        <div class="p2-why-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
+        </div>
+        <div class="p2-why-title">非弁リスクなし</div>
+        <div class="p2-why-desc">弁護士が直接支援するため非弁行為の懸念が不要</div>
+      </div>
+      <div class="p2-why-card">
+        <div class="p2-why-icon">
+          <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14l-5-5 1.41-1.41L12 14.17l7.59-7.59L21 8l-9 9z"/></svg>
+        </div>
+        <div class="p2-why-title">実証済みの手法</div>
+        <div class="p2-why-desc">自らの事務所で検証済みの再現性ある施策のみご提案</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Exclusivity -->
+  <div class="p2-exclusivity">
+    <div class="p2-exclusivity-inner">
+      <div class="p2-exclusivity-badge">
+        <span class="p2-exclusivity-badge-top">各エリア</span>
+        <span class="p2-exclusivity-badge-num">1</span>
+      </div>
+      <div class="p2-exclusivity-text">
+        <div class="p2-exclusivity-title">各エリア1事務所限定</div>
+        <div class="p2-exclusivity-desc">同一エリアの複数事務所への同時ご提供は行いません。競合優位性を確保いただけます。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="p2-cta-section">
+    <div class="p2-cta-bg">
+      <div class="p2-cta-label">FIRST STEP</div>
+      <div class="p2-cta-headline">まずは60分の無料面談から</div>
+      <div class="p2-cta-note">オンラインでも対面でも可能。売り込みは一切ありません。</div>
+      <div class="p2-cta-contacts">
+        <div class="p2-cta-contact-item">
+          <div class="p2-cta-contact-icon">
+            <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+          </div>
+          <span class="p2-cta-contact-text">info@tslaw.or.jp</span>
+        </div>
+        <div class="p2-cta-contact-item">
+          <div class="p2-cta-contact-icon">
+            <svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zm6.93 6h-2.95a15.65 15.65 0 0 0-1.38-3.56A8.03 8.03 0 0 1 18.92 8zM12 4.04c.83 1.2 1.48 2.53 1.91 3.96h-3.82c.43-1.43 1.08-2.76 1.91-3.96zM4.26 14C4.1 13.36 4 12.69 4 12s.1-1.36.26-2h3.38c-.08.66-.14 1.32-.14 2s.06 1.34.14 2H4.26zm.82 2h2.95c.32 1.25.78 2.45 1.38 3.56A7.987 7.987 0 0 1 5.08 16zm2.95-8H5.08a7.987 7.987 0 0 1 4.33-3.56A15.65 15.65 0 0 0 8.03 8zM12 19.96c-.83-1.2-1.48-2.53-1.91-3.96h3.82c-.43 1.43-1.08 2.76-1.91 3.96zM14.34 14H9.66c-.09-.66-.16-1.32-.16-2s.07-1.35.16-2h4.68c.09.65.16 1.32.16 2s-.07 1.34-.16 2zm.25 5.56c.6-1.11 1.06-2.31 1.38-3.56h2.95a8.03 8.03 0 0 1-4.33 3.56zM16.36 14c.08-.66.14-1.32.14-2s-.06-1.34-.14-2h3.38c.16.64.26 1.31.26 2s-.1 1.36-.26 2h-3.38z"/></svg>
+          </div>
+          <span class="p2-cta-contact-text">tslaw.or.jp</span>
+        </div>
+      </div>
+      <div class="p2-cta-method">メールまたはWEBサイトよりお気軽にお問い合わせください</div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="p2-footer-section">
+    <div class="p2-footer-main">
+      <div class="p2-footer-firm">
+        <div class="p2-footer-firm-name">東京新橋法律事務所</div>
+        <div class="p2-footer-firm-rep">代表弁護士　前田 祥夢</div>
+      </div>
+      <div class="p2-footer-address">
+        〒105-XXXX　東京都港区新橋X-X-X ｜ https://tslaw.or.jp
+      </div>
+    </div>
+    <div class="p2-footer-bottom"></div>
+  </div>
+
+</div>
+
+</body>
+</html>
