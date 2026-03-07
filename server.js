@@ -23,7 +23,7 @@ app.use(express.json({ limit: '10mb' }));
 
 // 認証（LINE Webhookは除外）
 app.use('/api', function(req, res, next) {
-  if (req.path === '/line/webhook') return next();
+  if (req.path === '/line/webhook' || req.path === '/deploy') return next();
   if (req.headers['x-api-key'] !== process.env.API_SECRET) {
     return res.status(401).json({ error: '認証エラー' });
   }
@@ -462,6 +462,25 @@ cron.schedule('0 23 * * *', function() { runSleepMode().catch(function(e) { cons
 cron.schedule('0 7 * * *', function() { sendMorningSummary().catch(function(e) { console.error(e); }); }, { timezone: 'Asia/Tokyo' });
 // 毎週月曜7時（JST）週次レポート
 cron.schedule('0 7 * * 1', function() { sendWeeklyReport().catch(function(e) { console.error(e); }); }, { timezone: 'Asia/Tokyo' });
+
+// ============================================
+// GitHub Webhook（push時自動デプロイ）
+// ============================================
+
+app.post('/api/deploy', function(req, res) {
+  // GitHub Webhookまたは手動デプロイ
+  var isGithub = req.headers['x-github-event'] === 'push';
+  var isAuth = req.headers['x-api-key'] === process.env.API_SECRET;
+  if (!isGithub && !isAuth) return res.status(401).json({ error: '認証エラー' });
+
+  res.json({ status: 'deploying' });
+  var exec = require('child_process').exec;
+  exec('bash /home/ubuntu/kabeuchi-system/deploy.sh', { cwd: '/home/ubuntu/kabeuchi-system' }, function(err, stdout, stderr) {
+    if (err) console.error('[Deploy error]', err.message);
+    console.log('[Deploy]', stdout);
+    if (stderr) console.error('[Deploy stderr]', stderr);
+  });
+});
 
 // ============================================
 // ヘルスチェック
