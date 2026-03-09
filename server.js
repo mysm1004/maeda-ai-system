@@ -612,9 +612,60 @@ async function processLineCommand(text, userId) {
     }
   }
 
-  // 音声メモとして保存
-  db.prepare('INSERT INTO voice_memos (text) VALUES (?)').run(t);
-  return 'メモ保存しました: 「' + t.substring(0, 30) + '...」';
+  // ============ 質問・ステータス問い合わせ判定 ============
+  var questionPatterns = [
+    /教えて/, /は[？?]$/, /どう(いう|なって)/, /状況/, /進捗/,
+    /動いてる/, /いまの/, /何してる/, /何やってる/, /どうなった/,
+    /作業.*教/, /確認.*して/, /見せて/, /報告/, /途中経過/
+  ];
+  var isQuestion = questionPatterns.some(function(p) { return p.test(t); });
+  if (isQuestion) {
+    var allSessions = db.prepare("SELECT * FROM sessions WHERE status IN ('active','sleep') ORDER BY updated_at DESC LIMIT 5").all();
+    var pendingQ = db.prepare("SELECT * FROM output_queue WHERE status = 'awaiting_approval'").all();
+    if (allSessions.length === 0 && pendingQ.length === 0) {
+      return '現在進行中のプロジェクトはありません';
+    }
+    var statusMsg = '【現在の状況】
+';
+    allSessions.forEach(function(s) {
+      statusMsg += '
+📋 ' + s.title + '
+  Phase' + s.phase + ' / ラウンド' + s.current_round + '/' + s.total_rounds + ' (' + s.status + ')';
+    });
+    if (pendingQ.length > 0) {
+      statusMsg += '
+
+【承認待ち: ' + pendingQ.length + '件】';
+      pendingQ.forEach(function(q) {
+        statusMsg += '
+・' + q.output_type + '（推奨: パターン' + q.recommended_pattern + '）';
+      });
+      statusMsg += '
+→「承認」または「却下 理由」で返信';
+    }
+    return statusMsg;
+  }
+
+  // ============ 明示的メモ保存 ============
+  var memoPatterns = [/メモ(して|しといて|保存)/, /覚えて/, /覚えておいて/, /記録して/];
+  var isMemoRequest = memoPatterns.some(function(p) { return p.test(t); });
+  if (isMemoRequest) {
+    var memoText = t.replace(/メモして|メモしといて|メモ保存|覚えて|覚えておいて|記録して/g, '').trim();
+    if (!memoText) memoText = t;
+    db.prepare('INSERT INTO voice_memos (text) VALUES (?)').run(memoText);
+    return 'メモ保存しました: 「' + memoText.substring(0, 30) + '」';
+  }
+
+  // それ以外は壁打ちコマンドとして処理を試みる
+  return '「' + t.substring(0, 20) + '」を受け付けました。
+
+使えるコマンド:
+・承認 / 却下 / 状態
+・コード○○ / 修正○○
+・PCモード / AWSモード
+・CC状態 / モード確認
+
+メモ保存は「○○をメモして」と送ってください';
 }
 
 // LINE返信
