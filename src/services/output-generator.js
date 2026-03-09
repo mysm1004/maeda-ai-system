@@ -63,7 +63,10 @@ var OpenAI = require('openai');
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -263,6 +266,9 @@ async function _apiRetry(fn, label) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -427,6 +433,7 @@ function OutputGenerator(db, lineQA, sendLineFn) {
 // Phase2 Step1: 訴求パターン生成（Claude）
 OutputGenerator.prototype._phase2_step1 = async function(sessionId, outputType, params) {
   var session = this.db.prepare('SELECT * FROM sessions WHERE id = ?').get(sessionId);
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
@@ -6053,11 +6060,16 @@ OutputGenerator.prototype._getTypeInstructions = function(type) {
 =======
 =======
 =======
+=======
+>>>>>>> Stashed changes
   var memory = this._getMemory(outputType);
   var officeDocs = this._getOfficeDocs();
   var p1conclusion = this._getPhase1Conclusion(session);
 
   var res = await this.anthropic.messages.create({
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
     model: 'claude-sonnet-4-20250514', max_tokens: 4000,
     system: 'あなたはトップコピーライティングディレクターです。Phase1で固まったアイデアを元に、最も効果的な訴求角度を複数生成してください。前田さんの好み: ' + JSON.stringify(memory),
@@ -6079,6 +6091,9 @@ OutputGenerator.prototype._getTypeInstructions = function(type) {
   return res.content[0].text;
 };
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -6107,6 +6122,9 @@ OutputGenerator.prototype._phase2_step3 = async function(sessionId, outputType, 
   var res = await this.openai.chat.completions.create({
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -6144,6 +6162,9 @@ OutputGenerator.prototype._phase2_step4 = async function(sessionId, outputType, 
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -6186,6 +6207,9 @@ OutputGenerator.prototype._phase2_step5 = async function(sessionId, outputType, 
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -6235,6 +6259,9 @@ OutputGenerator.prototype._phase3_step1 = async function(sessionId, outputType, 
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -6600,6 +6627,9 @@ OutputGenerator.prototype.scoreOutput = async function(sessionId, queueId) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -6665,6 +6695,9 @@ OutputGenerator.prototype._getPhase1Conclusion = function(session) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -6736,6 +6769,9 @@ OutputGenerator.prototype._getTypeInstructions = function(type) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -6823,12 +6859,18 @@ OutputGenerator.prototype._getTypeInstructions = function(type) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 OutputGenerator.prototype._getMemory = function(outputType, sessionId) {
   var rows;
   if (sessionId && outputType) {
     // プロジェクト固有 + グローバル（source_session_id=NULLまたは該当セッション）
     rows = this.db.prepare("SELECT category, key, value FROM memory_db WHERE (output_type = ? OR output_type IS NULL) AND (source_session_id = ? OR source_session_id IS NULL OR category IN ('tone','style','cta','pattern_preference')) ORDER BY confidence DESC LIMIT 30").all(outputType, sessionId);
   } else if (outputType) {
+=======
+OutputGenerator.prototype._getMemory = function(outputType) {
+  var rows;
+  if (outputType) {
+>>>>>>> Stashed changes
 =======
 OutputGenerator.prototype._getMemory = function(outputType) {
   var rows;
@@ -7242,6 +7284,10 @@ OutputGenerator.prototype._getSimilarOutputs = function(type) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 =======
 
 >>>>>>> Stashed changes
