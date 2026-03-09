@@ -79,7 +79,10 @@ var OpenAI = require('openai');
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -327,6 +330,9 @@ async function _apiRetry(fn, label) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -523,6 +529,7 @@ function OutputGenerator(db, lineQA, sendLineFn) {
 // Phase2 Step1: 訴求パターン生成（Claude）
 OutputGenerator.prototype._phase2_step1 = async function(sessionId, outputType, params) {
   var session = this.db.prepare('SELECT * FROM sessions WHERE id = ?').get(sessionId);
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
@@ -7524,6 +7531,8 @@ OutputGenerator.prototype._getMemory = function(outputType) {
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
   var memory = this._getMemory(outputType);
   var officeDocs = this._getOfficeDocs();
   var p1conclusion = this._getPhase1Conclusion(session);
@@ -7616,6 +7625,9 @@ OutputGenerator.prototype._phase2_step4 = async function(sessionId, outputType, 
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -7835,6 +7847,9 @@ OutputGenerator.prototype._phase3_step6 = async function(patterns, outputType) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -8058,6 +8073,9 @@ OutputGenerator.prototype.generateFull = async function(sessionId, outputType, p
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -8223,6 +8241,9 @@ OutputGenerator.prototype._getMemory = function(outputType) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -8367,6 +8388,10 @@ OutputGenerator.prototype._getSimilarOutputs = function(type) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 =======
 
 >>>>>>> Stashed changes
