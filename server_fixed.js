@@ -409,47 +409,21 @@ async function processLineCommand(text, userId) {
     if (allSessions.length === 0 && pendingQ.length === 0) {
       return '現在進行中のプロジェクトはありません';
     }
-    var statusMsg = '【現在の状況】
-';
+    var statusMsg = '【現在の状況】\n';
     allSessions.forEach(function(s) {
-      statusMsg += '
-📋 ' + s.title + '
-  Phase' + s.phase + ' / ラウンド' + s.current_round + '/' + s.total_rounds + ' (' + s.status + ')';
-    });
-    if (pendingQ.length > 0) {
-      statusMsg += '
+      statusMsg += '\n📋 ' + s.title + '
+  Phase' + s.phase + ' / ラウンド' + s.current_round + '/' + s.total_rounds + ' (' + s.status + ')';\n    });\n    if (pendingQ.length > 0) {\n      statusMsg += '
 
-【承認待ち: ' + pendingQ.length + '件】';
-      pendingQ.forEach(function(q) {
-        statusMsg += '
-・' + q.output_type + '（推奨: パターン' + q.recommended_pattern + '）';
-      });
-      statusMsg += '
-→「承認」または「却下 理由」で返信';
-    }
-    return statusMsg;
-  }
-
-  // ============ 明示的メモ保存 ============
-  var memoPatterns = [/メモ(して|しといて|保存)/, /覚えて/, /覚えておいて/, /記録して/];
-  var isMemoRequest = memoPatterns.some(function(p) { return p.test(t); });
-  if (isMemoRequest) {
-    var memoText = t.replace(/メモして|メモしといて|メモ保存|覚えて|覚えておいて|記録して/g, '').trim();
+【承認待ち: ' + pendingQ.length + '件】';\n      pendingQ.forEach(function(q) {\n        statusMsg += '
+・' + q.output_type + '（推奨: パターン' + q.recommended_pattern + '）';\n      });\n      statusMsg += '
+→「承認」または「却下 理由」で返信';\n    }\n    return statusMsg;\n  }\n\n  // ============ 明示的メモ保存 ============\n  var memoPatterns = [/メモ(して|しといて|保存)/, /覚えて/, /覚えておいて/, /記録して/];\n  var isMemoRequest = memoPatterns.some(function(p) { return p.test(t); });\n  if (isMemoRequest) {\n    var memoText = t.replace(/メモして|メモしといて|メモ保存|覚えて|覚えておいて|記録して/g, '').trim();
     if (!memoText) memoText = t;
     db.prepare('INSERT INTO voice_memos (text) VALUES (?)').run(memoText);
     return 'メモ保存しました: 「' + memoText.substring(0, 30) + '」';
   }
 
   // それ以外は壁打ちコマンドとして処理を試みる
-  return '「' + t.substring(0, 20) + '」を受け付けました。
-
-使えるコマンド:
-・承認 / 却下 / 状態
-・コード○○ / 修正○○
-・PCモード / AWSモード
-・CC状態 / モード確認
-
-メモ保存は「○○をメモして」と送ってください';
+  return '「' + t.substring(0, 20) + '」を受け付けました。\n\n使えるコマンド:\n・承認 / 却下 / 状態\n・コード○○ / 修正○○\n・PCモード / AWSモード\n・CC状態 / モード確認\n\nメモ保存は「○○をメモして」と送ってください';
 }
 
 // LINE返信
