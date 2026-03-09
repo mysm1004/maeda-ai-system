@@ -57,7 +57,10 @@ var OpenAI = require('openai');
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -239,6 +242,9 @@ async function _apiRetry(fn, label) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -447,7 +453,11 @@ OutputGenerator.prototype._phase2_step1 = async function(sessionId, outputType, 
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
   var memory = this._getMemory(outputType, sessionId);
+=======
+  var memory = this._getMemory(outputType);
+>>>>>>> Stashed changes
 =======
   var memory = this._getMemory(outputType);
 >>>>>>> Stashed changes
@@ -718,7 +728,11 @@ OutputGenerator.prototype._phase2_step3 = async function(sessionId, outputType, 
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     model: 'gpt-4o', max_tokens: 4000,
+=======
+    model: 'gpt-5.4', max_completion_tokens: 4000,
+>>>>>>> Stashed changes
 =======
     model: 'gpt-5.4', max_completion_tokens: 4000,
 >>>>>>> Stashed changes
@@ -962,7 +976,11 @@ OutputGenerator.prototype._phase2_step4 = async function(sessionId, outputType, 
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
   var memory = this._getMemory(outputType, sessionId);
+=======
+  var memory = this._getMemory(outputType);
+>>>>>>> Stashed changes
 =======
   var memory = this._getMemory(outputType);
 >>>>>>> Stashed changes
@@ -1207,7 +1225,11 @@ OutputGenerator.prototype._phase2_step5 = async function(sessionId, outputType, 
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
   var memory = this._getMemory(outputType, sessionId);
+=======
+  var memory = this._getMemory(outputType);
+>>>>>>> Stashed changes
 =======
   var memory = this._getMemory(outputType);
 >>>>>>> Stashed changes
@@ -1394,6 +1416,7 @@ OutputGenerator.prototype._phase2_step5 = async function(sessionId, outputType, 
       '6. 見出し群（H2/H3構成）\n' +
       '7. 最推奨の組み合わせ' }]
   });
+<<<<<<< Updated upstream
   return res.content[0].text;
 };
 
@@ -5965,6 +5988,43 @@ OutputGenerator.prototype._getTypeInstructions = function(type) {
 =======
 =======
 =======
+=======
+  return res.content[0].text;
+};
+
+// Phase2 Step6: 最終訴求の統合（Claude）
+OutputGenerator.prototype._phase2_step6 = async function(sessionId, outputType, step4Result, step5Result) {
+  var res = await this.anthropic.messages.create({
+    model: 'claude-sonnet-4-20250514', max_tokens: 3000,
+    system: 'あなたは最終統合者です。Phase3のアウトプット生成に渡す最終訴求設計書を作成してください。',
+    messages: [{ role: 'user', content: '【絞り込み結果】\n' + step4Result +
+      '\n\n【コピーライティング結果】\n' + step5Result +
+      '\n\nPhase3用に以下をJSON形式で整理：\n' +
+      '{\n' +
+      '  "main_appeal": "メイン訴求の概要",\n' +
+      '  "sub_appeal": "サブ訴求の概要",\n' +
+      '  "main_catchcopy": "最終メインキャッチコピー",\n' +
+      '  "sub_catchcopy": "サブキャッチコピー",\n' +
+      '  "lead_text": "リード文",\n' +
+      '  "body_structure": ["セクション1", "セクション2", ...],\n' +
+      '  "cta_text": "CTA文言",\n' +
+      '  "tone": "トーン&マナーの指示",\n' +
+      '  "key_numbers": ["使うべき数字1", "数字2"],\n' +
+      '  "ng_words": ["使ってはいけない表現1", "表現2"],\n' +
+      '  "quality_checklist": ["チェック項目1", "チェック項目2"]\n' +
+      '}' }]
+  });
+  return res.content[0].text;
+};
+
+// ============================================
+// Phase 3: アウトプット生成・磨き込み（7ステップ）
+// ============================================
+
+// Phase3 Step1: 初稿生成（Claude）- 4パターン同時
+OutputGenerator.prototype._phase3_step1 = async function(sessionId, outputType, phase2Final, params) {
+  var session = this.db.prepare('SELECT * FROM sessions WHERE id = ?').get(sessionId);
+>>>>>>> Stashed changes
   var memory = this._getMemory(outputType);
   var officeDocs = this._getOfficeDocs();
   var typeInst = this._getTypeInstructions(outputType);
@@ -6313,6 +6373,9 @@ OutputGenerator.prototype.scoreOutput = async function(sessionId, queueId) {
   if (!item || !item.patterns) return null;
   var patterns = JSON.parse(item.patterns);
   var scores = [];
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 
   for (var i = 0; i < patterns.length; i++) {
@@ -6360,6 +6423,9 @@ OutputGenerator.prototype._getPhase1Conclusion = function(session) {
   if (!session) return '（セッション情報なし）';
   var parts = [];
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -6413,6 +6479,9 @@ OutputGenerator.prototype._getTypeInstructions = function(type) {
     'dm': 'DM/手紙/営業メール。件名+本文。',
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -6482,12 +6551,18 @@ OutputGenerator.prototype._getTypeInstructions = function(type) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 OutputGenerator.prototype._getMemory = function(outputType, sessionId) {
   var rows;
   if (sessionId && outputType) {
     // プロジェクト固有 + グローバル（source_session_id=NULLまたは該当セッション）
     rows = this.db.prepare("SELECT category, key, value FROM memory_db WHERE (output_type = ? OR output_type IS NULL) AND (source_session_id = ? OR source_session_id IS NULL OR category IN ('tone','style','cta','pattern_preference')) ORDER BY confidence DESC LIMIT 30").all(outputType, sessionId);
   } else if (outputType) {
+=======
+OutputGenerator.prototype._getMemory = function(outputType) {
+  var rows;
+  if (outputType) {
+>>>>>>> Stashed changes
 =======
 OutputGenerator.prototype._getMemory = function(outputType) {
   var rows;
@@ -6865,6 +6940,10 @@ OutputGenerator.prototype._getSimilarOutputs = function(type) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 =======
 
 >>>>>>> Stashed changes
