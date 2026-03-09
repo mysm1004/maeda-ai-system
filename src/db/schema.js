@@ -242,10 +242,13 @@ function initDatabase(dbPath) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
   // インデックス
   db.exec("CREATE INDEX IF NOT EXISTS idx_logs_session ON discussion_logs(session_id)");
   db.exec("CREATE INDEX IF NOT EXISTS idx_logs_phase ON discussion_logs(session_id, phase, round_number)");
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -548,6 +551,9 @@ function initDatabase(dbPath) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -837,7 +843,10 @@ function initDatabase(dbPath) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -1215,6 +1224,9 @@ function initDatabase(dbPath) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

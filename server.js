@@ -380,6 +380,7 @@ async function processLineCommand(text, userId) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
   // ============ モード切替 ============
   if (t === 'PCモード' || t === 'pcモード' || t === 'PC' || t === 'ローカル') {
     try {
@@ -439,6 +440,8 @@ async function processLineCommand(text, userId) {
     return msg2;
   }
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -780,6 +783,7 @@ async function processLineCommand(text, userId) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
   // ============ 質問・ステータス問い合わせ判定 ============
   var questionPatterns = [
     /教えて/, /は[？?]$/, /どう(いう|なって)/, /状況/, /進捗/,
@@ -820,6 +824,8 @@ async function processLineCommand(text, userId) {
   // それ以外は壁打ちコマンドとして処理を試みる
   return '「' + t.substring(0, 20) + '」を受け付けました。\n\n使えるコマンド:\n・承認 / 却下 / 状態\n・コード○○ / 修正○○\n・PCモード / AWSモード\n・CC状態 / モード確認\n\nメモ保存は「○○をメモして」と送ってください';
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
