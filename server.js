@@ -3,11 +3,13 @@ var express = require('express');
 var helmet = require('helmet');
 var compression = require('compression');
 var cron = require('node-cron');
+var http = require('http');
 var https = require('https');
 var { initDatabase } = require('./db/schema');
 var DiscussionEngine = require('./services/discussion-engine');
 var PreferenceLearner = require('./services/preference-learner');
 var OutputGenerator = require('./services/output-generator');
+var StateManager = require('./state-manager');
 var Anthropic = require('@anthropic-ai/sdk');
 
 var app = express();
@@ -16,6 +18,14 @@ var db = initDatabase(process.env.DB_PATH || './data/kabeuchi.db');
 var engine = new DiscussionEngine(db);
 var prefLearner = new PreferenceLearner(db);
 var outputGen = new OutputGenerator(db);
+var stateManager = new StateManager(db);
+
+// 運用モード管理
+var operationMode = 'aws'; // 'aws' or 'local'
+try {
+  var savedState = stateManager.loadState();
+  if (savedState && savedState.mode) operationMode = savedState.mode;
+} catch (e) { /* デフォルトaws */ }
 
 app.use(helmet());
 app.use(compression());
@@ -274,6 +284,119 @@ async function processLineCommand(text, userId) {
       return '[' + s.id + '] ' + s.title + ' (R' + s.current_round + '/' + s.total_rounds + ')';
     }).join('\n');
   }
+  // ============ モード切替 ============
+  if (t === 'PCモード' || t === 'pcモード' || t === 'PC' || t === 'ローカル') {
+    try {
+      var result = stateManager.switchToPC();
+      operationMode = 'local';
+      // Claude Code Daemonを一時停止
+      try {
+        require('child_process').execSync('sudo systemctl stop claude-code-daemon', { timeout: 10000 });
+      } catch (e) { /* ok */ }
+      return 'PCモード切り替え完了。続きから始めます\n\n' +
+        '【保存した状態】\n' +
+        (result.state.active_projects || []).map(function(p) {
+          return '・' + p.name + ' (Phase' + p.phase + ' R' + p.current_round + ')\n  → ' + p.next_action;
+        }).join('\n') +
+        '\n\nGitHub push: ' + (result.pushed ? '✅' : '❌') +
+        '\n\nローカルで「AWSモード」と送るとAWSに戻ります';
+    } catch (e) {
+      return '⚠️ PCモード切替エラー: ' + e.message;
+    }
+  }
+
+  if (t === 'AWSモード' || t === 'awsモード' || t === 'AWS') {
+    try {
+      var state = stateManager.switchToAWS();
+      operationMode = 'aws';
+      // Claude Code Daemon再開
+      try {
+        require('child_process').execSync('sudo systemctl start claude-code-daemon', { timeout: 10000 });
+      } catch (e) { /* ok */ }
+      var projectInfo = '';
+      if (state && state.active_projects && state.active_projects.length > 0) {
+        projectInfo = '\n\n【復元した状態】\n' +
+          state.active_projects.map(function(p) {
+            return '・' + p.name + ' (Phase' + p.phase + ' R' + p.current_round + ')\n  → ' + p.next_action;
+          }).join('\n');
+      }
+      return 'AWSモード切り替え完了。続きから始めます' + projectInfo;
+    } catch (e) {
+      return '⚠️ AWSモード切替エラー: ' + e.message;
+    }
+  }
+
+  if (t === 'モード確認' || t === 'モード' || t === 'mode') {
+    var currentState = stateManager.loadState();
+    var modeLabel = operationMode === 'aws' ? '☁️ AWSモード（常駐稼働中）' : '💻 PCモード（AWS一時停止）';
+    var msg2 = '現在のモード: ' + modeLabel;
+    if (currentState) {
+      msg2 += '\n最終更新: ' + currentState.last_updated;
+      msg2 += '\n更新元: ' + (currentState.last_updated_by === 'aws' ? 'AWS' : 'PC');
+      if (currentState.active_projects && currentState.active_projects.length > 0) {
+        msg2 += '\n\n【進行中プロジェクト】';
+        currentState.active_projects.forEach(function(p) {
+          msg2 += '\n・' + p.name + ' (' + p.status + ')';
+        });
+      }
+    }
+    return msg2;
+  }
+
+  // ============ Claude Code コマンド ============
+  // Claude Code コマンド（コード修正・実装・デプロイ）
+  var ccPrefixes = ['コード', '修正', '実装', '追加', 'バグ', 'デプロイ', 'claude'];
+  var isCodeCmd = ccPrefixes.some(function(p) { return t.startsWith(p); });
+  if (isCodeCmd) {
+    try {
+      var instruction = t;
+      var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
+      var ccResult = await new Promise(function(resolve) {
+        var ccReq = http.request({
+          hostname: '127.0.0.1', port: 3001, path: '/task', method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'x-api-key': process.env.API_SECRET, 'Content-Length': Buffer.byteLength(ccData) }
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        });
+        ccReq.on('error', function(e) { resolve({ error: e.message }); });
+        ccReq.write(ccData); ccReq.end();
+      });
+      if (ccResult.error) return '⚠️ Claude Code接続エラー: ' + ccResult.error;
+      return '🔧 Claude Codeにタスク投入しました\nタスクID: ' + ccResult.taskId + '\n完了時にLINEで結果を通知します';
+    } catch (e) {
+      return '⚠️ Claude Code呼び出しエラー: ' + e.message;
+    }
+  }
+
+  // Claude Code 状態確認
+  if (t === 'CC状態' || t === 'Claude状態') {
+    try {
+      var statusResult = await new Promise(function(resolve) {
+        var sReq = http.request({
+          hostname: '127.0.0.1', port: 3001, path: '/status', method: 'GET',
+          headers: { 'x-api-key': process.env.API_SECRET }
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        });
+        sReq.on('error', function(e) { resolve({ error: e.message }); });
+        sReq.end();
+      });
+      if (statusResult.error) return '⚠️ Claude Code: ' + statusResult.error;
+      var msg = '🤖 Claude Code状態\n';
+      msg += statusResult.running ? '⏳ 実行中: ' + (statusResult.currentTask ? statusResult.currentTask.instruction : '') + '\n' : '✅ 待機中\n';
+      msg += 'キュー: ' + statusResult.queueLength + '件';
+      if (statusResult.recentTasks && statusResult.recentTasks.length > 0) {
+        msg += '\n\n最近のタスク:';
+        statusResult.recentTasks.slice(0, 3).forEach(function(t) {
+          msg += '\n' + (t.exitCode === 0 ? '✅' : '❌') + ' ' + t.instruction.substring(0, 50) + ' (' + t.duration + ')';
+        });
+      }
+      return msg;
+    } catch (e) {
+      return '⚠️ Claude Code状態取得エラー';
+    }
+  }
+
   // 音声メモとして保存
   db.prepare('INSERT INTO voice_memos (text) VALUES (?)').run(t);
   return 'メモ保存しました: 「' + t.substring(0, 30) + '...」';
@@ -462,6 +585,53 @@ cron.schedule('0 23 * * *', function() { runSleepMode().catch(function(e) { cons
 cron.schedule('0 7 * * *', function() { sendMorningSummary().catch(function(e) { console.error(e); }); }, { timezone: 'Asia/Tokyo' });
 // 毎週月曜7時（JST）週次レポート
 cron.schedule('0 7 * * 1', function() { sendWeeklyReport().catch(function(e) { console.error(e); }); }, { timezone: 'Asia/Tokyo' });
+// 30分ごとに状態自動保存（GitHub同期）
+cron.schedule('*/30 * * * *', function() {
+  if (operationMode !== 'aws') return;
+  try {
+    stateManager.saveState('aws');
+    stateManager.pushToGitHub('state: auto-save');
+    console.log('[Auto Save] 状態保存・GitHub push完了');
+  } catch (e) { console.error('[Auto Save]', e.message); }
+});
+
+// ============================================
+// 状態管理API
+// ============================================
+
+app.get('/api/state', function(req, res) {
+  var state = stateManager.collectState(operationMode);
+  res.json(state);
+});
+
+app.post('/api/state/save', function(req, res) {
+  var state = stateManager.saveState(req.body.mode || operationMode);
+  var pushed = stateManager.pushToGitHub('state: 手動保存');
+  res.json({ success: true, pushed: pushed, state: state });
+});
+
+app.post('/api/state/load', function(req, res) {
+  var state = stateManager.pullFromGitHub();
+  res.json({ success: !!state, state: state });
+});
+
+app.get('/api/mode', function(req, res) {
+  res.json({ mode: operationMode, state: stateManager.loadState() });
+});
+
+app.post('/api/mode', function(req, res) {
+  var newMode = req.body.mode;
+  if (newMode !== 'aws' && newMode !== 'local') return res.status(400).json({ error: 'mode must be aws or local' });
+  if (newMode === 'local') {
+    var result = stateManager.switchToPC();
+    operationMode = 'local';
+    res.json({ success: true, mode: 'local', pushed: result.pushed });
+  } else {
+    var state = stateManager.switchToAWS();
+    operationMode = 'aws';
+    res.json({ success: true, mode: 'aws', state: state });
+  }
+});
 
 // ============================================
 // GitHub Webhook（push時自動デプロイ）

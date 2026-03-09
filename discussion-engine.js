@@ -1,161 +1,302 @@
 var Anthropic = require('@anthropic-ai/sdk');
 var OpenAI = require('openai');
 
-var ROUND_THEMES = [
-  { num: 1, theme: 'ターゲットの解像度を上げる', focus: 'ペルソナ設定・ニーズ深掘り・検索キーワード・口コミ表現' },
-  { num: 2, theme: '市場規模・競合を分析する', focus: '市場データ・競合LP/広告分析・ポジショニング' },
-  { num: 3, theme: '差別化ポイントを磨く', focus: '独自の強み・USP・他社にない価値' },
-  { num: 4, theme: 'マネタイズの穴を突く', focus: '価格設定・収益モデル・LTV・コスト構造' },
-  { num: 5, theme: '最大のリスクを潰す', focus: 'リスク分析・法的リスク・実現可能性・失敗パターン' },
-  { num: 6, theme: '訴求メッセージに落とし込む', focus: 'キャッチコピー・訴求ポイント・感情設計・CTA' }
+var PHASE1_STEPS = [
+  { num: 1, name: '市場・競合調査（Claude）', ai: 'claude', role: 'Web検索で競合LP・料金・強み・弱みを網羅収集' },
+  { num: 2, name: '市場・競合調査（ChatGPT）', ai: 'chatgpt', role: 'Claudeの見落とし補完・別視点追加' },
+  { num: 3, name: '顧客ニーズ深掘り（Claude）', ai: 'claude', role: 'ターゲットの不安・欲求・言葉を徹底分析' },
+  { num: 4, name: '顧客ニーズ深掘り（ChatGPT）', ai: 'chatgpt', role: '異なる顧客像・ニーズを対抗提示' },
+  { num: 5, name: '構築・アイデア拡張（Claude）', ai: 'claude', role: 'ステップ1-4を統合してアイデアを最大限に膨らませる。異業種事例も投入' },
+  { num: 6, name: '批判・対抗（Claude）', ai: 'claude', role: '悪魔の代弁者。なぜ失敗するかを徹底的に突く' },
+  { num: 7, name: 'さらなる批判（ChatGPT）', ai: 'chatgpt', role: '競合代理人視点で競合ならこう潰すを提示' },
+  { num: 8, name: '最終案の統合（Claude）', ai: 'claude', role: '全批判を受けて穴を全て潰し最強のアイデアに昇華' }
 ];
 
-function DiscussionEngine(db) {
+function DiscussionEngine(db, lineQA, sendLineFn) {
   this.db = db;
+  this.lineQA = lineQA || null;
+  this.sendLineFn = sendLineFn || null;
   this.anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
   this.openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 }
 
-// 事前調査を実行
+// セッション作成
+DiscussionEngine.prototype.createSession = function(title, topic) {
+  var r = this.db.prepare('INSERT INTO sessions (title, topic, total_rounds) VALUES (?, ?, 8)').run(title, topic);
+  return r.lastInsertRowid;
+};
+
+// 事前調査
 DiscussionEngine.prototype.runResearch = async function(topic) {
   var officeDocs = this._getOfficeDocs();
   var memory = this._getMemoryForContext();
   var similarCases = this._getSimilarCases(topic);
-
   var res = await this.anthropic.messages.create({
     model: 'claude-sonnet-4-20250514', max_tokens: 3000,
-    system: 'あなたはマーケティングリサーチの専門家です。以下の事務所資料と過去案件を参照しつつ、テーマに関する事前調査レポートを作成してください。',
-    messages: [{ role: 'user', content: 'テーマ: ' + topic +
+    system: '【最重要】調査対象テーマ：「' + topic + '」\nこのテーマのみを調査してください。過去案件や記憶DBに別テーマの情報があっても、それに引っ張られず「' + topic + '」だけを分析すること。\n\nあなたはマーケティングリサーチの専門家です。「' + topic + '」の事前調査レポートを作成してください。',
+    messages: [{ role: 'user', content: '★★★ 調査テーマ：「' + topic + '」★★★\n※他のテーマの情報は無視すること\n\nテーマ: ' + topic +
       '\n\n【事務所資料】\n' + (officeDocs || 'なし') +
       '\n\n【類似過去案件】\n' + (similarCases || 'なし') +
-      '\n\n【前田さんの好み・傾向】\n' + JSON.stringify(memory) +
-      '\n\n以下を調査してレポートにまとめてください：\n1. 想定される競合の上位LP・広告の傾向\n2. 業界最新トレンド\n3. 類似サービスの成功・失敗パターン\n4. ターゲット層の検索キーワード・口コミ表現\n5. 差別化の機会' }]
+      '\n\n【前田さんの好み】\n' + JSON.stringify(memory) +
+      '\n\n調査項目：\n1. 競合LP・広告の傾向\n2. 業界トレンド\n3. 成功・失敗パターン\n4. 検索キーワード・口コミ表現\n5. 差別化の機会' }]
   });
   return res.content[0].text;
 };
 
-// 1ラウンド実行（4役）
-DiscussionEngine.prototype.runRound = async function(sessionId, topic, roundNum, research, isSleep) {
-  var rt = ROUND_THEMES[roundNum - 1] || { theme: '自由議論', focus: '' };
+// Phase1: 1ステップ実行
+DiscussionEngine.prototype.runStep = async function(sessionId, topic, stepNum, research, isSleep) {
+  var step = PHASE1_STEPS[stepNum - 1];
+  if (!step) throw new Error('Invalid step: ' + stepNum);
   var history = this._getHistory(sessionId);
   var memory = this._getMemoryForContext();
   var officeDocs = this._getOfficeDocsSummary();
   var sm = isSleep ? 1 : 0;
 
-  var baseCtx = '【テーマ】' + topic +
-    '\n【ラウンド' + roundNum + '】' + rt.theme +
-    '\n【フォーカス】' + rt.focus +
-    '\n【事前調査】' + (research || '未実施') +
-    '\n【事務所資料要約】' + (officeDocs || 'なし') +
-    '\n【前田さんの記憶DB】' + JSON.stringify(memory);
+  var prevResults = history.filter(function(h) { return h.role !== 'user'; })
+    .map(function(h) { return '【Step' + h.round_number + ': ' + h.round_theme + '】\n' + h.content; }).join('\n\n===\n\n');
+  var baseCtx = '★★★ 分析テーマ：「' + topic + '」 ★★★\n※以下の記憶DBや事務所資料に別テーマの情報があっても、上記テーマのみを分析すること。\n\n【テーマ】' + topic + '\n【事前調査】' + (research || '未実施') +
+    '\n【事務所資料要約】' + (officeDocs || 'なし') + '\n【前田さんの記憶DB】' + JSON.stringify(memory);
+  if (prevResults) baseCtx += '\n\n【これまでの結果】\n' + prevResults;
 
-  var prevLogs = history.slice(-8).map(function(h) { return '[' + h.role_label + '] ' + h.content; }).join('\n---\n');
-  if (prevLogs) baseCtx += '\n\n【これまでの議論】\n' + prevLogs;
+  var result;
+  switch (stepNum) {
+    case 1: result = await this._step1(baseCtx, topic); break;
+    case 2: result = await this._step2(baseCtx, topic, history); break;
+    case 3: result = await this._step3(baseCtx, topic, history); break;
+    case 4: result = await this._step4(baseCtx, topic, history); break;
+    case 5:
+      result = await this._step5(baseCtx, topic, history);
+      // Step5後: 方向性確認（非就寝モード時）
+      if (this.lineQA && this.sendLineFn && !isSleep) {
+        try {
+          var dirCheck = await this._checkNeedsConfirmation(result, topic);
+          if (dirCheck.needsConfirmation) {
+            var userDir = await this.lineQA.askUserViaLine({
+              sessionId: sessionId, question: dirCheck.question,
+              context: { step: 5, topic: topic }, engineType: 'discussion',
+              engineStep: 'phase1_step5', pushLineFn: this.sendLineFn
+            });
+            if (userDir) result += '\n\n【前田さんの方向性指示】\n' + userDir;
+          }
+        } catch (e) { console.log('[Discussion] Step5確認スキップ:', e.message); }
+      }
+      break;
+    case 6: result = await this._step6(baseCtx, topic, history); break;
+    case 7: result = await this._step7(baseCtx, topic, history); break;
+    case 8: result = await this._step8(baseCtx, topic, history, memory, sessionId); break;
+  }
 
-  // Claude A（構築役・楽観論者）
-  var draft = await this._callClaudeA(baseCtx, rt);
-  this._saveLog(sessionId, 1, roundNum, rt.theme, 'claude_a', 'Claude A（構築役）', draft, sm);
-
-  // Claude B（破壊役・悪魔の代弁者）
-  var critique = await this._callClaudeB(baseCtx, draft, rt);
-  this._saveLog(sessionId, 1, roundNum, rt.theme, 'claude_b', 'Claude B（破壊役）', critique, sm);
-
-  // ChatGPT（市場役）
-  var market = await this._callChatGPT(baseCtx, draft, critique, rt);
-  this._saveLog(sessionId, 1, roundNum, rt.theme, 'chatgpt', 'ChatGPT（市場役）', market, sm);
-
-  // 前田フィルター統合
-  var synthesis = await this._synthesize(baseCtx, draft, critique, market, rt, memory);
-  this._saveLog(sessionId, 1, roundNum, rt.theme, 'synthesis', '統合（前田フィルター適用）', synthesis, sm);
-
-  this.db.prepare('UPDATE sessions SET current_round = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?').run(roundNum, sessionId);
-
-  return { round: roundNum, theme: rt.theme, draft: draft, critique: critique, market: market, synthesis: synthesis, sessionId: sessionId };
+  this._saveLog(sessionId, 1, stepNum, step.name, step.ai === 'claude' ? 'claude' : 'chatgpt', step.name, result, sm);
+  this.db.prepare('UPDATE sessions SET current_round = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?').run(stepNum, sessionId);
+  return { step: stepNum, totalSteps: 8, name: step.name, ai: step.ai, content: result, sessionId: sessionId };
 };
 
-// 全ラウンド完了後の最終統合
-DiscussionEngine.prototype.generateFinalSummary = async function(sessionId) {
-  var session = this.db.prepare('SELECT * FROM sessions WHERE id = ?').get(sessionId);
-  var allLogs = this._getHistory(sessionId);
-  var memory = this._getMemoryForContext();
+// 旧互換
+DiscussionEngine.prototype.runRound = function(sessionId, topic, roundNum, research, isSleep) {
+  return this.runStep(sessionId, topic, roundNum, research, isSleep);
+};
 
-  var logSummary = allLogs.filter(function(l) { return l.role === 'synthesis'; })
-    .map(function(l) { return '[R' + l.round_number + ' ' + l.round_theme + ']\n' + l.content; }).join('\n\n===\n\n');
-
+// Step1: 市場・競合調査（Claude）
+DiscussionEngine.prototype._step1 = async function(ctx, topic) {
   var res = await this.anthropic.messages.create({
     model: 'claude-sonnet-4-20250514', max_tokens: 4000,
-    system: 'あなたは全ラウンドの議論を統合して最終戦略をまとめる統括者です。前田さんの好み: ' + JSON.stringify(memory),
-    messages: [{ role: 'user', content: 'テーマ: ' + session.topic +
-      '\n\n全ラウンドの統合結果:\n' + logSummary +
-      '\n\n以下をJSON形式で出力してください:\n' +
-      '{\n  "target_definition": "ターゲット定義（具体的人物像）",\n' +
-      '  "appeal_points": ["訴求ポイント1（最優先）", "訴求ポイント2", "訴求ポイント3"],\n' +
-      '  "catchcopy": ["コピー案1", "コピー案2", "コピー案3", "コピー案4", "コピー案5"],\n' +
-      '  "output_plan": "推奨アウトプット構成案"\n}' }]
+    system: '【最重要】分析対象テーマ：「' + topic + '」\nこのテーマのみを分析してください。記憶DBや過去案件の別テーマに絶対に引っ張られないこと。\n\nあなたは市場調査の専門家です。「' + topic + '」に関する競合のLP・料金体系・強み・弱みを徹底的に分析してください。具体的な競合名と数字を出すこと。',
+    messages: [{ role: 'user', content: ctx + '\n\n以下を網羅調査：\n1. 競合サービスのリスト（名称・URL・特徴）\n2. 各競合の料金体系・価格帯\n3. 各競合LPの構成・訴求ポイント\n4. 各競合の強み・弱み\n5. 市場規模（TAM/SAM/SOM）\n6. 市場の成長率・トレンド\n7. 参入障壁\n8. 業界の課題・ペインポイント' }]
   });
+  return res.content[0].text;
+};
 
+// Step2: 市場・競合調査（ChatGPT）
+DiscussionEngine.prototype._step2 = async function(ctx, topic, history) {
+  var s1 = this._getStepResult(history, 1);
+  var res = await this.openai.chat.completions.create({
+    model: 'gpt-4o', max_tokens: 4000,
+    messages: [
+      { role: 'system', content: '【最重要】分析対象テーマ：「' + topic + '」\nこのテーマのみを分析してください。記憶DBや過去案件の別テーマに絶対に引っ張られないこと。\n\nあなたは市場調査の専門家です。「' + topic + '」に関するClaudeの調査を検証し、見落とし・別視点を補完してください。' },
+      { role: 'user', content: ctx + '\n\n【Claudeの調査結果】\n' + s1 + '\n\n実行事項：\n1. 見落とし競合\n2. 料金データ補完・修正\n3. 海外の類似サービス\n4. 過大評価の指摘\n5. 市場規模の別推定\n6. 最新トレンド・ニュース' }
+    ]
+  });
+  return res.choices[0].message.content;
+};
+
+// Step3: 顧客ニーズ深掘り（Claude）
+DiscussionEngine.prototype._step3 = async function(ctx, topic, history) {
+  var res = await this.anthropic.messages.create({
+    model: 'claude-sonnet-4-20250514', max_tokens: 4000,
+    system: '【最重要】分析対象テーマ：「' + topic + '」\nこのテーマのみを分析してください。記憶DBや過去案件の別テーマに絶対に引っ張られないこと。\n\nあなたは消費者心理の専門家です。「' + topic + '」のターゲットの不安・欲求・使う言葉を深層心理まで掘り下げてください。',
+    messages: [{ role: 'user', content: ctx + '\n\n徹底分析：\n1. ペルソナ3人以上\n2. 顕在・潜在ニーズ\n3. 購入を阻む不安トップ5\n4. 検索キーワード20個以上\n5. リアルな口コミ表現15個以上\n6. 買わない理由トップ5と克服法\n7. 感情の流れ（認知→検討→決定→後悔防止）\n8. 情報収集チャネル\n9. 決定トリガー\n10. 競合を選ぶ理由と奪い返す方法' }]
+  });
+  return res.content[0].text;
+};
+
+// Step4: 顧客ニーズ深掘り（ChatGPT）
+DiscussionEngine.prototype._step4 = async function(ctx, topic, history) {
+  var s3 = this._getStepResult(history, 3);
+  var res = await this.openai.chat.completions.create({
+    model: 'gpt-4o', max_tokens: 4000,
+    messages: [
+      { role: 'system', content: '【最重要】分析対象テーマ：「' + topic + '」\nこのテーマのみを分析してください。記憶DBや過去案件の別テーマに絶対に引っ張られないこと。\n\nあなたは消費者行動分析の専門家です。「' + topic + '」に関するClaudeの分析を検証し、全く異なる顧客像やニーズを対抗提示してください。' },
+      { role: 'user', content: ctx + '\n\n【Claudeの顧客分析】\n' + s3 + '\n\n実行：\n1. 想定外の顧客セグメント\n2. 見落とし心理的障壁\n3. 別角度ペルソナ\n4. 購買決定の別モデル\n5. SNS・Q&Aでの声\n6. Claudeへの反論と代替仮説' }
+    ]
+  });
+  return res.choices[0].message.content;
+};
+
+// Step5: 構築・アイデア拡張（Claude）
+DiscussionEngine.prototype._step5 = async function(ctx, topic, history) {
+  var s1 = this._getStepResult(history, 1);
+  var s2 = this._getStepResult(history, 2);
+  var s3 = this._getStepResult(history, 3);
+  var s4 = this._getStepResult(history, 4);
+  var res = await this.anthropic.messages.create({
+    model: 'claude-sonnet-4-20250514', max_tokens: 5000,
+    system: '【最重要】分析対象テーマ：「' + topic + '」\nこのテーマのみを分析してください。記憶DBや過去案件の別テーマに絶対に引っ張られないこと。\n\nあなたは事業戦略の天才です。「' + topic + '」に関する全調査結果を統合し、アイデアを最大限に膨らませてください。異業種の成功事例も積極投入。',
+    messages: [{ role: 'user', content: ctx +
+      '\n\n【Step1: 市場調査Claude】\n' + s1 + '\n\n【Step2: 市場調査GPT】\n' + s2 +
+      '\n\n【Step3: 顧客ニーズClaude】\n' + s3 + '\n\n【Step4: 顧客ニーズGPT】\n' + s4 +
+      '\n\n実行：\n1. 全調査の統合サマリー\n2. 最有望戦略3案\n3. 各案の差別化ポイント\n4. 異業種成功事例の応用3つ以上\n5. テクノロジー活用の可能性\n6. 収益モデル設計\n7. 実行ロードマップ（3ヶ月・6ヶ月・1年）\n8. 最推奨案と理由' }]
+  });
+  return res.content[0].text;
+};
+
+// Step6: 批判・対抗（Claude）
+DiscussionEngine.prototype._step6 = async function(ctx, topic, history) {
+  var s5 = this._getStepResult(history, 5);
+  var res = await this.anthropic.messages.create({
+    model: 'claude-sonnet-4-20250514', max_tokens: 4000,
+    system: '【最重要】分析対象テーマ：「' + topic + '」\nこのテーマのみを分析してください。記憶DBや過去案件の別テーマに絶対に引っ張られないこと。\n\nあなたは容赦ない悪魔の代弁者です。「' + topic + '」について、なぜ失敗するかを徹底的に突いてください。甘い見通し・楽観的数字・見落としリスクを全て指摘。ただし建設的提案も必ず添えること。',
+    messages: [{ role: 'user', content: ctx + '\n\n【Step5: アイデア拡張】\n' + s5 +
+      '\n\n批判観点：\n1. 市場規模が楽観的すぎないか\n2. 競合の反撃シナリオ\n3. 法的リスク（弁護士法・景表法・個情法等）\n4. オペレーション破綻ポイント\n5. 顧客獲得コストの現実性\n6. やらない理由トップ5\n7. 類似事業の失敗パターン\n8. 前田事務所のリソースで可能か\n9. 3年後に市場が変わる可能性\n10. 致命的欠陥と回避策' }]
+  });
+  return res.content[0].text;
+};
+
+// Step7: さらなる批判（ChatGPT）
+DiscussionEngine.prototype._step7 = async function(ctx, topic, history) {
+  var s5 = this._getStepResult(history, 5);
+  var s6 = this._getStepResult(history, 6);
+  var res = await this.openai.chat.completions.create({
+    model: 'gpt-4o', max_tokens: 4000,
+    messages: [
+      { role: 'system', content: '【最重要】分析対象テーマ：「' + topic + '」\nこのテーマのみを分析してください。記憶DBや過去案件の別テーマに絶対に引っ張られないこと。\n\nあなたは競合企業の戦略コンサルタントです。「' + topic + '」に関する前田法律事務所の戦略を見て「競合ならどう潰すか」を徹底提示してください。' },
+      { role: 'user', content: ctx + '\n\n【前田事務所のアイデア】\n' + s5 + '\n\n【Claude批判】\n' + s6 +
+        '\n\n競合代理人として：\n1. 競合の対抗戦略\n2. 価格で潰す方法\n3. マーケで潰す方法\n4. サービス品質で潰す方法\n5. Claude批判の見落とし\n6. 最も脆弱なポイント\n7. 競合が先手で仕掛ける施策' }
+    ]
+  });
+  return res.choices[0].message.content;
+};
+
+// Step8: 批判を乗り越えた最終案の統合（Claude）
+DiscussionEngine.prototype._step8 = async function(ctx, topic, history, memory, sessionId) {
+  var s5 = this._getStepResult(history, 5);
+  var s6 = this._getStepResult(history, 6);
+  var s7 = this._getStepResult(history, 7);
+  var res = await this.anthropic.messages.create({
+    model: 'claude-sonnet-4-20250514', max_tokens: 5000,
+    system: '【最重要】分析対象テーマ：「' + topic + '」\nこのテーマのみを分析してください。記憶DBや過去案件の別テーマに絶対に引っ張られないこと。\n\nあなたは最終統合者です。「' + topic + '」に関する全批判を受け止め穴を全て潰した最強のアイデアを提示してください。各批判に対する具体的解決策を必ず示すこと。前田さんの好み: ' + JSON.stringify(memory),
+    messages: [{ role: 'user', content: ctx +
+      '\n\n【Step5: アイデア拡張】\n' + s5 + '\n\n【Step6: 批判Claude】\n' + s6 + '\n\n【Step7: 批判GPT/競合視点】\n' + s7 +
+      '\n\n実行：\n1. 各批判への具体的解決策（全批判に1つずつ回答）\n2. 修正した最終アイデア\n3. ターゲット定義（最終版）\n4. 差別化ポイント（端的に3つ）\n5. 勝てる理由（端的に）\n6. 収益モデル（最終版）\n7. リスク対策マトリクス\n8. 実行優先順位\n\nフェーズ2に渡す結論としてJSON出力：\n{\n  "target_definition": "ターゲット定義",\n  "appeal_points": ["訴求1", "訴求2", "訴求3"],\n  "differentiation": ["差別化1", "差別化2", "差別化3"],\n  "winning_reason": "勝てる理由",\n  "revenue_model": "収益モデル概要",\n  "catchcopy": ["コピー案1", "コピー案2", "コピー案3"]\n}' }]
+  });
   var text = res.content[0].text;
   var jsonMatch = text.match(/\{[\s\S]*\}/);
   if (jsonMatch) {
     try {
       var parsed = JSON.parse(jsonMatch[0]);
       this.db.prepare('UPDATE sessions SET phase = 2, target_definition = ?, appeal_points = ?, catchcopy = ?, output_plan = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?')
-        .run(parsed.target_definition, JSON.stringify(parsed.appeal_points), JSON.stringify(parsed.catchcopy), parsed.output_plan, sessionId);
-    } catch(e) {}
+        .run(parsed.target_definition, JSON.stringify(parsed.appeal_points), JSON.stringify(parsed.catchcopy), (parsed.winning_reason || '') + ' | ' + (parsed.revenue_model || ''), sessionId);
+    } catch(e) {
+      console.error('[Phase1統合] JSON解析エラー:', e.message);
+      // LINE確認で手動入力を求める
+      if (this.lineQA && this.sendLineFn) {
+        try {
+          var manual = await this.lineQA.askUserViaLine({
+            sessionId: sessionId,
+            question: 'Phase1最終統合でデータ抽出に失敗しました。以下を簡潔に教えてください:\n1. メインターゲット\n2. 訴求ポイント（3つ）\n3. キャッチコピー案',
+            context: { step: 8, error: e.message }, engineType: 'discussion',
+            engineStep: 'phase1_step8_json', pushLineFn: this.sendLineFn
+          });
+          if (manual) text += '\n\n【前田さんの手動指示】\n' + manual;
+        } catch(e2) { console.log('[Discussion] Step8確認タイムアウト'); }
+      }
+    }
   }
   return text;
 };
 
-// セッション作成
-DiscussionEngine.prototype.createSession = function(title, topic) {
-  var r = this.db.prepare('INSERT INTO sessions (title, topic) VALUES (?, ?)').run(title, topic);
-  return r.lastInsertRowid;
+// 最終統合（旧互換）
+DiscussionEngine.prototype.generateFinalSummary = async function(sessionId) {
+  var session = this.db.prepare('SELECT * FROM sessions WHERE id = ?').get(sessionId);
+  var history = this._getHistory(sessionId);
+  var s8 = history.filter(function(h) { return h.round_number === 8; });
+  if (s8.length > 0) return s8[s8.length - 1].content;
+  return this._step8('【テーマ】' + session.topic, session.topic, history, this._getMemoryForContext(), sessionId);
 };
 
-// Claude A: 楽観的構築役
-DiscussionEngine.prototype._callClaudeA = async function(ctx, rt) {
+// フェーズ1完了レポート生成
+DiscussionEngine.prototype.generatePhase1Report = async function(sessionId) {
+  var session = this.db.prepare('SELECT * FROM sessions WHERE id = ?').get(sessionId);
+  var history = this._getHistory(sessionId);
+  var allResults = '';
+  for (var i = 1; i <= 8; i++) {
+    var stepData = history.filter(function(h) { return h.round_number === i && h.role !== 'user'; });
+    if (stepData.length > 0) {
+      allResults += '【Step' + i + ': ' + (stepData[stepData.length - 1].round_theme || '') + '】\n' + stepData[stepData.length - 1].content.substring(0, 3000) + '\n\n';
+    }
+  }
+
   var res = await this.anthropic.messages.create({
-    model: 'claude-sonnet-4-20250514', max_tokens: 2500,
-    system: 'あなたは「Claude A（構築役）」。アイデアを最大限に発展させる楽観論者。可能性を広げ、具体的で実行可能な提案をする。事務所資料の実績・数字を積極的に活用する。',
-    messages: [{ role: 'user', content: ctx + '\n\nこのラウンドのテーマ「' + rt.theme + '」について、最大限にアイデアを発展させてください。' }]
+    model: 'claude-sonnet-4-20250514', max_tokens: 6000,
+    system: 'あなたは前田法律事務所の専属AIアシスタントです。8ステップの壁打ち結果を分析し、以下の6セクションで構造化レポートを作成してください。\n\n各セクションは端的かつ明確に、根拠データや具体的数字を必ず含めてください。抽象的な表現は避け、意思決定に使える品質で出力してください。\n\n必ず以下のJSON形式で出力してください:\n{\n  "target": "ターゲット像・選定理由・その合理性",\n  "market": "市場規模・競合の強み弱み・自社のポジション・根拠データ",\n  "service": "サービスの具体的内容・差別化ポイント・競合に勝てる根拠",\n  "revenue": "想定単価・月間件数・月商・年商・主なコストと利益",\n  "challenges": "実現上の課題・リスク・解決すべき問題",\n  "discussion": "壁打ちで出た主要論点・立てた仮説・その根拠"\n}',
+    messages: [{ role: 'user', content: '【テーマ】' + session.topic + '\n\n【壁打ち全8ステップの結果】\n' + allResults }]
   });
-  return res.content[0].text;
+
+  var text = res.content[0].text;
+  var jsonMatch = text.match(/\{[\s\S]*\}/);
+  if (jsonMatch) {
+    try {
+      var report = JSON.parse(jsonMatch[0]);
+      report.topic = session.topic;
+      report.title = session.title;
+      report.sessionId = sessionId;
+      return report;
+    } catch(e) {
+      console.error('[Phase1Report] JSON解析エラー:', e.message);
+    }
+  }
+  // フォールバック: テキストをそのまま返す
+  return { topic: session.topic, title: session.title, sessionId: sessionId, target: '', market: '', service: '', revenue: '', challenges: '', discussion: '', raw: text };
 };
 
-// Claude B: 容赦ない破壊役
-DiscussionEngine.prototype._callClaudeB = async function(ctx, draft, rt) {
+// ステップクリア（やり直し用, Feature 2）
+DiscussionEngine.prototype.clearStep = function(sessionId, stepNum) {
+  this.db.prepare('DELETE FROM discussion_logs WHERE session_id = ? AND round_number = ? AND role != ?').run(sessionId, stepNum, 'user');
+  // current_roundをstepNum-1に戻す
+  var prevStep = stepNum > 1 ? stepNum - 1 : 0;
+  this.db.prepare('UPDATE sessions SET current_round = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?').run(prevStep, sessionId);
+  console.log('[DiscussionEngine] Step' + stepNum + 'クリア完了 (session:' + sessionId + ')');
+};
+
+// ===== ヘルパー =====
+
+// Step5後: 方向性確認が必要か判定
+DiscussionEngine.prototype._checkNeedsConfirmation = async function(stepResult, topic) {
   var res = await this.anthropic.messages.create({
-    model: 'claude-sonnet-4-20250514', max_tokens: 2500,
-    system: 'あなたは「Claude B（破壊役）」。容赦なく穴を突く悪魔の代弁者。「絶対失敗する」レベルで厳しく批判する。甘い分析は許さない。法的リスクにも敏感。ただし建設的な代替案も必ず出す。',
-    messages: [{ role: 'user', content: ctx + '\n\nClaude Aの提案:\n' + draft + '\n\n「絶対失敗する」視点で容赦なく批判してください。' }]
+    model: 'claude-sonnet-4-20250514', max_tokens: 500,
+    system: '議論結果を分析し、前田さんに方向性確認が必要か判定してください。複数の大きく異なる戦略案がある場合のみtrueにしてください。',
+    messages: [{ role: 'user', content: '以下の議論結果に、方向性が大きく異なる複数案がありますか？\n\n' + stepResult.substring(0, 2000) + '\n\nJSON形式: {"needsConfirmation": true/false, "question": "前田さんへの質問文（false時は空）"}' }]
   });
-  return res.content[0].text;
+  try {
+    var m = res.content[0].text.match(/\{[\s\S]*\}/);
+    return m ? JSON.parse(m[0]) : { needsConfirmation: false, question: '' };
+  } catch(e) { return { needsConfirmation: false, question: '' }; }
 };
 
-// ChatGPT: 市場・データ役
-DiscussionEngine.prototype._callChatGPT = async function(ctx, draft, critique, rt) {
-  var res = await this.openai.chat.completions.create({
-    model: 'gpt-4o', max_tokens: 2500,
-    messages: [
-      { role: 'system', content: 'あなたは「ChatGPT（市場役）」。競合・トレンド・顧客心理の専門家。必ずデータと事例で語る。他業界の成功事例も積極的に引用する。' },
-      { role: 'user', content: ctx + '\n\nClaude A:\n' + draft + '\n\nClaude B:\n' + critique + '\n\n市場データ・競合分析・顧客心理の観点から意見してください。' }
-    ]
-  });
-  return res.choices[0].message.content;
+DiscussionEngine.prototype._getStepResult = function(history, stepNum) {
+  var s = history.filter(function(h) { return h.round_number === stepNum && h.role !== 'user'; });
+  return s.length > 0 ? s[s.length - 1].content : '（未実行）';
 };
 
-// 統合（前田フィルター適用）
-DiscussionEngine.prototype._synthesize = async function(ctx, draft, critique, market, rt, memory) {
-  var res = await this.anthropic.messages.create({
-    model: 'claude-sonnet-4-20250514', max_tokens: 3000,
-    system: '全意見を統合し、前田さんの過去の判断傾向を織り込んで最終見解をまとめてください。前田さんの記憶DB: ' + JSON.stringify(memory),
-    messages: [{ role: 'user', content: 'ラウンド「' + rt.theme + '」の全意見:\n\nClaude A（構築役）:\n' + draft + '\n\nClaude B（破壊役）:\n' + critique + '\n\nChatGPT（市場役）:\n' + market +
-      '\n\n全意見を統合し、前田さんの好み・判断傾向を考慮した最終見解をまとめてください。このラウンドの結論と次ラウンドへの課題も明記。' }]
-  });
-  return res.content[0].text;
-};
-
-// ヘルパー
 DiscussionEngine.prototype._getHistory = function(sid) {
   return this.db.prepare('SELECT * FROM discussion_logs WHERE session_id = ? ORDER BY created_at ASC').all(sid);
 };
@@ -176,23 +317,36 @@ DiscussionEngine.prototype._getOfficeDocs = function() {
   var path = require('path');
   var dir = path.join(__dirname, '..', '..', 'data', 'office-docs');
   if (!fs.existsSync(dir)) return null;
-  var files = fs.readdirSync(dir).filter(function(f) { return f.endsWith('.txt') || f.endsWith('.md'); });
-  var contents = files.map(function(f) {
-    try { return '【' + f + '】\n' + fs.readFileSync(path.join(dir, f), 'utf8').substring(0, 2000); }
-    catch(e) { return ''; }
-  });
-  return contents.join('\n\n') || null;
+  var result = [];
+  this._readDir(dir, result);
+  return result.join('\n\n') || null;
+};
+
+DiscussionEngine.prototype._readDir = function(dir, result) {
+  var fs = require('fs');
+  var path = require('path');
+  try {
+    var items = fs.readdirSync(dir);
+    for (var i = 0; i < items.length; i++) {
+      var full = path.join(dir, items[i]);
+      var stat = fs.statSync(full);
+      if (stat.isDirectory()) this._readDir(full, result);
+      else if (items[i].endsWith('.txt') || items[i].endsWith('.md')) {
+        try { result.push('【' + items[i] + '】\n' + fs.readFileSync(full, 'utf8').substring(0, 2000)); } catch(e) {}
+      }
+    }
+  } catch(e) {}
 };
 
 DiscussionEngine.prototype._getOfficeDocsSummary = function() {
-  var docs = this._getOfficeDocs();
-  return docs ? docs.substring(0, 1500) : null;
+  var d = this._getOfficeDocs();
+  return d ? d.substring(0, 1500) : null;
 };
 
 DiscussionEngine.prototype._getSimilarCases = function(topic) {
-  var cases = this.db.prepare("SELECT title, output_type, description, tone, tags FROM case_library ORDER BY created_at DESC LIMIT 10").all();
-  if (cases.length === 0) return null;
-  return cases.map(function(c) { return '[' + c.output_type + '] ' + c.title + ': ' + (c.description || ''); }).join('\n');
+  var c = this.db.prepare("SELECT title, output_type, description FROM case_library ORDER BY created_at DESC LIMIT 10").all();
+  if (c.length === 0) return null;
+  return c.map(function(x) { return '[' + x.output_type + '] ' + x.title; }).join('\n');
 };
 
 DiscussionEngine.prototype._saveLog = function(sid, phase, round, theme, role, label, content, sm) {

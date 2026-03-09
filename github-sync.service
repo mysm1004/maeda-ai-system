@@ -1,0 +1,21 @@
+[Unit]
+Description=GitHub Auto-Sync for Kabeuchi System
+After=network.target claude-code-daemon.service
+
+[Service]
+Type=simple
+User=ubuntu
+Group=ubuntu
+WorkingDirectory=/home/ubuntu/kabeuchi-system
+EnvironmentFile=/home/ubuntu/kabeuchi-system/.env
+ExecStart=/usr/bin/node /home/ubuntu/kabeuchi-system/github-sync.js sync
+Restart=always
+RestartSec=30
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=github-sync
+Environment=NODE_ENV=production
+Environment=HOME=/home/ubuntu
+
+[Install]
+WantedBy=multi-user.target

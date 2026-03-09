@@ -1,0 +1,35 @@
+[Unit]
+Description=Claude Code Daemon - LINE→Claude Code Bridge
+After=network.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=ubuntu
+Group=ubuntu
+WorkingDirectory=/home/ubuntu/kabeuchi-system
+EnvironmentFile=/home/ubuntu/kabeuchi-system/.env
+ExecStart=/usr/bin/node /home/ubuntu/kabeuchi-system/claude-code-daemon.js
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=claude-code-daemon
+
+# セキュリティ設定
+NoNewPrivileges=false
+ProtectSystem=false
+ProtectHome=false
+
+# リソース制限
+LimitNOFILE=65536
+MemoryMax=1G
+TimeoutStopSec=30
+
+# 環境変数
+Environment=NODE_ENV=production
+Environment=HOME=/home/ubuntu
+Environment=PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+[Install]
+WantedBy=multi-user.target
