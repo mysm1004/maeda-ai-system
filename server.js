@@ -284,79 +284,6 @@ async function processLineCommand(text, userId) {
       return '[' + s.id + '] ' + s.title + ' (R' + s.current_round + '/' + s.total_rounds + ')';
     }).join('\n');
   }
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
   // ============ モード切替 ============
   if (t === 'PCモード' || t === 'pcモード' || t === 'PC' || t === 'ローカル') {
     try {
@@ -416,152 +343,6 @@ async function processLineCommand(text, userId) {
     return msg2;
   }
 
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
   // Claude Code コマンド（コード修正・実装・デプロイ）
   var ccPrefixes = ['コード', '修正', '実装', '追加', 'バグ', 'デプロイ', 'claude'];
   var isCodeCmd = ccPrefixes.some(function(p) { return t.startsWith(p); });
@@ -615,7 +396,6 @@ async function processLineCommand(text, userId) {
     }
   }
 
-<<<<<<< Updated upstream
   // ============ 質問・ステータス問い合わせ判定 ============
   var questionPatterns = [
     /教えて/, /は[？?]$/, /どう(いう|なって)/, /状況/, /進捗/,
@@ -629,23 +409,16 @@ async function processLineCommand(text, userId) {
     if (allSessions.length === 0 && pendingQ.length === 0) {
       return '現在進行中のプロジェクトはありません';
     }
-    var statusMsg = '【現在の状況】
-';
+    var statusMsg = '【現在の状況】\n';
     allSessions.forEach(function(s) {
-      statusMsg += '
-📋 ' + s.title + '
-  Phase' + s.phase + ' / ラウンド' + s.current_round + '/' + s.total_rounds + ' (' + s.status + ')';
+      statusMsg += '\n\u{1F4CB} ' + s.title + '\n  Phase' + s.phase + ' / ラウンド' + s.current_round + '/' + s.total_rounds + ' (' + s.status + ')';
     });
     if (pendingQ.length > 0) {
-      statusMsg += '
-
-【承認待ち: ' + pendingQ.length + '件】';
+      statusMsg += '\n\n【承認待ち: ' + pendingQ.length + '件】';
       pendingQ.forEach(function(q) {
-        statusMsg += '
-・' + q.output_type + '（推奨: パターン' + q.recommended_pattern + '）';
+        statusMsg += '\n・' + q.output_type + '（推奨: パターン' + q.recommended_pattern + '）';
       });
-      statusMsg += '
-→「承認」または「却下 理由」で返信';
+      statusMsg += '\n→「承認」または「却下 理由」で返信';
     }
     return statusMsg;
   }
@@ -661,20 +434,7 @@ async function processLineCommand(text, userId) {
   }
 
   // それ以外は壁打ちコマンドとして処理を試みる
-  return '「' + t.substring(0, 20) + '」を受け付けました。
-
-使えるコマンド:
-・承認 / 却下 / 状態
-・コード○○ / 修正○○
-・PCモード / AWSモード
-・CC状態 / モード確認
-
-メモ保存は「○○をメモして」と送ってください';
-=======
-  // 音声メモとして保存
-  db.prepare('INSERT INTO voice_memos (text) VALUES (?)').run(t);
-  return 'メモ保存しました: 「' + t.substring(0, 30) + '...」';
->>>>>>> Stashed changes
+  return '「' + t.substring(0, 20) + '」を受け付けました。\n\n使えるコマンド:\n・承認 / 却下 / 状態\n・コード○○ / 修正○○\n・PCモード / AWSモード\n・CC状態 / モード確認\n\nメモ保存は「○○をメモして」と送ってください';
 }
 
 // LINE返信
