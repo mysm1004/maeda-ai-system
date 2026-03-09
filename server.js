@@ -284,6 +284,7 @@ async function processLineCommand(text, userId) {
       return '[' + s.id + '] ' + s.title + ' (R' + s.current_round + '/' + s.total_rounds + ')';
     }).join('\n');
   }
+<<<<<<< Updated upstream
   // ============ モード切替 ============
   if (t === 'PCモード' || t === 'pcモード' || t === 'PC' || t === 'ローカル') {
     try {
@@ -344,6 +345,8 @@ async function processLineCommand(text, userId) {
   }
 
   // ============ Claude Code コマンド ============
+=======
+>>>>>>> Stashed changes
   // Claude Code コマンド（コード修正・実装・デプロイ）
   var ccPrefixes = ['コード', '修正', '実装', '追加', 'バグ', 'デプロイ', 'claude'];
   var isCodeCmd = ccPrefixes.some(function(p) { return t.startsWith(p); });

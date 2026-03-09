@@ -1,0 +1,26 @@
+{
+  "name": "kabeuchi-system",
+  "version": "1.0.0",
+  "description": "3者自動壁打ちシステム - Claude A/B + ChatGPT",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.39.0",
+    "better-sqlite3": "^11.7.0",
+    "compression": "^1.7.4",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.0",
+    "ejs": "^3.1.10",
+    "exceljs": "^4.4.0",
+    "express": "^4.21.0",
+    "express-rate-limit": "^7.4.0",
+    "express-session": "^1.18.0",
+    "helmet": "^8.0.0",
+    "marked": "^15.0.0",
+    "node-cron": "^3.0.3",
+    "openai": "^4.77.0"
+  }
+}
