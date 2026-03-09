@@ -148,10 +148,13 @@ function initDatabase(dbPath) {
   )");
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
   // インデックス
   db.exec("CREATE INDEX IF NOT EXISTS idx_logs_session ON discussion_logs(session_id)");
   db.exec("CREATE INDEX IF NOT EXISTS idx_logs_phase ON discussion_logs(session_id, phase, round_number)");
 =======
+=======
+>>>>>>> Stashed changes
   // LINE Q&A 保留質問
   db.exec("CREATE TABLE IF NOT EXISTS pending_questions (\
     id INTEGER PRIMARY KEY AUTOINCREMENT,\
@@ -172,6 +175,9 @@ function initDatabase(dbPath) {
     // インデックス
   db.exec("CREATE INDEX IF NOT EXISTS idx_logs_session ON discussion_logs(session_id)");
   try { db.exec("CREATE INDEX IF NOT EXISTS idx_logs_phase ON discussion_logs(session_id, phase, round_number)"); } catch(e) {}
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
   db.exec("CREATE INDEX IF NOT EXISTS idx_memory_cat ON memory_db(category)");
   db.exec("CREATE INDEX IF NOT EXISTS idx_memory_output ON memory_db(output_type)");
@@ -179,7 +185,10 @@ function initDatabase(dbPath) {
   db.exec("CREATE INDEX IF NOT EXISTS idx_case_tags ON case_library(tags)");
   db.exec("CREATE INDEX IF NOT EXISTS idx_decisions_session ON decisions(session_id)");
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
   db.exec("CREATE INDEX IF NOT EXISTS idx_pending_status ON pending_questions(status)");
 
   // Feature 3: 優先度
@@ -275,6 +284,9 @@ function initDatabase(dbPath) {
   // Phase 4/5/6: sessions テーブル拡張
   try { db.exec("ALTER TABLE sessions ADD COLUMN phase_plan TEXT DEFAULT '1,2,3,4,5,6'"); } catch(e) {}
   try { db.exec("ALTER TABLE sessions ADD COLUMN list_count INTEGER DEFAULT 100"); } catch(e) {}
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 
   return db;
