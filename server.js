@@ -285,6 +285,7 @@ async function processLineCommand(text, userId) {
     }).join('\n');
   }
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
   // ============ モード切替 ============
   if (t === 'PCモード' || t === 'pcモード' || t === 'PC' || t === 'ローカル') {
     try {
@@ -344,6 +345,8 @@ async function processLineCommand(text, userId) {
     return msg2;
   }
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
   // Claude Code コマンド（コード修正・実装・デプロイ）
