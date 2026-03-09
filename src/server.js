@@ -5,10 +5,10 @@ var compression = require('compression');
 var cron = require('node-cron');
 var http = require('http');
 var https = require('https');
-var { initDatabase } = require('./db/schema');
-var DiscussionEngine = require('./services/discussion-engine');
-var PreferenceLearner = require('./services/preference-learner');
-var OutputGenerator = require('./services/output-generator');
+var { initDatabase } = require('./schema');
+var DiscussionEngine = require('./discussion-engine');
+var PreferenceLearner = require('./preference-learner');
+var OutputGenerator = require('./output-generator');
 var StateManager = require('./state-manager');
 var Anthropic = require('@anthropic-ai/sdk');
 
@@ -284,7 +284,6 @@ async function processLineCommand(text, userId) {
       return '[' + s.id + '] ' + s.title + ' (R' + s.current_round + '/' + s.total_rounds + ')';
     }).join('\n');
   }
-<<<<<<< Updated upstream
   // ============ モード切替 ============
   if (t === 'PCモード' || t === 'pcモード' || t === 'PC' || t === 'ローカル') {
     try {
@@ -344,9 +343,6 @@ async function processLineCommand(text, userId) {
     return msg2;
   }
 
-  // ============ Claude Code コマンド ============
-=======
->>>>>>> Stashed changes
   // Claude Code コマンド（コード修正・実装・デプロイ）
   var ccPrefixes = ['コード', '修正', '実装', '追加', 'バグ', 'デプロイ', 'claude'];
   var isCodeCmd = ccPrefixes.some(function(p) { return t.startsWith(p); });

@@ -200,8 +200,8 @@ OutputGenerator.prototype._phase3_step1 = async function(sessionId, outputType, 
   var results = await Promise.all(Object.keys(PATTERNS).map(async function(key) {
     var p = PATTERNS[key];
     var r = await this.anthropic.messages.create({
-      model: 'claude-sonnet-4-20250514', max_tokens: 5000,
-      system: 'あなたはトップコピーライターです。「' + p.name + '（' + p.desc + '）」のパターンで、Phase2の訴求設計書に基づいて最高品質のコンテンツを生成してください。' + qualityRules,
+      model: 'claude-sonnet-4-20250514', max_tokens: 16000,
+      system: 'あなたはトップコピーライターです。「' + p.name + '（' + p.desc + '）」のパターンで、Phase2の訴求設計書に基づいて最高品質のコンテンツを生成してください。HTML系アウトプット（LP、バナー等）の場合は、必ず<!DOCTYPE html>から</html>まで完結する単一HTMLファイルとして出力。CSSは全て<style>タグ内、JSは全て<script>タグ内にインライン記述。外部ファイル参照禁止。' + qualityRules,
       messages: [{ role: 'user', content: basePrompt + '\n\nパターン「' + p.name + '」で生成してください。設計書のキャッチコピー・構成を活かしつつ、このパターンの特性を最大限発揮すること。' }]
     });
     return { pattern: key, name: p.name, desc: p.desc, content: r.content[0].text };
@@ -360,8 +360,8 @@ OutputGenerator.prototype._phase3_step7 = async function(patterns, phase2Final, 
   // 4パターン最終改善版を並行生成
   var finalPatterns = await Promise.all(patterns.map(async function(p) {
     var r = await this.anthropic.messages.create({
-      model: 'claude-sonnet-4-20250514', max_tokens: 5000,
-      system: 'あなたは最終仕上げ担当のトップコピーライターです。全チェック結果を反映し最高品質の最終版を生成してください。前田さんの好み: ' + JSON.stringify(memory),
+      model: 'claude-sonnet-4-20250514', max_tokens: 16000,
+      system: 'あなたは最終仕上げ担当のトップコピーライターです。全チェック結果を反映し最高品質の最終版を生成してください。HTML系アウトプット（LP、バナー等）の場合は、必ず<!DOCTYPE html>から</html>まで完結する単一HTMLファイルとして出力。CSSは全て<style>タグ内、JSは全て<script>タグ内にインライン記述。外部ファイル参照禁止。前田さんの好み: ' + JSON.stringify(memory),
       messages: [{ role: 'user', content: '【元のパターン' + p.pattern + ': ' + p.name + '】\n' + p.content +
         '\n\n【全チェックからの改善指示】\n' + allFeedback +
         '\n\n全ての指摘を反映した最終版を生成してください。改善点を必ず全て反映すること。' }]
@@ -607,8 +607,8 @@ OutputGenerator.prototype._saveOutputLog = function(sessionId, phase, step, labe
 // アウトプット種別ごとの指示
 OutputGenerator.prototype._getTypeInstructions = function(type) {
   var map = {
-    'lp': 'レスポンシブHTML/CSSでLP全体を生成。セクション: ファーストビュー→悩み共感→解決策→実績/証拠→サービス詳細→料金→FAQ→CTA。',
-    'banner': '複数サイズ（300x250, 728x90, 1200x628）のHTML/SVGバナーを生成。',
+    'lp': '完全な単一HTMLファイルでLP全体を生成。CSSは全て<style>タグ内にインライン記述（外部CSS参照禁止）。JavaScriptも全て<script>タグ内にインライン記述（外部JS参照禁止）。画像はSVGインラインまたはCSS背景のみ使用（外部画像URL禁止）。bodyやコンテナにdisplay:noneやvisibility:hiddenを設定しない。<!DOCTYPE html>から</html>まで完結すること。セクション: ファーストビュー→悩み共感→解決策→実績/証拠→サービス詳細→料金→FAQ→CTA。レスポンシブ対応必須。',
+    'banner': '完全な単一HTMLファイルで複数サイズ（300x250, 728x90, 1200x628）のHTML/SVGバナーを生成。CSSは全て<style>タグ内にインライン記述。外部ファイル参照禁止。<!DOCTYPE html>から</html>まで完結すること。',
     'sns_post': 'X(Twitter)・Instagram・Facebook・LinkedIn用の投稿文を各1つ生成。ハッシュタグ付き。',
     'blog': 'SEO最適化記事。H1/H2/H3構成、メタディスクリプション、内部リンク候補を含む。3000文字以上。',
     'youtube_script': 'YouTube動画台本。フック→本題→CTA構成。タイムスタンプ付き。',
@@ -618,7 +618,7 @@ OutputGenerator.prototype._getTypeInstructions = function(type) {
     'seo_article': 'SEO記事。構成案→本文→メタ情報まで一括。schema.org構造化データ付き。',
     'aio_content': 'AI検索回答に選ばれるFAQ/構造化コンテンツ。',
     'proposal': '提案書。目次→概要→課題分析→提案内容→実績→スケジュール→費用。',
-    'dm': 'DM/手紙/営業メール。件名+本文。',
+    'dm': '完全な単一HTMLファイルでDMを生成。CSSは全て<style>タグ内にインライン記述。JavaScriptも全て<script>タグ内にインライン記述。外部ファイル参照禁止。<!DOCTYPE html>から</html>まで完結すること。件名+本文。印刷向けレイアウト推奨。',
     'sales_script': '営業トーク台本・FAQ集。場面別の対応スクリプト。',
     'company_profile': '会社概要・サービス資料。',
     'legal_content': '法律解説コンテンツ。一般向け・わかりやすい表現。',
