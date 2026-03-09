@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>家族に迷惑をかけない死後事務委任｜前田法律事務所</title>
+    <meta name="description" content="役所届出・銀行手続き・不動産処理等の死後手続きを弁護士が代行サポート。提携寺院ネットワークで宗派を問わず対応。法的拘束力のある生前契約で安心の終活準備。">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Hiragino Kaku Gothic ProN', 'Yu Gothic', sans-serif;
+            line-height: 1.7;
+            color: #333;
+            background-color: #fff;
+            font-size: 16px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .section {
+            padding: 80px 0;
+        }
+
+        /* ファーストビュー */
+        .hero {
+            background: linear-gradient(135deg, #2c5282 0%, #2a4365 100%);
+            color: white;
+            text-align: center;
+            padding: 80px 0;
+            position: relative;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><path d="M0,300 Q300,100 600,300 T1200,300 L1200,800 L0,800 Z" fill="rgba(255,255,255,0.08)"/></svg>') no-repeat bottom center;
+            background-size: cover;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 25px;
+            line-height: 1.4;
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 35px;
+            opacity: 0.95;
+            line-height: 1.6;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-stats {
+            background: rgba(255,255,255,0.15);
+            border-radius: 12px;
+            padding: 25px;
+            margin: 30px auto;
+            max-width: 650px;
+            backdrop-filter: blur(10px);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            text-align: center;
+        }
+
+        .stat-item {
+            padding: 15px;
+        }
+
+        .stat-number {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #68d391;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #38a169, #2f855a);
+            color: white;
+            padding: 18px 35px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 1.15rem;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(56, 161, 105, 0.3);
+            transition: all 0.3s ease;
+            margin: 25px 10px;
+            min-height: 48px;
+            min-width: 200px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(56, 161, 105, 0.4);
+        }
+
+        .cta-secondary {
+            background: linear-gradient(135deg, #e53e3e, #c53030);
+            box-shadow: 0 4px 15px rgba(229, 62, 62, 0.3);
+        }
+
+        .cta-secondary:hover {
+            box-shadow: 0 6px 20px rgba(229, 62, 62, 0.4);
+        }
+
+        /* 弁護士プロフィール - 信頼性強化 */
+        .lawyer-profile {
+            background: #f0f8ff;
+            padding: 70px 0;
+        }
+
+        .profile-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 50px;
+            border-radius: 20px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .lawyer-photo {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            background: #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            color: #2c5282;
+            flex-shrink: 0;
+        }
+
+        .profile-content {
+            flex: 1;
+        }
+
+        .profile-content h2 {
+            font-size: 2rem;
+            color: #2c5282;
+            margin-bottom: 10px;
+        }
+
+        .lawyer-title {
+            color: #666;
+            font-size: 1.1rem;
+            margin-bottom: 25px;
+        }
+
+        .profile-description {
+            line-height: 1.7;
+            color: #555;
+            margin-bottom: 25px;
+            font-size: 16px;
+        }
+
+        .office-info {
+            background: #f7fafc;
+            padding: 25px;
+            border-radius: 12px;
+            font-size: 16px;
+            color: #555;
+            border-left: 5px solid #2c5282;
+        }
+
+        .office-info h3 {
+            color: #2c5282;
+            margin-bottom: 12px;
+            font-size: 1.2rem;
+        }
+
+        /* 課題提起セクション - ストーリー性強化 */
+        .story-section {
+            padding: 70px 0;
+            background: #fafafa;
+        }
+
+        .story-container {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .story-section h2 {
+            font-size: 2.2rem;
+            color: #2d3748;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+
+        .story-intro {
+            font-size: 1.2rem;
+            color: #666;
+            line-height: 1.7;
+            margin-bottom: 40px;
+        }
+
+        .story-highlight {
+            background: linear-gradient(135deg, #fff5f5, #fed7d7);
+            border-left: 5px solid #e53e3e;
+            border-radius: 12px;
+            padding: 35px;
+            margin: 40px 0;
+            text-align: left;
+        }
+
+        .story-highlight h3 {
+            font-size: 1.6rem;
+            color: #e53e3e;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .problem-scenario {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin: 20px 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        .scenario-title {
+            font-size: 1.3rem;
+            color: #2d3748;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .problem-list {
+            list-style: none;
+            margin: 20px 0;
+        }
+
+        .problem-list li {
+            padding: 8px 0;
+            position: relative;
+            padding-left: 30px;
+            font-size: 16px;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .problem-list li::before {
+            content: '⚠️';
+            position: absolute;
+            left: 0;
+        }
+
+        .data-source {
+            background: #e6f7ff;
+            border: 2px solid #91d5ff;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 30px 0;
+            font-size: 0.95rem;
+            color: #1890ff;
+            text-align: center;
+        }
+
+        /* 独自性セクション - 具体性強化 */
+        .uniqueness {
+            background: white;
+            padding: 70px 0;
+        }
+
+        .uniqueness h2 {
+            text-align: center;
+            font-size: 2.2rem;
+            color: #2d3748;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .uniqueness-subtitle {
+            text-align: center;
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 50px;
+        }
+
+        .unique-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 35px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .unique-card {
+            background: white;
+            padding: 40px 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            text-align: center;
+            border: 2px solid #e2e8f0;
+            position: relative;
+        }
+
+        .unique-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #38a169, #2f855a);
+            border-radius: 15px 15px 0 0;
+        }
+
+        .unique-icon {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .unique-card h3 {
+            font-size: 1.5rem;
+            color: #2d3748;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .unique-card p {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+
+        .unique-detail {
+            background: #f7fafc;
+            padding: 20px;
+            border-radius: 10px;
+            font-size: 16px;
+            color: #4a5568;
+            border-left: 4px solid #38a169;
+            text-align: left;
+        }
+
+        .unique-detail strong {
+            color: #2d3748;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        /* 解決策セクション */
+        .solution-section {
+            background: linear-gradient(135deg, #2c5282, #2a4365);
+            color: white;
+            padding: 70px 0;
+            text-align: center;
+        }
+
+        .solution-section h2 {
+            font-size: 2.3rem;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+
+        .solution-intro {
+            font-size: 1.3rem;
+            margin-bottom: 50px;
+            opacity: 0.95;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-bottom: 50px;
+        }
+
+        .solution-process {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .process-step {
+            background: rgba(255,255,255,0.12);
+            padding: 40px 25px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        .step-number {
+            width: 60px;
+            height: 60px;
+            background: #38a169;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 25px;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .process-step h3 {
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .process-step p {
+            font-size: 16px;
+            line-height: 1.7;
+            opacity: 0.95;
+        }
+
+        /* サービス詳細 */
+        .service-details {
+            padding: 70px 0;
+            background: #f7fafc;
+        }
+
+        .service-details h2 {
+            text-align: center;
+            font-size: 2.2rem;
+            color: #2d3748;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .service-subtitle {
+            text-align: center;
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 50px;
+        }
+
+        .service-categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+        }
+
+        .service-category {
+            background: white;
+            padding: 40px 30px;
+            border-radius: 15px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+        }
+
+        .category-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .category-number {
+            display: inline-block;
+            background: #2c5282;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            line-height: 50px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .service-category h3 {
+            font-size: 1.5rem;
+            color: #2c5282;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .service-list {
+            list-style: none;
+        }
+
+        .service-list li {
+            padding: 12px 0;
+            border-bottom: 1px solid #e2e8f0;
+            position: relative;
+            padding-left: 30px;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        .service-list li::before {
+            content: '✓';
+            color: #38a169;
+            font-weight: 700;
+            position: absolute;
+            left: 0;
+            font-size: 1.2rem;
+        }
+
+        /* 料金セクション */
+        .pricing {
+            padding: 70px 0;
+            text-align: center;
+            background: white;
+        }
+
+        .pricing h2 {
+            font-size: 2.2rem;
+            color: #2d3748;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+
+        .pricing-subtitle {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 50px;
+        }
+
+        .pricing-container {
+            max-width: 700px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            overflow: hidden;
+        }
+
+        .pricing-header {
+            background: linear-gradient(135deg, #2c5282, #2a4365);
+            color: white;
+            padding: 50px 30px;
+        }
+
+        .pricing-title {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .pricing-amount {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .pricing-note {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .pricing-features {
+            padding: 50px 40px;
+        }
+
+        .pricing-features ul {
+            list-style: none;
+            text-align: left;
+        }
+
+        .pricing-features li {
+            padding: 15px 0;
+            border-bottom: 1px solid #e2e8f0;
+            position: relative;
+            padding-left: 35px;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        .pricing-features li::before {
+            content: '✓';
+            color: #38a169;
+            font-weight: 700;
+            position: absolute;
+            left: 0;
+            font-size: 1.3rem;
+        }
+
+        /* FAQ */
+        .faq {
+            background: #f7fafc;
+            padding: 70px 0;
+        }
+
+        .faq h2 {
+            text-align: center;
+            font-size: 2.2rem;
+            color: #2d3748;
+            margin-bottom: 50px;
+            font-weight: 600;
+        }
+
+        .faq-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            background
