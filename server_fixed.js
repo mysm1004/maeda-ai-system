@@ -411,12 +411,23 @@ async function processLineCommand(text, userId) {
     }
     var statusMsg = '【現在の状況】\n';
     allSessions.forEach(function(s) {
-      statusMsg += '\n📋 ' + s.title + '
-  Phase' + s.phase + ' / ラウンド' + s.current_round + '/' + s.total_rounds + ' (' + s.status + ')';\n    });\n    if (pendingQ.length > 0) {\n      statusMsg += '
+      statusMsg += '\n\u{1F4CB} ' + s.title + '\n  Phase' + s.phase + ' / ラウンド' + s.current_round + '/' + s.total_rounds + ' (' + s.status + ')';
+    });
+    if (pendingQ.length > 0) {
+      statusMsg += '\n\n【承認待ち: ' + pendingQ.length + '件】';
+      pendingQ.forEach(function(q) {
+        statusMsg += '\n・' + q.output_type + '（推奨: パターン' + q.recommended_pattern + '）';
+      });
+      statusMsg += '\n→「承認」または「却下 理由」で返信';
+    }
+    return statusMsg;
+  }
 
-【承認待ち: ' + pendingQ.length + '件】';\n      pendingQ.forEach(function(q) {\n        statusMsg += '
-・' + q.output_type + '（推奨: パターン' + q.recommended_pattern + '）';\n      });\n      statusMsg += '
-→「承認」または「却下 理由」で返信';\n    }\n    return statusMsg;\n  }\n\n  // ============ 明示的メモ保存 ============\n  var memoPatterns = [/メモ(して|しといて|保存)/, /覚えて/, /覚えておいて/, /記録して/];\n  var isMemoRequest = memoPatterns.some(function(p) { return p.test(t); });\n  if (isMemoRequest) {\n    var memoText = t.replace(/メモして|メモしといて|メモ保存|覚えて|覚えておいて|記録して/g, '').trim();
+  // ============ 明示的メモ保存 ============
+  var memoPatterns = [/メモ(して|しといて|保存)/, /覚えて/, /覚えておいて/, /記録して/];
+  var isMemoRequest = memoPatterns.some(function(p) { return p.test(t); });
+  if (isMemoRequest) {
+    var memoText = t.replace(/メモして|メモしといて|メモ保存|覚えて|覚えておいて|記録して/g, '').trim();
     if (!memoText) memoText = t;
     db.prepare('INSERT INTO voice_memos (text) VALUES (?)').run(memoText);
     return 'メモ保存しました: 「' + memoText.substring(0, 30) + '」';
