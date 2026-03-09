@@ -2,8 +2,11 @@ var Anthropic = require('@anthropic-ai/sdk');
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -28,6 +31,9 @@ async function _apiRetry(fn, label) {
 }
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -40,6 +46,7 @@ var PATTERNS = {
   D: { name: '恐怖訴求型', desc: '失わないために行動させる' }
 };
 
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
@@ -67,6 +74,8 @@ OutputGenerator.prototype.createDesignDoc = async function(sessionId, outputType
       '\n【類似過去案件】' + (similarCases || 'なし') +
       '\n\n以下の設計書を作成:\n1. 読者の具体的な人物像\n2. 感情の流れ（不安→共感→希望→信頼→行動）\n3. 最重要ベネフィット1つ・サブベネフィット3つ\n4. 競合との差別化ポイント\n5. 推奨訴求パターン（PASONA/ベネフィット直球/ストーリー/恐怖訴求）\n6. 品質基準チェックリスト' }]
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -238,6 +247,9 @@ OutputGenerator.prototype._phase2_step6 = async function(sessionId, outputType, 
       '}' }]
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -247,6 +259,7 @@ OutputGenerator.prototype._phase2_step6 = async function(sessionId, outputType, 
   return res.content[0].text;
 };
 
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
@@ -266,6 +279,8 @@ OutputGenerator.prototype.generatePatterns = async function(sessionId, outputTyp
 
   var typeInstructions = this._getTypeInstructions(outputType);
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -290,6 +305,9 @@ OutputGenerator.prototype._phase3_step1 = async function(sessionId, outputType, 
     '\n【種別指示】' + typeInst;
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -303,9 +321,15 @@ OutputGenerator.prototype._phase3_step1 = async function(sessionId, outputType, 
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
       model: 'claude-sonnet-4-20250514', max_tokens: 4000,
       system: 'あなたはトップコピーライターです。「' + p.name + '（' + p.desc + '）」のパターンで書いてください。' + qualityRules,
       messages: [{ role: 'user', content: basePrompt + '\n\n' + typeInstructions + '\n\nパターン「' + p.name + '」で生成してください。' }]
+=======
+      model: 'claude-sonnet-4-20250514', max_tokens: 16000,
+      system: 'あなたはトップコピーライターです。「' + p.name + '（' + p.desc + '）」のパターンで、Phase2の訴求設計書に基づいて最高品質のコンテンツを生成してください。HTML系アウトプット（LP、バナー等）の場合は、必ず<!DOCTYPE html>から</html>まで完結する単一HTMLファイルとして出力。CSS・JSは全てインライン（<style>・<script>タグ内）。外部ファイル参照禁止。' + qualityRules,
+      messages: [{ role: 'user', content: basePrompt + '\n\nパターン「' + p.name + '」で生成してください。設計書のキャッチコピー・構成を活かしつつ、このパターンの特性を最大限発揮すること。' }]
+>>>>>>> Stashed changes
 =======
       model: 'claude-sonnet-4-20250514', max_tokens: 16000,
       system: 'あなたはトップコピーライターです。「' + p.name + '（' + p.desc + '）」のパターンで、Phase2の訴求設計書に基づいて最高品質のコンテンツを生成してください。HTML系アウトプット（LP、バナー等）の場合は、必ず<!DOCTYPE html>から</html>まで完結する単一HTMLファイルとして出力。CSS・JSは全てインライン（<style>・<script>タグ内）。外部ファイル参照禁止。' + qualityRules,
@@ -331,11 +355,14 @@ OutputGenerator.prototype._phase3_step1 = async function(sessionId, outputType, 
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 // ステップ3: 自己批評・改善
 OutputGenerator.prototype.critiqueAndImprove = async function(patterns, designDoc, outputType) {
   var memory = this._getMemory(outputType);
 
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -421,6 +448,9 @@ OutputGenerator.prototype._phase3_step4 = async function(patterns, step2Result, 
 OutputGenerator.prototype._phase3_step5 = async function(patterns, step4Result) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -432,6 +462,7 @@ OutputGenerator.prototype._phase3_step5 = async function(patterns, step4Result) 
 
   var res = await this.anthropic.messages.create({
     model: 'claude-sonnet-4-20250514', max_tokens: 3000,
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
@@ -471,6 +502,8 @@ OutputGenerator.prototype.generateFull = async function(sessionId, outputType, p
 
 // 承認後に案件ライブラリに保存
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -691,6 +724,9 @@ OutputGenerator.prototype.generateFull = async function(sessionId, outputType, p
 
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -713,11 +749,14 @@ OutputGenerator.prototype.approveOutput = function(queueId, patternChosen, fileP
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 // アウトプット種別ごとの指示
 OutputGenerator.prototype._getTypeInstructions = function(type) {
   var map = {
     'lp': 'レスポンシブHTML/CSSでLP全体を生成。セクション: ファーストビュー→悩み共感→解決策→実績/証拠→サービス詳細→料金→FAQ→CTA。',
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -815,6 +854,9 @@ OutputGenerator.prototype._getTypeInstructions = function(type) {
     'lp': '完全な単一HTMLファイルでLP全体を生成。CSSは全て<style>タグ内にインライン記述（外部CSS参照禁止）。JavaScriptも全て<script>タグ内にインライン記述（外部JS参照禁止）。画像はSVGインラインまたはCSS背景のみ使用（外部画像URL禁止）。bodyやコンテナにdisplay:noneやvisibility:hiddenを設定しない。<!DOCTYPE html>から</html>まで完結すること。セクション: ファーストビュー→悩み共感→解決策→実績/証拠→サービス詳細→料金→FAQ→CTA。レスポンシブ対応必須。',
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -859,12 +901,15 @@ OutputGenerator.prototype._getOfficeDocs = function() {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
   var files = fs.readdirSync(dir).filter(function(f) { return f.endsWith('.txt') || f.endsWith('.md'); });
   return files.map(function(f) {
     try { return '【' + f + '】\n' + fs.readFileSync(path.join(dir, f), 'utf8').substring(0, 1500); }
     catch(e) { return ''; }
   }).join('\n') || null;
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -890,6 +935,9 @@ OutputGenerator.prototype._readDir = function(dir, result) {
   } catch(e) {}
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -906,6 +954,10 @@ OutputGenerator.prototype._getSimilarOutputs = function(type) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 =======
 
 >>>>>>> Stashed changes
