@@ -5,10 +5,10 @@ var compression = require('compression');
 var cron = require('node-cron');
 var http = require('http');
 var https = require('https');
-var { initDatabase } = require('./db/schema');
-var DiscussionEngine = require('./services/discussion-engine');
-var PreferenceLearner = require('./services/preference-learner');
-var OutputGenerator = require('./services/output-generator');
+var { initDatabase } = require('./schema');
+var DiscussionEngine = require('./discussion-engine');
+var PreferenceLearner = require('./preference-learner');
+var OutputGenerator = require('./output-generator');
 var StateManager = require('./state-manager');
 var Anthropic = require('@anthropic-ai/sdk');
 
