@@ -284,10 +284,6 @@ async function processLineCommand(text, userId) {
       return '[' + s.id + '] ' + s.title + ' (R' + s.current_round + '/' + s.total_rounds + ')';
     }).join('\n');
   }
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
   // ============ モード切替 ============
   if (t === 'PCモード' || t === 'pcモード' || t === 'PC' || t === 'ローカル') {
     try {
@@ -347,14 +343,6 @@ async function processLineCommand(text, userId) {
     return msg2;
   }
 
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
   // Claude Code コマンド（コード修正・実装・デプロイ）
   var ccPrefixes = ['コード', '修正', '実装', '追加', 'バグ', 'デプロイ', 'claude'];
   var isCodeCmd = ccPrefixes.some(function(p) { return t.startsWith(p); });
@@ -408,10 +396,6 @@ async function processLineCommand(text, userId) {
     }
   }
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
   // ============ 質問・ステータス問い合わせ判定 ============
   var questionPatterns = [
     /教えて/, /は[？?]$/, /どう(いう|なって)/, /状況/, /進捗/,
@@ -451,14 +435,6 @@ async function processLineCommand(text, userId) {
 
   // それ以外は壁打ちコマンドとして処理を試みる
   return '「' + t.substring(0, 20) + '」を受け付けました。\n\n使えるコマンド:\n・承認 / 却下 / 状態\n・コード○○ / 修正○○\n・PCモード / AWSモード\n・CC状態 / モード確認\n\nメモ保存は「○○をメモして」と送ってください';
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
   // 音声メモとして保存
   db.prepare('INSERT INTO voice_memos (text) VALUES (?)').run(t);
   return 'メモ保存しました: 「' + t.substring(0, 30) + '...」';
