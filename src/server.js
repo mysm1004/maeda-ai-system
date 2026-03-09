@@ -105,6 +105,7 @@ var cron = require('node-cron');
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 var http = require('http');
 var https = require('https');
 var { initDatabase } = require('./schema');
@@ -114,6 +115,8 @@ var OutputGenerator = require('./output-generator');
 var StateManager = require('./state-manager');
 var Anthropic = require('@anthropic-ai/sdk');
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -431,6 +434,9 @@ var pathMod = require("path");
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -638,6 +644,7 @@ var pathMod = require("path");
 var app = express();
 var PORT = process.env.PORT || 3000;
 var db = initDatabase(process.env.DB_PATH || './data/kabeuchi.db');
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
@@ -954,6 +961,8 @@ try {
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 var lineQA = new LineQA(db);
 var engine = new DiscussionEngine(db, lineQA, sendLine);
 var prefLearner = new PreferenceLearner(db);
@@ -1062,6 +1071,9 @@ var mediaOptimizer = new MediaOptimizer(db, lineQA, sendLine);
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -1371,6 +1383,10 @@ app.use(express.json({ limit: '10mb' }));
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+app.use('/outputs', express.static(pathMod.join(__dirname, 'public/outputs')));
+>>>>>>> Stashed changes
 =======
 app.use('/outputs', express.static(pathMod.join(__dirname, 'public/outputs')));
 >>>>>>> Stashed changes
@@ -1790,7 +1806,11 @@ app.use('/api', function(req, res, next) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 // Phase 1: 壁打ち（6ラウンド議論）
+=======
+// Phase 1: 壁打ち（8ステップ）
+>>>>>>> Stashed changes
 =======
 // Phase 1: 壁打ち（8ステップ）
 >>>>>>> Stashed changes
@@ -2212,7 +2232,10 @@ app.post('/api/discussion', async function(req, res) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -2522,6 +2545,9 @@ app.post('/api/discussion', async function(req, res) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -2843,11 +2869,14 @@ app.post('/api/discussion', async function(req, res) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     if (round > 6) {
       // 全6ラウンド完了 → 最終統合
       var summary = await engine.generateFinalSummary(sid);
       return res.json({ phase: 'complete', sessionId: sid, summary: summary, message: '全6ラウンド完了。Phase2に進む準備ができました。' });
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -3167,6 +3196,9 @@ app.post('/api/discussion', async function(req, res) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -3530,9 +3562,12 @@ app.post('/api/output/generate', async function(req, res) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     var result = await outputGen.generateFull(body.sessionId, body.outputType, body.params || {});
     res.json(result);
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -3852,6 +3887,9 @@ app.post('/api/output/generate', async function(req, res) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -4061,6 +4099,7 @@ app.post('/api/output/generate', async function(req, res) {
   }
 });
 
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
@@ -4377,6 +4416,8 @@ app.post('/api/output/design', async function(req, res) {
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 // アウトプット承認
 app.post('/api/output/approve', function(req, res) {
   var body = req.body;
@@ -4484,7 +4525,12 @@ app.post('/api/output/approve', function(req, res) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
   if (body.pattern) prefLearner.learnFromPatternChoice(null, body.pattern, body.outputType);
+=======
+  var approvedItem = db.prepare('SELECT * FROM output_queue WHERE id = ?').get(body.queueId);
+  if (body.pattern) prefLearner.learnFromPatternChoice(approvedItem ? approvedItem.session_id : null, body.pattern, approvedItem ? approvedItem.output_type : body.outputType);
+>>>>>>> Stashed changes
 =======
   var approvedItem = db.prepare('SELECT * FROM output_queue WHERE id = ?').get(body.queueId);
   if (body.pattern) prefLearner.learnFromPatternChoice(approvedItem ? approvedItem.session_id : null, body.pattern, approvedItem ? approvedItem.output_type : body.outputType);
@@ -5005,7 +5051,10 @@ app.get('/api/output/queue', function(req, res) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -5436,6 +5485,9 @@ app.post('/api/session/phase-advance', async function(req, res) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -5786,7 +5838,10 @@ app.get('/api/voice', function(req, res) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -6302,6 +6357,9 @@ function generateOutputHTML(result, outputType, sessionId) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -6642,9 +6700,12 @@ app.post('/api/line/webhook', async function(req, res) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
       if (reply && ev.replyToken) {
         await replyLine(ev.replyToken, reply);
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -6952,6 +7013,9 @@ app.post('/api/line/webhook', async function(req, res) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -7263,12 +7327,15 @@ app.post('/api/line/webhook', async function(req, res) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 async function processLineCommand(text, userId) {
   var t = text.trim();
   // 承認
   if (t === '承認' || t === 'OK' || t === 'ok') {
     var latest = db.prepare("SELECT * FROM sessions WHERE status = 'active' ORDER BY updated_at DESC LIMIT 1").get();
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -7865,6 +7932,9 @@ async function processLineCommand(text, userId) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -8176,11 +8246,14 @@ async function processLineCommand(text, userId) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
   // 却下
   if (t.startsWith('却下') || t.startsWith('NG')) {
     var comment = t.replace(/^(却下|NG)\s*/, '');
     var latest2 = db.prepare("SELECT * FROM sessions WHERE status = 'active' ORDER BY updated_at DESC LIMIT 1").get();
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -8489,6 +8562,9 @@ async function processLineCommand(text, userId) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -8800,6 +8876,7 @@ async function processLineCommand(text, userId) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
   // 状態確認
   if (t === '状態' || t === 'ステータス') {
     var sessions = db.prepare("SELECT * FROM sessions WHERE status = 'active' ORDER BY updated_at DESC LIMIT 3").all();
@@ -8969,6 +9046,8 @@ async function processLineCommand(text, userId) {
   return 'メモ保存しました: 「' + t.substring(0, 30) + '...」';
 >>>>>>> Stashed changes
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -9569,6 +9648,9 @@ async function processLineCommand(text, userId) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -9958,6 +10040,7 @@ async function runSleepMode() {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
   var latest = db.prepare("SELECT * FROM sessions WHERE status = 'active' ORDER BY updated_at DESC LIMIT 1").get();
   if (!latest) { console.log('[就寝モード] アクティブなセッションなし'); return; }
 
@@ -9992,6 +10075,8 @@ async function runSleepMode() {
   db.prepare('INSERT INTO sleep_logs (session_id, action, result) VALUES (?,?,?)').run(latest.id, 'sleep_end', '完了');
   console.log('[就寝モード] 完了');
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -10386,6 +10471,9 @@ async function runSleepMode() {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -10699,6 +10787,7 @@ async function sendMorningSummary() {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
   var sleepLogs = db.prepare("SELECT * FROM discussion_logs WHERE is_sleep_mode = 1 AND created_at > datetime('now', '-12 hours') ORDER BY created_at ASC").all();
   if (sleepLogs.length === 0) { console.log('[朝サマリー] 就寝中ログなし'); return; }
 
@@ -10723,6 +10812,8 @@ async function sendMorningSummary() {
 
   await sendLine('おはようございます、前田さん\n\n【就寝中の議論サマリー】\n\n' + summary + pendingMsg);
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -11095,6 +11186,9 @@ async function sendMorningSummary() {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -11422,8 +11516,11 @@ async function sendWeeklyReport() {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
   db.prepare('INSERT INTO weekly_reports (week_start, report) VALUES (date(?), ?)').run(new Date().toISOString(), report);
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -11734,6 +11831,9 @@ async function sendWeeklyReport() {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -11949,6 +12049,7 @@ async function sendWeeklyReport() {
 cron.schedule('0 23 * * *', function() { runSleepMode().catch(function(e) { console.error(e); }); }, { timezone: 'Asia/Tokyo' });
 // 毎朝7時（JST）朝サマリー
 cron.schedule('0 7 * * *', function() { sendMorningSummary().catch(function(e) { console.error(e); }); }, { timezone: 'Asia/Tokyo' });
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
@@ -12303,6 +12404,8 @@ app.post('/api/mode', function(req, res) {
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 // 毎時: 保留質問のタイムアウト処理
 cron.schedule('0 * * * *', function() {
   db.prepare("UPDATE pending_questions SET status = 'timeout' WHERE status = 'pending' AND timeout_at < datetime('now')").run();
@@ -12453,6 +12556,9 @@ cron.schedule('0 7 * * 1', function() { sendWeeklyReport().catch(function(e) { c
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -12779,7 +12885,10 @@ app.post('/api/deploy', function(req, res) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -13230,6 +13339,9 @@ app.get('/api/competitors/changes', function(req, res) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -13545,8 +13657,11 @@ app.get('/health', function(req, res) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     cases: caseCount.cnt
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -13854,6 +13969,9 @@ app.get('/health', function(req, res) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
