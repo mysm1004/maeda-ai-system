@@ -2,7 +2,10 @@ var Anthropic = require('@anthropic-ai/sdk');
 var OpenAI = require('openai');
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 
 // 個別API呼び出しリトライ（レート制限時30秒待機、最大3回）
 async function _apiRetry(fn, label) {
@@ -19,6 +22,9 @@ async function _apiRetry(fn, label) {
     }
   }
 }
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 var PATTERNS = {
   A: { name: 'PASONA型', desc: '問題→共感→解決→提案→行動' },
@@ -109,7 +115,11 @@ OutputGenerator.prototype._phase2_step2 = async function(sessionId, outputType, 
 OutputGenerator.prototype._phase2_step3 = async function(sessionId, outputType, step1Result, step2Result) {
   var res = await this.openai.chat.completions.create({
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     model: 'gpt-4o', max_tokens: 4000,
+=======
+    model: 'gpt-5.4', max_completion_tokens: 4000,
+>>>>>>> Stashed changes
 =======
     model: 'gpt-5.4', max_completion_tokens: 4000,
 >>>>>>> Stashed changes
@@ -225,7 +235,11 @@ OutputGenerator.prototype._phase3_step1 = async function(sessionId, outputType, 
     var r = await this.anthropic.messages.create({
       model: 'claude-sonnet-4-20250514', max_tokens: 16000,
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
       system: 'あなたはトップコピーライターです。「' + p.name + '（' + p.desc + '）」のパターンで、Phase2の訴求設計書に基づいて最高品質のコンテンツを生成してください。HTML系アウトプット（LP、バナー等）の場合は、必ず<!DOCTYPE html>から</html>まで完結する単一HTMLファイルとして出力。CSSは全て<style>タグ内、JSは全て<script>タグ内にインライン記述。外部ファイル参照禁止。' + qualityRules,
+=======
+      system: 'あなたはトップコピーライターです。「' + p.name + '（' + p.desc + '）」のパターンで、Phase2の訴求設計書に基づいて最高品質のコンテンツを生成してください。HTML系アウトプット（LP、バナー等）の場合は、必ず<!DOCTYPE html>から</html>まで完結する単一HTMLファイルとして出力。CSS・JSは全てインライン（<style>・<script>タグ内）。外部ファイル参照禁止。' + qualityRules,
+>>>>>>> Stashed changes
 =======
       system: 'あなたはトップコピーライターです。「' + p.name + '（' + p.desc + '）」のパターンで、Phase2の訴求設計書に基づいて最高品質のコンテンツを生成してください。HTML系アウトプット（LP、バナー等）の場合は、必ず<!DOCTYPE html>から</html>まで完結する単一HTMLファイルとして出力。CSS・JSは全てインライン（<style>・<script>タグ内）。外部ファイル参照禁止。' + qualityRules,
 >>>>>>> Stashed changes
@@ -271,7 +285,11 @@ OutputGenerator.prototype._phase3_step3 = async function(patterns, phase2Final, 
 
   var res = await this.openai.chat.completions.create({
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     model: 'gpt-4o', max_tokens: 4000,
+=======
+    model: 'gpt-5.4', max_completion_tokens: 4000,
+>>>>>>> Stashed changes
 =======
     model: 'gpt-5.4', max_completion_tokens: 4000,
 >>>>>>> Stashed changes
@@ -393,7 +411,11 @@ OutputGenerator.prototype._phase3_step7 = async function(patterns, phase2Final, 
     var r = await this.anthropic.messages.create({
       model: 'claude-sonnet-4-20250514', max_tokens: 16000,
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
       system: 'あなたは最終仕上げ担当のトップコピーライターです。全チェック結果を反映し最高品質の最終版を生成してください。HTML系アウトプット（LP、バナー等）の場合は、必ず<!DOCTYPE html>から</html>まで完結する単一HTMLファイルとして出力。CSSは全て<style>タグ内、JSは全て<script>タグ内にインライン記述。外部ファイル参照禁止。前田さんの好み: ' + JSON.stringify(memory),
+=======
+      system: 'あなたは最終仕上げ担当のトップコピーライターです。全チェック結果を反映し最高品質の最終版を生成してください。HTML系アウトプット（LP、バナー等）の場合は、必ず<!DOCTYPE html>から</html>まで完結する単一HTMLファイルとして出力。CSS・JSは全てインライン（<style>・<script>タグ内）。外部ファイル参照禁止。前田さんの好み: ' + JSON.stringify(memory),
+>>>>>>> Stashed changes
 =======
       system: 'あなたは最終仕上げ担当のトップコピーライターです。全チェック結果を反映し最高品質の最終版を生成してください。HTML系アウトプット（LP、バナー等）の場合は、必ず<!DOCTYPE html>から</html>まで完結する単一HTMLファイルとして出力。CSS・JSは全てインライン（<style>・<script>タグ内）。外部ファイル参照禁止。前田さんの好み: ' + JSON.stringify(memory),
 >>>>>>> Stashed changes
@@ -418,7 +440,10 @@ OutputGenerator.prototype._phase3_step7 = async function(patterns, phase2Final, 
 
 OutputGenerator.prototype.generateFull = async function(sessionId, outputType, params) {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
   // API呼び出し自動リトライ（初回だけラップ）
   if (!this._retryWrapped) {
     this._retryWrapped = true;
@@ -429,6 +454,9 @@ OutputGenerator.prototype.generateFull = async function(sessionId, outputType, p
       this.openai.chat.completions.create = function(opts) { return _apiRetry(function() { return origO(opts); }, 'ChatGPT'); };
     }
   }
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
   console.log('[OutputGen] ===== Phase2+3開始: session=' + sessionId + ' type=' + outputType + ' =====');
 
@@ -450,6 +478,7 @@ OutputGenerator.prototype.generateFull = async function(sessionId, outputType, p
   this._saveOutputLog(sessionId, 2, 4, 'Phase2-絞り込み', p2s4);
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
   // Phase2 Step4後: 訴求の確認
   if (this.lineQA && this.sendLineFn) {
     try {
@@ -465,6 +494,9 @@ OutputGenerator.prototype.generateFull = async function(sessionId, outputType, p
       }
     } catch(e) { console.log('[OutputGen] 訴求確認スキップ:', e.message); }
   }
+=======
+  // Phase2 Step4: 確認なしで続行
+>>>>>>> Stashed changes
 =======
   // Phase2 Step4: 確認なしで続行
 >>>>>>> Stashed changes
@@ -498,6 +530,7 @@ OutputGenerator.prototype.generateFull = async function(sessionId, outputType, p
   this._saveOutputLog(sessionId, 3, 4, 'Phase3-品質チェック', p3s4);
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
   // Phase3 Step4後: 品質不合格時の確認
   if (this.lineQA && this.sendLineFn && (p3s4.indexOf('不合格') !== -1 || p3s4.indexOf('要改善') !== -1)) {
     try {
@@ -514,6 +547,8 @@ OutputGenerator.prototype.generateFull = async function(sessionId, outputType, p
       }
     } catch(e) { console.log('[OutputGen] 品質確認スキップ:', e.message); }
 =======
+=======
+>>>>>>> Stashed changes
   // Phase3 Step4: 品質不合格時→自動修正→再チェック（最大3回）
   var qualityRetry = 0;
   while (qualityRetry < 3 && (p3s4.indexOf('不合格') !== -1 || p3s4.indexOf('要改善') !== -1)) {
@@ -539,6 +574,9 @@ OutputGenerator.prototype.generateFull = async function(sessionId, outputType, p
   }
   if (qualityRetry > 0) {
     console.log('[Phase3] 品質修正完了: ' + qualityRetry + '回のリトライ後' + (p3s4.indexOf('不合格') === -1 ? '合格' : '続行'));
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
   }
 
@@ -559,7 +597,11 @@ OutputGenerator.prototype.generateFull = async function(sessionId, outputType, p
   // DB保存
   this.db.prepare('INSERT INTO output_queue (session_id, output_type, params, design_doc, patterns, critique, recommended_pattern, status) VALUES (?,?,?,?,?,?,?,?)')
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     .run(sessionId, outputType, JSON.stringify(params), p2s6, JSON.stringify(finalResult.patterns), JSON.stringify({ critique: finalResult.critique, reason: finalResult.reason }), finalResult.recommended, 'awaiting_approval');
+=======
+    .run(sessionId, outputType, JSON.stringify(params), p2s6, JSON.stringify(finalResult.patterns), JSON.stringify({ critique: finalResult.critique, reason: finalResult.reason }), finalResult.recommended, 'completed');
+>>>>>>> Stashed changes
 =======
     .run(sessionId, outputType, JSON.stringify(params), p2s6, JSON.stringify(finalResult.patterns), JSON.stringify({ critique: finalResult.critique, reason: finalResult.reason }), finalResult.recommended, 'completed');
 >>>>>>> Stashed changes
@@ -636,7 +678,11 @@ OutputGenerator.prototype.scoreOutput = async function(sessionId, queueId) {
   // LINE通知
   if (this.sendLineFn && scores.length > 0) {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     var gradeMap = function(t) { return t >= 36 ? 'S' : t >= 32 ? 'A' : t >= 28 ? 'B' : t >= 24 ? 'C' : 'D'; };
+=======
+    var gradeMap = function(t) { return t >= 36 ? 'S' : t >= 32 ? 'A' : t >= 28 ? 'B' : t >= 24 ? 'C' : 'D\n\n【法的根拠の引用ルール】法的根拠は国の機関（法務省・厚労省・国税庁・裁判所等）、裁判所判例DB、行政機関公式サイト、弁護士公式サイト、法律学術論文、日弁連公式見解のみ引用可。事業会社サイト・行政書士・司法書士サイト・まとめサイト・ブログ・Wikipedia使用禁止。ソース引用時は出典（URL・資料名・発行機関）を明記。裏取りできない情報は「未確認」と明示。'; };
+>>>>>>> Stashed changes
 =======
     var gradeMap = function(t) { return t >= 36 ? 'S' : t >= 32 ? 'A' : t >= 28 ? 'B' : t >= 24 ? 'C' : 'D\n\n【法的根拠の引用ルール】法的根拠は国の機関（法務省・厚労省・国税庁・裁判所等）、裁判所判例DB、行政機関公式サイト、弁護士公式サイト、法律学術論文、日弁連公式見解のみ引用可。事業会社サイト・行政書士・司法書士サイト・まとめサイト・ブログ・Wikipedia使用禁止。ソース引用時は出典（URL・資料名・発行機関）を明記。裏取りできない情報は「未確認」と明示。'; };
 >>>>>>> Stashed changes
@@ -697,7 +743,11 @@ OutputGenerator.prototype._getTypeInstructions = function(type) {
   var map = {
     'lp': '完全な単一HTMLファイルでLP全体を生成。CSSは全て<style>タグ内にインライン記述（外部CSS参照禁止）。JavaScriptも全て<script>タグ内にインライン記述（外部JS参照禁止）。画像はSVGインラインまたはCSS背景のみ使用（外部画像URL禁止）。bodyやコンテナにdisplay:noneやvisibility:hiddenを設定しない。<!DOCTYPE html>から</html>まで完結すること。セクション: ファーストビュー→悩み共感→解決策→実績/証拠→サービス詳細→料金→FAQ→CTA。レスポンシブ対応必須。',
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     'banner': '完全な単一HTMLファイルで複数サイズ（300x250, 728x90, 1200x628）のHTML/SVGバナーを生成。CSSは全て<style>タグ内にインライン記述。外部ファイル参照禁止。<!DOCTYPE html>から</html>まで完結すること。',
+=======
+    'banner': '複数サイズ（300x250, 728x90, 1200x628）のHTML/SVGバナーを生成。',
+>>>>>>> Stashed changes
 =======
     'banner': '複数サイズ（300x250, 728x90, 1200x628）のHTML/SVGバナーを生成。',
 >>>>>>> Stashed changes
@@ -711,7 +761,11 @@ OutputGenerator.prototype._getTypeInstructions = function(type) {
     'aio_content': 'AI検索回答に選ばれるFAQ/構造化コンテンツ。',
     'proposal': '提案書。目次→概要→課題分析→提案内容→実績→スケジュール→費用。',
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     'dm': '完全な単一HTMLファイルでDMを生成。CSSは全て<style>タグ内にインライン記述。JavaScriptも全て<script>タグ内にインライン記述。外部ファイル参照禁止。<!DOCTYPE html>から</html>まで完結すること。件名+本文。印刷向けレイアウト推奨。',
+=======
+    'dm': 'DM/手紙/営業メール。件名+本文。',
+>>>>>>> Stashed changes
 =======
     'dm': 'DM/手紙/営業メール。件名+本文。',
 >>>>>>> Stashed changes
@@ -768,6 +822,10 @@ OutputGenerator.prototype._getSimilarOutputs = function(type) {
 };
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 =======
 
 >>>>>>> Stashed changes
