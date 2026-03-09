@@ -42,7 +42,7 @@ function OutputGenerator(db, lineQA, sendLineFn) {
 // Phase2 Step1: 訴求パターン生成（Claude）
 OutputGenerator.prototype._phase2_step1 = async function(sessionId, outputType, params) {
   var session = this.db.prepare('SELECT * FROM sessions WHERE id = ?').get(sessionId);
-  var memory = this._getMemory(outputType);
+  var memory = this._getMemory(outputType, sessionId);
   var officeDocs = this._getOfficeDocs();
   var p1conclusion = this._getPhase1Conclusion(session);
 
@@ -109,7 +109,7 @@ OutputGenerator.prototype._phase2_step3 = async function(sessionId, outputType, 
 
 // Phase2 Step4: 絞り込み（Claude）
 OutputGenerator.prototype._phase2_step4 = async function(sessionId, outputType, step1Result, step2Result, step3Result) {
-  var memory = this._getMemory(outputType);
+  var memory = this._getMemory(outputType, sessionId);
   var res = await this.anthropic.messages.create({
     model: 'claude-sonnet-4-20250514', max_tokens: 4000,
     system: 'あなたは訴求戦略の最終決定者です。全批判を踏まえ最強の訴求2案に絞ってください。前田さんの好み: ' + JSON.stringify(memory),
@@ -130,7 +130,7 @@ OutputGenerator.prototype._phase2_step4 = async function(sessionId, outputType, 
 // Phase2 Step5: コピーライティング（Claude）
 OutputGenerator.prototype._phase2_step5 = async function(sessionId, outputType, step4Result, params) {
   var session = this.db.prepare('SELECT * FROM sessions WHERE id = ?').get(sessionId);
-  var memory = this._getMemory(outputType);
+  var memory = this._getMemory(outputType, sessionId);
   var typeInst = this._getTypeInstructions(outputType);
 
   var res = await this.anthropic.messages.create({
@@ -184,7 +184,7 @@ OutputGenerator.prototype._phase2_step6 = async function(sessionId, outputType, 
 // Phase3 Step1: 初稿生成（Claude）- 4パターン同時
 OutputGenerator.prototype._phase3_step1 = async function(sessionId, outputType, phase2Final, params) {
   var session = this.db.prepare('SELECT * FROM sessions WHERE id = ?').get(sessionId);
-  var memory = this._getMemory(outputType);
+  var memory = this._getMemory(outputType, sessionId);
   var officeDocs = this._getOfficeDocs();
   var typeInst = this._getTypeInstructions(outputType);
   var qualityRules = this._getQualityRules();
@@ -211,8 +211,8 @@ OutputGenerator.prototype._phase3_step1 = async function(sessionId, outputType, 
 };
 
 // Phase3 Step2: コンテンツチェック（Claude）
-OutputGenerator.prototype._phase3_step2 = async function(patterns, phase2Final, outputType) {
-  var memory = this._getMemory(outputType);
+OutputGenerator.prototype._phase3_step2 = async function(patterns, phase2Final, outputType, sessionId) {
+  var memory = this._getMemory(outputType, sessionId);
   var patternsText = patterns.map(function(p) {
     return '【パターン' + p.pattern + ': ' + p.name + '】\n' + p.content;
   }).join('\n\n========\n\n');
@@ -335,8 +335,8 @@ OutputGenerator.prototype._phase3_step6 = async function(patterns, outputType) {
 };
 
 // Phase3 Step7: 最終版生成（Claude）
-OutputGenerator.prototype._phase3_step7 = async function(patterns, phase2Final, step2Result, step3Result, step4Result, step5Result, step6Result, outputType) {
-  var memory = this._getMemory(outputType);
+OutputGenerator.prototype._phase3_step7 = async function(patterns, phase2Final, step2Result, step3Result, step4Result, step5Result, step6Result, outputType, sessionId) {
+  var memory = this._getMemory(outputType, sessionId);
 
   // 全チェック結果を統合して最終改善指示を作成
   var allFeedback = '【Claude批評】\n' + step2Result +
@@ -434,7 +434,7 @@ OutputGenerator.prototype.generateFull = async function(sessionId, outputType, p
   this._saveOutputLog(sessionId, 3, 1, 'Phase3-初稿生成', JSON.stringify(patterns.map(function(p) { return p.pattern + ':' + p.name; })));
 
   console.log('[Phase3] Step2: コンテンツチェック（Claude）...');
-  var p3s2 = await this._phase3_step2(patterns, p2s6, outputType);
+  var p3s2 = await this._phase3_step2(patterns, p2s6, outputType, sessionId);
   this._saveOutputLog(sessionId, 3, 2, 'Phase3-チェックClaude', p3s2);
 
   console.log('[Phase3] Step3: コンテンツチェック（ChatGPT）...');
@@ -471,7 +471,7 @@ OutputGenerator.prototype.generateFull = async function(sessionId, outputType, p
   this._saveOutputLog(sessionId, 3, 6, 'Phase3-モバイルチェック', p3s6);
 
   console.log('[Phase3] Step7: 最終版生成...');
-  var finalResult = await this._phase3_step7(patterns, p2s6, p3s2, p3s3, p3s4, p3s5, p3s6, outputType);
+  var finalResult = await this._phase3_step7(patterns, p2s6, p3s2, p3s3, p3s4, p3s5, p3s6, outputType, sessionId);
   this._saveOutputLog(sessionId, 3, 7, 'Phase3-最終版生成', '推奨:' + finalResult.recommended);
 
   console.log('[OutputGen] ===== 全13ステップ完了 =====');
@@ -627,9 +627,12 @@ OutputGenerator.prototype._getTypeInstructions = function(type) {
   return map[type] || '指定された種別のコンテンツを高品質で生成してください。';
 };
 
-OutputGenerator.prototype._getMemory = function(outputType) {
+OutputGenerator.prototype._getMemory = function(outputType, sessionId) {
   var rows;
-  if (outputType) {
+  if (sessionId && outputType) {
+    // プロジェクト固有 + グローバル（source_session_id=NULLまたは該当セッション）
+    rows = this.db.prepare("SELECT category, key, value FROM memory_db WHERE (output_type = ? OR output_type IS NULL) AND (source_session_id = ? OR source_session_id IS NULL OR category IN ('tone','style','cta','pattern_preference')) ORDER BY confidence DESC LIMIT 30").all(outputType, sessionId);
+  } else if (outputType) {
     rows = this.db.prepare("SELECT category, key, value FROM memory_db WHERE output_type = ? OR output_type IS NULL ORDER BY confidence DESC LIMIT 20").all(outputType);
   } else {
     rows = this.db.prepare("SELECT category, key, value FROM memory_db ORDER BY confidence DESC LIMIT 20").all();
