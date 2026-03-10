@@ -47,7 +47,7 @@ OutputGenerator.prototype._phase2_step1 = async function(sessionId, outputType, 
   var p1conclusion = this._getPhase1Conclusion(session);
 
   var res = await this.anthropic.messages.create({
-    model: 'claude-sonnet-4-20250514', max_tokens: 4000,
+    model: 'claude-opus-4-6', max_tokens: 4000,
     system: 'あなたはトップコピーライティングディレクターです。Phase1で固まったアイデアを元に、最も効果的な訴求角度を複数生成してください。前田さんの好み: ' + JSON.stringify(memory),
     messages: [{ role: 'user', content: '【Phase1の結論】\n' + p1conclusion +
       '\n\n【アウトプット種別】' + outputType +
@@ -70,7 +70,7 @@ OutputGenerator.prototype._phase2_step1 = async function(sessionId, outputType, 
 // Phase2 Step2: 訴求批判（Claude）
 OutputGenerator.prototype._phase2_step2 = async function(sessionId, outputType, step1Result) {
   var res = await this.anthropic.messages.create({
-    model: 'claude-sonnet-4-20250514', max_tokens: 4000,
+    model: 'claude-opus-4-6', max_tokens: 4000,
     system: 'あなたは容赦ない広告批評家です。各訴求の弱点・甘さ・見落としを徹底的に突いてください。ただし建設的な改善提案も必ず添えること。',
     messages: [{ role: 'user', content: '【Step1: 訴求パターン】\n' + step1Result +
       '\n\n各訴求について以下を批判：\n' +
@@ -89,7 +89,7 @@ OutputGenerator.prototype._phase2_step2 = async function(sessionId, outputType, 
 // Phase2 Step3: 訴求批判（ChatGPT）
 OutputGenerator.prototype._phase2_step3 = async function(sessionId, outputType, step1Result, step2Result) {
   var res = await this.openai.chat.completions.create({
-    model: 'gpt-4o', max_tokens: 4000,
+    model: 'gpt-5.4', max_completion_tokens: 4000,
     messages: [
       { role: 'system', content: 'あなたは実際の消費者代表です。法律事務所の広告を見る一般人の視点で、各訴求が本当に響くか率直に評価してください。' },
       { role: 'user', content: '【訴求パターン】\n' + step1Result +
@@ -111,7 +111,7 @@ OutputGenerator.prototype._phase2_step3 = async function(sessionId, outputType, 
 OutputGenerator.prototype._phase2_step4 = async function(sessionId, outputType, step1Result, step2Result, step3Result) {
   var memory = this._getMemory(outputType, sessionId);
   var res = await this.anthropic.messages.create({
-    model: 'claude-sonnet-4-20250514', max_tokens: 4000,
+    model: 'claude-opus-4-6', max_tokens: 4000,
     system: 'あなたは訴求戦略の最終決定者です。全批判を踏まえ最強の訴求2案に絞ってください。前田さんの好み: ' + JSON.stringify(memory),
     messages: [{ role: 'user', content: '【Step1: 訴求パターン】\n' + step1Result +
       '\n\n【Step2: Claude批判】\n' + step2Result +
@@ -134,7 +134,7 @@ OutputGenerator.prototype._phase2_step5 = async function(sessionId, outputType, 
   var typeInst = this._getTypeInstructions(outputType);
 
   var res = await this.anthropic.messages.create({
-    model: 'claude-sonnet-4-20250514', max_tokens: 5000,
+    model: 'claude-opus-4-6', max_tokens: 5000,
     system: 'あなたは日本トップクラスのコピーライターです。訴求をキャッチコピー・ボディコピー・CTAに落とし込んでください。前田さんの好み: ' + JSON.stringify(memory),
     messages: [{ role: 'user', content: '【絞り込まれた訴求2案】\n' + step4Result +
       '\n\n【アウトプット種別】' + outputType +
@@ -155,7 +155,7 @@ OutputGenerator.prototype._phase2_step5 = async function(sessionId, outputType, 
 // Phase2 Step6: 最終訴求の統合（Claude）
 OutputGenerator.prototype._phase2_step6 = async function(sessionId, outputType, step4Result, step5Result) {
   var res = await this.anthropic.messages.create({
-    model: 'claude-sonnet-4-20250514', max_tokens: 3000,
+    model: 'claude-opus-4-6', max_tokens: 3000,
     system: 'あなたは最終統合者です。Phase3のアウトプット生成に渡す最終訴求設計書を作成してください。',
     messages: [{ role: 'user', content: '【絞り込み結果】\n' + step4Result +
       '\n\n【コピーライティング結果】\n' + step5Result +
@@ -204,7 +204,7 @@ OutputGenerator.prototype._phase3_step1 = async function(sessionId, outputType, 
     var p = PATTERNS[key];
     console.log('[Phase3] Step1: パターン' + key + '（' + p.name + '）生成中...');
     var r = await this.anthropic.messages.create({
-      model: 'claude-sonnet-4-20250514', max_tokens: 8000,
+      model: 'claude-opus-4-6', max_tokens: 16000,
       system: 'あなたはトップコピーライターです。「' + p.name + '（' + p.desc + '）」のパターンで、Phase2の訴求設計書に基づいて最高品質のコンテンツを生成してください。HTML系アウトプット（LP、バナー等）の場合は、必ず<!DOCTYPE html>から</html>まで完結する単一HTMLファイルとして出力。CSSは全て<style>タグ内にインライン記述。外部ファイル参照禁止。CSSは簡潔にまとめること。' + qualityRules,
       messages: [{ role: 'user', content: basePrompt + '\n\nパターン「' + p.name + '」で生成してください。設計書のキャッチコピー・構成を活かしつつ、このパターンの特性を最大限発揮すること。' }]
     });
@@ -221,7 +221,7 @@ OutputGenerator.prototype._phase3_step2 = async function(patterns, phase2Final, 
   }).join('\n\n========\n\n');
 
   var res = await this.anthropic.messages.create({
-    model: 'claude-sonnet-4-20250514', max_tokens: 4000,
+    model: 'claude-opus-4-6', max_tokens: 4000,
     system: 'あなたはClaude批評役。Phase2の訴求設計書に照らし合わせ、各パターンを容赦なくチェックしてください。前田さんの好み: ' + JSON.stringify(memory),
     messages: [{ role: 'user', content: '【Phase2設計書】\n' + phase2Final +
       '\n\n【4パターン】\n' + patternsText +
@@ -246,7 +246,7 @@ OutputGenerator.prototype._phase3_step3 = async function(patterns, phase2Final, 
   }).join('\n\n========\n\n');
 
   var res = await this.openai.chat.completions.create({
-    model: 'gpt-4o', max_tokens: 4000,
+    model: 'gpt-5.4', max_completion_tokens: 4000,
     messages: [
       { role: 'system', content: 'あなたは一般消費者の代表です。法律事務所のコンテンツを見た率直な感想と改善点を述べてください。Claudeの批評も検証してください。' },
       { role: 'user', content: '【4パターン】\n' + patternsText +
@@ -270,7 +270,7 @@ OutputGenerator.prototype._phase3_step4 = async function(patterns, step2Result, 
   }).join('\n\n========\n\n');
 
   var res = await this.anthropic.messages.create({
-    model: 'claude-sonnet-4-20250514', max_tokens: 4000,
+    model: 'claude-opus-4-6', max_tokens: 4000,
     system: 'あなたは品質管理の専門家です。アウトプットの品質基準を厳密にチェックしてください。',
     messages: [{ role: 'user', content: '【4パターン】\n' + patternsText +
       '\n\n【Claude批評】\n' + step2Result +
@@ -297,7 +297,7 @@ OutputGenerator.prototype._phase3_step5 = async function(patterns, step4Result) 
   }).join('\n\n========\n\n');
 
   var res = await this.anthropic.messages.create({
-    model: 'claude-sonnet-4-20250514', max_tokens: 3000,
+    model: 'claude-opus-4-6', max_tokens: 3000,
     system: 'あなたは広告効果測定の専門家です。各パターンの実際の反応を予測し、インパクトを評価してください。',
     messages: [{ role: 'user', content: '【4パターン】\n' + patternsText +
       '\n\n【品質チェック結果】\n' + step4Result +
@@ -321,7 +321,7 @@ OutputGenerator.prototype._phase3_step6 = async function(patterns, outputType) {
   }).join('\n\n========\n\n');
 
   var res = await this.anthropic.messages.create({
-    model: 'claude-sonnet-4-20250514', max_tokens: 3000,
+    model: 'claude-opus-4-6', max_tokens: 3000,
     system: 'あなたはUI/UXの専門家です。スマートフォンでの表示・可読性を徹底チェックしてください。',
     messages: [{ role: 'user', content: '【アウトプット種別】' + outputType +
       '\n\n【4パターン】\n' + patternsText +
@@ -350,7 +350,7 @@ OutputGenerator.prototype._phase3_step7 = async function(patterns, phase2Final, 
 
   // 推奨パターン特定
   var recommendRes = await this.anthropic.messages.create({
-    model: 'claude-sonnet-4-20250514', max_tokens: 1000,
+    model: 'claude-opus-4-6', max_tokens: 1000,
     system: '全チェック結果を分析し、最終推奨パターンを決定してください。',
     messages: [{ role: 'user', content: allFeedback +
       '\n\nJSON形式で回答：{"recommended":"A|B|C|D","reason":"推奨理由","critique":"全体批評要約"}' }]
@@ -366,7 +366,7 @@ OutputGenerator.prototype._phase3_step7 = async function(patterns, phase2Final, 
     var p = patterns[fi];
     console.log('[Phase3] Step7: パターン' + p.pattern + ' 最終版生成中...');
     var r = await this.anthropic.messages.create({
-      model: 'claude-sonnet-4-20250514', max_tokens: 8000,
+      model: 'claude-opus-4-6', max_tokens: 16000,
       system: 'あなたは最終仕上げ担当のトップコピーライターです。全チェック結果を反映し最高品質の最終版を生成してください。HTML系アウトプット（LP、バナー等）の場合は、必ず<!DOCTYPE html>から</html>まで完結する単一HTMLファイルとして出力。CSSは全て<style>タグ内にインライン記述。外部ファイル参照禁止。CSSは簡潔にまとめること。前田さんの好み: ' + JSON.stringify(memory),
       messages: [{ role: 'user', content: '【元のパターン' + p.pattern + ': ' + p.name + '】\n' + p.content +
         '\n\n【全チェックからの改善指示】\n' + allFeedback +
@@ -538,7 +538,7 @@ OutputGenerator.prototype.scoreOutput = async function(sessionId, queueId) {
     var content = p.content || (typeof p === 'string' ? p : JSON.stringify(p));
     try {
       var res = await this.anthropic.messages.create({
-        model: 'claude-sonnet-4-20250514', max_tokens: 800,
+        model: 'claude-opus-4-6', max_tokens: 800,
         system: 'アウトプットの品質を4軸で採点してください。各軸1-10点。JSON形式で回答。\n\n軸:\n- appeal: 訴求力（読者の心を動かせるか）\n- differentiation: 差別化（競合と明確に違うか）\n- format: 体裁（読みやすさ、構成、デザイン）\n- impact: インパクト（記憶に残るか、行動を促すか）',
         messages: [{ role: 'user', content: '以下のアウトプット（パターン' + p.pattern + '）を採点してください。\n\n' + content.substring(0, 3000) + '\n\nJSON形式: {"appeal":N,"differentiation":N,"format":N,"impact":N,"improvement":"改善ポイント1文"}' }]
       });
@@ -651,7 +651,7 @@ OutputGenerator.prototype._getMemory = function(outputType, sessionId) {
 OutputGenerator.prototype._getOfficeDocs = function() {
   var fs = require('fs');
   var path = require('path');
-  var dir = path.join(__dirname, '..', '..', 'data', 'office-docs');
+  var dir = path.join(__dirname, 'data', 'office-docs');
   if (!fs.existsSync(dir)) return null;
   var result = [];
   this._readDir(dir, result);
