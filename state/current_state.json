@@ -1,6 +1,6 @@
 {
   "mode": "aws",
-  "last_updated": "2026-03-10T05:00:00.327Z",
+  "last_updated": "2026-03-10T05:30:00.655Z",
   "last_updated_by": "aws",
   "system_version": "2.0",
   "active_projects": [
@@ -47,84 +47,6 @@
         "type": "proposal",
         "recommended": "B"
       },
-      "recent_decisions": []
-    },
-    {
-      "id": 9,
-      "name": "���V�Ё~���㎖���ϔC ��g��ď�",
-      "topic": "���㎖���ϔC�_��̑��V�Ќ����Ɩ���g���",
-      "phase": 1,
-      "current_round": 1,
-      "total_rounds": 8,
-      "status": "進行中",
-      "next_action": "ラウンド2/8の議論を継続",
-      "last_log_summary": "申し訳ございませんが、分析対象テーマが文字化けしており（「���㎖���ϔC�_��̑��V�Ќ����Ɩ���g���」）、正確なテーマ内容を特定できません。\n\n## 📋 **現状の課題**\n\n### **文字エンコーディング問題**\n- 提供されたテーマ名が完全に文字化けしており、実際のサービス・商品名が判読不可能です\n- 事前調査レポートでも同様の問題が指摘されています\n\n### **推測",
-      "pending_output": null,
-      "recent_decisions": []
-    },
-    {
-      "id": 8,
-      "name": "���V�Ё~���㎖���ϔC ��g��ď�",
-      "topic": "���㎖���ϔC�_��̑��V�Ќ����Ɩ���g���",
-      "phase": 1,
-      "current_round": 1,
-      "total_rounds": 8,
-      "status": "進行中",
-      "next_action": "ラウンド2/8の議論を継続",
-      "last_log_summary": "# 🔍 残業代請求市場：競合徹底分析レポート\n\n## 📊 1. 市場規模分析（TAM/SAM/SOM）\n\n### **TAM（Total Addressable Market）**\n- 日本の全労働者数：約6,700万人\n- 残業代未払い経験者：推定40%（約2,680万人）\n- 潜在市場規模：年間約800～1,200億円\n\n### **SAM（Serviceable Addressable ",
-      "pending_output": null,
-      "recent_decisions": []
-    },
-    {
-      "id": 7,
-      "name": "���V�Ё~���㎖���ϔC ��g��ď�",
-      "topic": "���㎖���ϔC�_��̑��V�Ќ����Ɩ���g���",
-      "phase": 1,
-      "current_round": 1,
-      "total_rounds": 8,
-      "status": "進行中",
-      "next_action": "ラウンド2/8の議論を継続",
-      "last_log_summary": "# 🔍 市場調査専門家による競合分析レポート\n\n**調査対象**：残業代請求市場\n**調査日**：2024年12月19日\n**調査担当**：マーケティングリサーチ専門家\n\n---\n\n## 📊 1. 競合サービス詳細リスト\n\n### **🥇 Tier1: 大手法律事務所（市場シェア60%）**\n\n#### **弁護士法人ALG & Associates**\n- **URL**: https:/",
-      "pending_output": null,
-      "recent_decisions": []
-    },
-    {
-      "id": 6,
-      "name": "���V�Ё~���㎖���ϔC ��g��ď�",
-      "topic": "���㎖���ϔC�_��̑��V�Ќ����Ɩ���g���",
-      "phase": 1,
-      "current_round": 0,
-      "total_rounds": 8,
-      "status": "進行中",
-      "next_action": "ラウンド1/8の議論を継続",
-      "last_log_summary": null,
-      "pending_output": null,
-      "recent_decisions": []
-    },
-    {
-      "id": 5,
-      "name": "���V�Ё~���㎖���ϔC ��g��ď�",
-      "topic": "���㎖���ϔC�_��̑��V�Ќ����Ɩ���g���",
-      "phase": 1,
-      "current_round": 1,
-      "total_rounds": 8,
-      "status": "進行中",
-      "next_action": "ラウンド2/8の議論を継続",
-      "last_log_summary": "# 残業代請求事業：競合分析・市場調査レポート\n\n## 1. 主要競合サービス分析\n\n### 🏆 大手競合3社詳細分析\n\n#### **弁護士法人ALG & Associates（業界最大手）**\n- **URL**: https://www.adire-roudou.jp/\n- **料金体系**: \n  - 着手金: 無料\n  - 成功報酬: 回収額の22%（税込）\n  - 実費: 別途請求\n",
-      "pending_output": null,
-      "recent_decisions": []
-    },
-    {
-      "id": 4,
-      "name": "���V���~���㎖���ϔC �Ɩ���g��Ď���",
-      "topic": "���V���������㎖���ϔC�T�[�r�X���",
-      "phase": 1,
-      "current_round": 3,
-      "total_rounds": 8,
-      "status": "進行中",
-      "next_action": "ラウンド4/8の議論を継続",
-      "last_log_summary": "消費者心理専門家として、残業代請求サービスのターゲット深層心理を徹底分析します。\n\n# 🧠 残業代請求サービス：消費者心理の深層分析\n\n## 1. ペルソナ3タイプの深層心理\n\n### 👨‍💼 **ペルソナA：疲弊系サラリーマン（田中、35歳、IT企業勤務）**\n\n**表面的特徴**\n- 月残業80時間、年収450万円、妻子あり\n- 毎日終電帰り、土日も出勤あり\n- 上司からの圧力で残業代申",
-      "pending_output": null,
       "recent_decisions": []
     },
     {
