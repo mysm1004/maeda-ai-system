@@ -1,6 +1,6 @@
 {
   "mode": "aws",
-  "last_updated": "2026-03-10T05:30:00.655Z",
+  "last_updated": "2026-03-10T06:00:00.495Z",
   "last_updated_by": "aws",
   "system_version": "2.0",
   "active_projects": [
@@ -113,6 +113,30 @@
     }
   ],
   "feedback_db": [
+    {
+      "category": "feedback_db",
+      "key": "legal_ad_regulation",
+      "value": "法律事務所は広告規制が厳しい。過度な表現は避ける。FV訴求はやりすぎずドンズバ両立",
+      "confidence": 0.5
+    },
+    {
+      "category": "feedback_db",
+      "key": "smartphone_first",
+      "value": "スマホ表示を最重視。写真素材のスマホ確認必須。スマホファースト設計",
+      "confidence": 0.5
+    },
+    {
+      "category": "feedback_db",
+      "key": "test_key",
+      "value": "test_value",
+      "confidence": 0.5
+    },
+    {
+      "category": "feedback_db",
+      "key": "post_creation_report",
+      "value": "LP���̍쐬��A�쐬���ɂ͔c���ł��Ȃ����������荞�ނׂ��ǉ���񂪂���΁A�쐬��̕񍐂Ŗ������邱�ƁB��F������HP�̍X�V���A�V���Ȏ��сA��������Ȃ�",
+      "confidence": 0.5
+    },
     {
       "category": "feedback_db",
       "key": "no_fake_data",
