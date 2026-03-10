@@ -1,6 +1,6 @@
 {
   "mode": "aws",
-  "last_updated": "2026-03-10T03:30:00.016Z",
+  "last_updated": "2026-03-10T04:00:00.287Z",
   "last_updated_by": "aws",
   "system_version": "2.0",
   "active_projects": [
@@ -191,6 +191,24 @@
     }
   ],
   "feedback_db": [
+    {
+      "category": "feedback_db",
+      "key": "no_fake_data",
+      "value": "�ˋ�̎��сE�����͐�΂Ɏg��Ȃ��B������HP�E���������t�@�C���Ɋ�Â����̂ݎg�p�B�ٌ�m���E���������E�d�b�ԍ��͕K���������Əƍ�",
+      "confidence": 0.6
+    },
+    {
+      "category": "feedback_db",
+      "key": "design_quality",
+      "value": "�����ۂ��EAI���̂���f�U�C���͕s���i�B�v���̃f�U�C����Ѓ��x����ڎw���BAI�@���Z�~�i�[LP���f�U�C���̍Œ჉�C���Ƃ��ĎQ�ƁBInter+Noto Sans JP+Noto Serif JP�̃t�H���g�̌n�ACSS�ϐ��ɂ��J���[�V�X�e���A�X�N���[���A�j���[�V�����A���X�|���V�u�Ή��͕K�{",
+      "confidence": 0.5
+    },
+    {
+      "category": "feedback_db",
+      "key": "lp_material_priority",
+      "value": "LP�f�ނ͎������t�H���_���̂��̂�K���D��g�p���邱�ƁB�D�揇��: 1.�ٌ�m�ʐ^�t�H���_ 2.nanobanapro2�ŉ摜���� 3.ChatGPT�ŉ摜���� 4.�l�b�g��̃t���[�f��",
+      "confidence": 0.5
+    },
     {
       "category": "line_qa",
       "key": "リンク開いたら真っ白だわ",
