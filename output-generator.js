@@ -196,17 +196,20 @@ OutputGenerator.prototype._phase3_step1 = async function(sessionId, outputType, 
     '\n【追加指示】' + JSON.stringify(params) +
     '\n【種別指示】' + typeInst;
 
-  // 4パターン並行生成
-  var results = await Promise.all(Object.keys(PATTERNS).map(async function(key) {
+  // 4パターン順次生成（レートリミット対策）
+  var results = [];
+  var keys = Object.keys(PATTERNS);
+  for (var ki = 0; ki < keys.length; ki++) {
+    var key = keys[ki];
     var p = PATTERNS[key];
+    console.log('[Phase3] Step1: パターン' + key + '（' + p.name + '）生成中...');
     var r = await this.anthropic.messages.create({
-      model: 'claude-sonnet-4-20250514', max_tokens: 16000,
-      system: 'あなたはトップコピーライターです。「' + p.name + '（' + p.desc + '）」のパターンで、Phase2の訴求設計書に基づいて最高品質のコンテンツを生成してください。HTML系アウトプット（LP、バナー等）の場合は、必ず<!DOCTYPE html>から</html>まで完結する単一HTMLファイルとして出力。CSSは全て<style>タグ内、JSは全て<script>タグ内にインライン記述。外部ファイル参照禁止。' + qualityRules,
+      model: 'claude-sonnet-4-20250514', max_tokens: 8000,
+      system: 'あなたはトップコピーライターです。「' + p.name + '（' + p.desc + '）」のパターンで、Phase2の訴求設計書に基づいて最高品質のコンテンツを生成してください。HTML系アウトプット（LP、バナー等）の場合は、必ず<!DOCTYPE html>から</html>まで完結する単一HTMLファイルとして出力。CSSは全て<style>タグ内にインライン記述。外部ファイル参照禁止。CSSは簡潔にまとめること。' + qualityRules,
       messages: [{ role: 'user', content: basePrompt + '\n\nパターン「' + p.name + '」で生成してください。設計書のキャッチコピー・構成を活かしつつ、このパターンの特性を最大限発揮すること。' }]
     });
-    return { pattern: key, name: p.name, desc: p.desc, content: r.content[0].text };
-  }.bind(this)));
-
+    results.push({ pattern: key, name: p.name, desc: p.desc, content: r.content[0].text });
+  }
   return results;
 };
 
@@ -357,17 +360,20 @@ OutputGenerator.prototype._phase3_step7 = async function(patterns, phase2Final, 
   var jsonMatch = recText.match(/\{[\s\S]*\}/);
   if (jsonMatch) { try { recJson = JSON.parse(jsonMatch[0]); } catch(e) {} }
 
-  // 4パターン最終改善版を並行生成
-  var finalPatterns = await Promise.all(patterns.map(async function(p) {
+  // 4パターン最終改善版を順次生成（レートリミット対策）
+  var finalPatterns = [];
+  for (var fi = 0; fi < patterns.length; fi++) {
+    var p = patterns[fi];
+    console.log('[Phase3] Step7: パターン' + p.pattern + ' 最終版生成中...');
     var r = await this.anthropic.messages.create({
-      model: 'claude-sonnet-4-20250514', max_tokens: 16000,
-      system: 'あなたは最終仕上げ担当のトップコピーライターです。全チェック結果を反映し最高品質の最終版を生成してください。HTML系アウトプット（LP、バナー等）の場合は、必ず<!DOCTYPE html>から</html>まで完結する単一HTMLファイルとして出力。CSSは全て<style>タグ内、JSは全て<script>タグ内にインライン記述。外部ファイル参照禁止。前田さんの好み: ' + JSON.stringify(memory),
+      model: 'claude-sonnet-4-20250514', max_tokens: 8000,
+      system: 'あなたは最終仕上げ担当のトップコピーライターです。全チェック結果を反映し最高品質の最終版を生成してください。HTML系アウトプット（LP、バナー等）の場合は、必ず<!DOCTYPE html>から</html>まで完結する単一HTMLファイルとして出力。CSSは全て<style>タグ内にインライン記述。外部ファイル参照禁止。CSSは簡潔にまとめること。前田さんの好み: ' + JSON.stringify(memory),
       messages: [{ role: 'user', content: '【元のパターン' + p.pattern + ': ' + p.name + '】\n' + p.content +
         '\n\n【全チェックからの改善指示】\n' + allFeedback +
         '\n\n全ての指摘を反映した最終版を生成してください。改善点を必ず全て反映すること。' }]
     });
-    return { pattern: p.pattern, name: p.name, desc: p.desc, content: r.content[0].text };
-  }.bind(this)));
+    finalPatterns.push({ pattern: p.pattern, name: p.name, desc: p.desc, content: r.content[0].text });
+  }
 
   return {
     patterns: finalPatterns,

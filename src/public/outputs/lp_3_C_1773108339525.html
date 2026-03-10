@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>「仕事に迷惑をかけて申し訳ない」その心配、もういりません｜前田法律事務所</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #fafafa;
+            padding-top: 80px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* 緊急性バナー */
+        .urgent-banner {
+            background: #e74c3c;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            font-weight: bold;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+        
+        /* ヘッダー */
+        .header {
+            background: linear-gradient(135deg, #2c5aa0 0%, #1e3d6f 100%);
+            color: white;
+            padding: 40px 0;
+            text-align: center;
+        }
+        
+        .main-catchcopy {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            line-height: 1.3;
+        }
+        
+        .sub-catchcopy {
+            font-size: 18px;
+            margin-bottom: 30px;
+            color: #f0f8ff;
+        }
+        
+        .cta-button {
+            background: #e74c3c;
+            color: white;
+            padding: 20px 40px;
+            border: none;
+            border-radius: 50px;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+            min-height: 48px;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(231, 76, 60, 0.4);
+        }
+        
+        /* ストーリーセクション */
+        .story-section {
+            background: white;
+            padding: 60px 0;
+        }
+        
+        .story-box {
+            background: #f8f9fa;
+            border-left: 5px solid #2c5aa0;
+            padding: 30px;
+            margin: 30px 0;
+            border-radius: 0 10px 10px 0;
+        }
+        
+        .story-title {
+            font-size: 22px;
+            color: #2c5aa0;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+        
+        .story-text {
+            font-size: 16px;
+            line-height: 1.8;
+            color: #555;
+        }
+        
+        .highlight {
+            background: #fff3cd;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-weight: bold;
+            color: #856404;
+        }
+        
+        .section-title {
+            font-size: 28px;
+            text-align: center;
+            margin-bottom: 40px;
+            color: #2c5aa0;
+            font-weight: bold;
+        }
+        
+        /* 解決策セクション */
+        .solution-section {
+            background: #f8f9fa;
+            padding: 60px 0;
+        }
+        
+        .solution-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 40px;
+        }
+        
+        .solution-item {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .solution-number {
+            background: #2c5aa0;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        
+        .solution-subtitle {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c5aa0;
+            margin-bottom: 12px;
+        }
+        
+        /* 実績セクション */
+        .results-section {
+            background: white;
+            padding: 60px 0;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        
+        .stat-number {
+            font-size: 36px;
+            font-weight: bold;
+            color: #e74c3c;
+            display: block;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            color: #666;
+            margin-top: 8px;
+        }
+        
+        /* お客様の声 */
+        .testimonial {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 25px 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .testimonial-text {
+            font-size: 15px;
+            line-height: 1.7;
+            margin-bottom: 15px;
+            color: #555;
+        }
+        
+        .testimonial-author {
+            text-align: right;
+            color: #888;
+            font-size: 13px;
+        }
+        
+        /* サービス詳細 */
+        .service-section {
+            background: #f8f9fa;
+            padding: 60px 0;
+        }
+        
+        .service-list {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            margin: 20px 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .service-category {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c5aa0;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .service-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 12px;
+        }
+        
+        .service-item {
+            padding: 8px 12px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        
+        /* 料金セクション */
+        .pricing-section {
+            background: white;
+            padding: 60px 0;
+        }
+        
+        .price-plan {
+            background: linear-gradient(135deg, #2c5aa0 0%, #1e3d6f 100%);
+            color: white;
+            padding: 35px;
+            border-radius: 15px;
+            text-align: center;
+            margin: 25px 0;
+            box-shadow: 0 10px 30px rgba(44, 90, 160, 0.3);
+        }
+        
+        .price-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        
+        .price-amount {
+            font-size: 36px;
+            font-weight: bold;
+            color: #ffd700;
+            margin: 15px 0;
+        }
+        
+        .price-note {
+            font-size: 13px;
+            color: #b0c4de;
+            margin-top: 12px;
+        }
+        
+        /* FAQ */
+        .faq-section {
+            background: #f8f9fa;
+            padding: 60px 0;
+        }
+        
+        .faq-item {
+            background: white;
+            margin: 15px 0;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .faq-question {
+            background: #2c5aa0;
+            color: white;
+            padding: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            position: relative;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .faq-question::after {
+            content: '+';
+            position: absolute;
+            right: 18px;
+            font-size: 20px;
+        }
+        
+        .faq-answer {
+            padding: 18px;
+            display: none;
+            line-height: 1.7;
+        }
+        
+        .faq-answer.active {
+            display: block;
+        }
+        
+        /* フッターCTA */
+        .footer-cta {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            padding: 60px 0;
+            color: white;
+            text-align: center;
+        }
+        
+        .cta-title {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        
+        .cta-subtitle {
+            font-size: 16px;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+        
+        .contact-info {
+            background: rgba(255,255,255,0.1);
+            padding: 25px;
+            border-radius: 10px;
+            margin: 30px 0;
+        }
+        
+        .phone-number {
+            font-size: 28px;
+            font-weight: bold;
+            color: #ffd700;
+            margin: 8px 0;
+        }
+        
+        /* レスポンシブ対応 */
+        @media (max-width: 768px) {
+            body {
+                padding-top: 70px;
+            }
+            
+            .urgent-banner {
+                font-size: 14px;
+                padding: 12px 10px;
+            }
+            
+            .main-catchcopy {
+                font-size: 24px;
+                line-height: 1.4;
+            }
+            
+            .sub-catchcopy {
+                font-size: 16px;
+            }
+            
+            .container {
+                padding: 0 15px;
+            }
+            
+            .section-title {
+                font-size: 24px;
+                margin-bottom: 30px;
+            }
+            
+            .story-text {
+                font-size: 15px;
+                line-height: 1.7;
+            }
+            
+            .story-box {
+                padding: 20px 15px;
+                margin: 20px 0;
+            }
+            
+            .solution-grid,
+            .service-items {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .stat-number {
+                font-size: 28px;
+            }
+            
+            .cta-title {
+                font-size: 26px;
+            }
+            
+            .phone-number {
+                font-size: 22px;
+            }
+            
+            .cta-button {
+                width: 90%;
+                max-width: 280px;
+                padding: 16px 20px;
+                font-size: 18px;
+                display: block;
+                margin: 15px auto;
+            }
+            
+            .price-amount {
+                font-size: 28px;
+            }
+            
+            .service-list {
+                padding: 20px 15px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .main-catchcopy {
+                font-size: 20px;
+            }
+            
+            .section-title {
+                font-size: 20px;
+            }
+            
+            .story-title {
+                font-size: 18px;
+            }
+            
+            .story-text {
+                font-size: 14px;
+            }
+            
+            .testimonial {
+                padding: 20px 15px;
+            }
+            
+            .testimonial-text {
+                font-size: 14px;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .stat-item {
+                padding: 20px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 緊急性バナー -->
+    <div class="urgent-banner">
+        ⏰ 今月残り3名 ⏰ 初回相談無料は2月28日まで・東京23区対応・24時間受付中
+    </div>
+
+    <!-- ヘッダー -->
+    <header class="header">
+        <div class="container">
+            <h1 class="main-catchcopy">
+                「仕事に迷惑をかけて申し訳ない」<br>
+                その心配、もういりません
+            </h1>
+            <p class="sub-catchcopy">
+                143項目の死後手続きを平日代行、今から最期まで前田弁護士が伴走サポート<br>
+                東京23区対応・初回相談無料（今月残り3名）遺言書無料更新は契約期間中何度でも
+            </p>
+            <a href="#contact" class="cta-button">
+                今すぐ無料相談を申し込む
+            </a>
+        </div>
+    </header>
+
+    <!-- ストーリー：問題提起 -->
+    <section class="story-section">
+        <div class="container">
+            <h2 class="section-title">田中さん（73歳）の実体験談</h2>
+            
+            <div class="story-box">
+                <div class="story-title">「息子に迷惑をかけたくない」という想い</div>
+                <div class="story-text">
+                    東京都杉並区在住の田中さんは、一人暮らしの73歳。息子は都内で会社員として働いており、「自分に何かあった時、息子に仕事を休ませるわけにはいかない」と常々心配されていました。<br><br>
+                    
+                    「最近は有給休暇も取りづらいし、コロナ禍で会社も厳しい。<span class="highlight">親の死後手続きで2週間も休むなんて、申し訳なくて...</span>」
+                </div>
+            </div>
+            
+            <div class="story-box">
+                <div class="story-title">実際に親を亡くした息子さんの現実</div>
+                <div class="story-text">
+                    実際に親を亡くした方の息子さん（42歳・会社員）は語ります：<br><br>
+                    
+                    「父が亡くなった時、<span class="highlight">143項目もの手続きがあるとは思いませんでした。銀行17行、年金事務所、市役所3ヶ所、電気・ガス・水道、携帯3社の解約...平日の昼間しか受け付けない所ばかり。</span><br><br>
+                    
+                    結局14日間の有給を全て使い、会社にも迷惑をかけました。同僚に仕事を押し付けてしまい、本当に申し訳ない気持ちでいっぱいです。」
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 解決策 -->
+    <section class="solution-section">
+        <div class="container">
+            <h2 class="section-title">田中さんが選んだ解決策</h2>
+            
+            <div class="story-box">
+                <div class="story-title">前田弁護士との出会い</div>
+                <div class="story-text">
+                    そんな田中さんが、友人の紹介で前田弁護士に相談したのは2年前のこと。<br><br>
+                    
+                    「最初は『弁護士なんて敷居が高い』と思っていましたが、前田先生は私の話を最後まで聞いてくださり、<span class="highlight">'お子さんに迷惑をかけない方法がありますよ'</span>と優しく説明してくれました。」
+                </div>
+            </div>
+            
+            <div class="solution-grid">
+                <div class="solution-item">
+                    <div class="solution-number">143</div>
+                    <div class="solution-subtitle">項目の手続きを完全代行</div>
+                    <p>銀行17行解約、年金停止、保険12社請求、電気・ガス・水道停止、携帯3社解約など、死後に必要な143項目すべてを弁護士が代行します。</p>
+                </div>
+                
+                <div class="solution-item">
+                    <div class="solution-number">平日</div>
+                    <div class="solution-subtitle">昼間の手続きも安心</div>
+                    <p>平日の昼間しか受け付けない役所や銀行への手続きも、弁護士が代理で行います。ご家族は仕事を一切休む必要がありません。</p>
+                </div>
+                
+                <div class="solution-item">
+                    <div class="solution-number">20年</div>
+                    <div class="solution-subtitle">今から最期まで伴走</div>
+                    <p>契約から20年間、遺言書の無料更新、法改正への自動対応、家族状況の変化に応じたアドバイスを継続提供します。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 継続価値のストーリー -->
+    <section class="story-section">
+        <div class="container">
+            <h2 class="section-title">契約から2年後の田中さん</h2>
+            
+            <div class="story-box">
+                <div class="story-title">想定外の法改正にも安心対応</div>
+                <div class="story-text">
+                    契約から1年後、遺言書に関する法改正（配偶者居住権の新設）がありました。田中さんには前田弁護士から連絡があり、<span class="highlight">無料で遺言書を最新の法律に合わせて更新</span>してもらえました。<br><br>
+                    
+                    「もし一人でやっていたら、法改正なんて知らないまま古い遺言書を使っていたでしょう。息子に余計な手間をかけるところでした。」
+                </div>
+            </div>
+            
+            <div class="story-box">
+                <div class="story-title">家族状況の変化にも柔軟対応</div>
+                <div class="story-text">
+                    さらに1年後、息子さんに第二子が誕生。田中さんは孫への遺産分配も検討したくなりました。<br><br>
+                    
+                    「前田先生に相談したら、<span class="highlight">孫への教育資金贈与の特例（1,500万円まで非課税）</span>についても詳しく教えてくださり、税務上有利な方法で遺言書を書き直してくれました。これも追加料金なしです。」<br><br>
+                    
+                    「一度契約すれば、本当に最期まで安心です。息子にも『お父さん、ちゃんと準備してくれてありがとう』と言われました。」
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 実績・信頼構築 -->
+    <section class="results-section">
+        <div class="container">
+            <h2 class="section-title">前田弁護士の実績</h2>
+            
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <span class="stat-number">15</span>
+                    <div class="stat-label">年間の実績</div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">200</span>
+                    <div class="stat-label">件以上の死後事務完了</div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">85</span>
+                    <div class="stat-label">%が5年以内に遺言書更新</div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">12</span>
+                    <div class="stat-label">ヶ所の提携寺院</div>
+                </div>
+            </div>
+            
+            <div class="testimonial">
+                <div class="testimonial-text">
+                    父が亡くなった時、前田先生が本当にすべてやってくださいました。私は仕事を一日も休まずに済み、父の想いを実現できました。同僚からは「お父さん、すごい準備をされていたんですね」と言われ、誇らしい気持ちになりました。
+                </div>
+                <div class="testimonial-author">- 練馬区 佐藤様の息子さん（45歳・会社員）</div>
+            </div>
+            
+            <div class="testimonial">
+                <div class="testimonial-text">
+                    最初は「弁護士に頼むなんて大げさかな」と思いましたが、実際に契約してみると、法律の専門知識だけでなく、家族の気持ちも理解してくださる先生でした。遺言書も3回更新していただき、いつも最新の状態を保てています。
+                </div>
+                <div class="testimonial-author">- 世田谷区 山田様（71歳）</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- サービス詳細 -->
+    <section class="service-section">
+        <div class="container">
+            <h2 class="section-title">143項目の死後手続き代行サービス</h2>
+            
+            <div class="service-list">
+                <div class="service-category">金融・保険関係（47項目）</div>
+                <div class="service-items">
+                    <div class="service-item">銀行17行の口座解約・残高確認</div>
+                    <div class="service-item">生命保険12社の保険金請求</div>
+                    <div class="service-item">証券3社の口座解約・株式売却</div>
+                    <div class="service-item">クレジットカード5社解約</div>
+                    <div class="service-item">住宅ローン完済手続き</div>
+                    <div class="service-item">その他金融機関手続き10項目</div>
+                </div>
+            </div>
+            
+            <div class="service-list">
+                <div class="service-category">行政手続き（38項目）</div>
+                <div class="service-items">
+                    <div class="service-item">死亡届提出（市区町村3ヶ所）</div>
+                    <div class="service-item">年金受給停止手続き</div>
+                    <div class="service-item">健康保険証返却・医療費清算</div>
+                    <div class="service-item">介護保険証返却・利用料清算</div>
+                    <div class="service-item">住民票抹消・印鑑証明廃止</div>
+                    <div class="service-item">その他行政手続き31項目</div>
+                </div>
+            </div>
+            
+            <div class="service-list">
+                <div class="service-category">生活インフラ（32項目）</div>
+                <div class="service-items">
+                    <div class="service-item">電気・ガス・水道停止（3社）</div>
+                    <div class="service-item">携帯電話3社解約・SIM返却</div>
+                    <div class="service-item">インターネット2社解約</div>
+                    <div class="service-item">NHK受信料停止手続き</div>
+                    <div class="service-item">新聞2社購読停止</div>
+                    <div class="service-item">その他インフラ停止22項目</div>
+                </div>
+            </div>
+            
+            <div class="service-list">
+                <div class="service-category">その他手続き（26項目）</div>
+                <div class="service-items">
+                    <div class="service-item">運転免許証返納手続き</div>
+                    <div class="service-item">パスポート返納手続き</div>
+                    <div class="service-item">賃貸住宅解約・敷金返却</div>
+                    <div class="service-item">遺品整理業者手配・立会い</div>
+                    <div class="service-item">葬儀社との最終清算</div>
+                    <div class="service-item">その他各種手続き21項目</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 料金 -->
+    <section class="pricing-section">
+        <div class="container">
+            <h2 class="section-title">明確な料金体系</h2>
+            
+            <div class="price-plan">
+                <div class="price-title">死後事務委任契約</div>
+                <div class="price-amount">138万円</div>
+                <div style="font-size: 18px; margin: 15px 0;">143項目の手続き代行・20年間サポート込み</div>
+                <div style="font-size: 16px; margin: 10px 0;">分割払い可：月3.8万円×36回</div>
+                <div class="price-note">※遺言書作成・更新は契約期間中何度でも無料</div>
+                <div class="price-note">※法改正・家族状況変化への対応も無料</div>
+                <div class="price-note">※提携寺院12ヶ所での法要手配も無料</div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 30px;">
+                <p style="font-size: 16px; color: #666; margin-bottom: 20px;">
+                    他事務所の相場：180-220万円（継続サポートなし）<br>
+                    → 前田法律事務所なら<strong style="color: #e74c3c;">最大82万円もお得</strong>
+                </p>
+                
+                <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin: 20px 0;">
+                    <strong style="color: #2c5aa0;">今月残り3名限定特典</strong><br>
+                    初回相談無料（通常5,500円）<br>
+                    出張相談可能・土日対応・秘密厳守
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="faq-section">
+        <div class="container">
+            <h2 class="section-title">よくあるご質問</h2>
+            
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    契約後に家族状況が変わった場合はどうなりますか？
+                </div>
+                <div class="faq</body></html>
