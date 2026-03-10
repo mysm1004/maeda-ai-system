@@ -1,6 +1,6 @@
 {
   "mode": "aws",
-  "last_updated": "2026-03-10T13:30:00.563Z",
+  "last_updated": "2026-03-10T14:00:00.736Z",
   "last_updated_by": "aws",
   "system_version": "2.0",
   "active_projects": [
@@ -11,7 +11,7 @@
       "phase": 1,
       "current_round": 6,
       "total_rounds": 8,
-      "status": "進行中",
+      "status": "sleep",
       "next_action": "ラウンド7/8の議論を継続",
       "last_log_summary": "続行。批判は非常に鋭い。特に「葬儀社にとって5年後の1件より今月の100件」「小規模葬儀社をターゲットに」「預託金は信託口座」「DMのダブルネームは非弁リスク」は重要な指摘。これらを踏まえてStep7以降の統合・最終提言に進めて。",
       "pending_output": null,
