@@ -28,13 +28,18 @@ try {
   if (savedState && savedState.mode) operationMode = savedState.mode;
 } catch (e) { /* デフォルトaws */ }
 
-app.use(helmet());
-// 静的ファイル配信（LP等のHTML）- helmetのCSPを緩和
-app.use("/outputs", function(req, res, next) {
-  res.removeHeader("Content-Security-Policy");
-  next();
+// 静的ファイル配信（LP等のHTML）- helmetの前に配置
+app.disable("x-powered-by");
+var fs = require("fs");
+app.get("/outputs/:filename", function(req, res) {
+  var filePath = path.join(__dirname, "src/public/outputs", req.params.filename);
+  if (!fs.existsSync(filePath)) return res.status(404).send("Not Found");
+  var html = fs.readFileSync(filePath, "utf8");
+  res.set("Content-Type", "text/html; charset=UTF-8");
+  res.send(html);
 });
-app.use("/outputs", express.static(path.join(__dirname, "src/public/outputs")));
+
+app.use(helmet());
 app.use(compression());
 app.use(express.json({ limit: '10mb' }));
 
