@@ -1,3 +1,4 @@
+var path = require("path");
 require('dotenv').config();
 var express = require('express');
 var helmet = require('helmet');
@@ -28,6 +29,12 @@ try {
 } catch (e) { /* デフォルトaws */ }
 
 app.use(helmet());
+// 静的ファイル配信（LP等のHTML）- helmetのCSPを緩和
+app.use("/outputs", function(req, res, next) {
+  res.removeHeader("Content-Security-Policy");
+  next();
+});
+app.use("/outputs", express.static(path.join(__dirname, "src/public/outputs")));
 app.use(compression());
 app.use(express.json({ limit: '10mb' }));
 
