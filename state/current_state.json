@@ -1,6 +1,6 @@
 {
   "mode": "aws",
-  "last_updated": "2026-03-12T13:30:00.766Z",
+  "last_updated": "2026-03-12T14:00:00.991Z",
   "last_updated_by": "aws",
   "system_version": "2.0",
   "active_projects": [
@@ -24,7 +24,7 @@
       "phase": 1,
       "current_round": 3,
       "total_rounds": 8,
-      "status": "進行中",
+      "status": "sleep",
       "next_action": "ラウンド4/8の議論を継続",
       "last_log_summary": "# 📊 死後事務委任×寺院連携ビジネス：消費者深層心理 完全分析レポート\n\n---\n\n## 1. ペルソナ詳細設計（5名）\n\n### 【ペルソナ①】山田 節子（やまだ せつこ）72歳\n\n```\n■ 基本情報\n・東京都世田谷区在住、分譲マンション（築25年）独居\n・夫を5年前に亡くし、一人暮らし\n・息子（45歳）は名古屋で家庭持ち、娘（42歳）は海外赴任中\n・年金月額18万円＋貯蓄2,800万円\n",
       "pending_output": null,
