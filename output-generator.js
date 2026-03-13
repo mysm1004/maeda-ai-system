@@ -42,12 +42,12 @@ function OutputGenerator(db, lineQA, sendLineFn) {
 // Phase2 Step1: 訴求パターン生成（Claude）
 OutputGenerator.prototype._phase2_step1 = async function(sessionId, outputType, params) {
   var session = this.db.prepare('SELECT * FROM sessions WHERE id = ?').get(sessionId);
-  var memory = this._getMemory(outputType);
+  var memory = this._getMemory(outputType, sessionId);
   var officeDocs = this._getOfficeDocs();
   var p1conclusion = this._getPhase1Conclusion(session);
 
   var res = await this.anthropic.messages.create({
-    model: 'claude-sonnet-4-20250514', max_tokens: 4000,
+    model: 'claude-opus-4-6', max_tokens: 4000,
     system: 'あなたはトップコピーライティングディレクターです。Phase1で固まったアイデアを元に、最も効果的な訴求角度を複数生成してください。前田さんの好み: ' + JSON.stringify(memory),
     messages: [{ role: 'user', content: '【Phase1の結論】\n' + p1conclusion +
       '\n\n【アウトプット種別】' + outputType +
@@ -70,7 +70,7 @@ OutputGenerator.prototype._phase2_step1 = async function(sessionId, outputType, 
 // Phase2 Step2: 訴求批判（Claude）
 OutputGenerator.prototype._phase2_step2 = async function(sessionId, outputType, step1Result) {
   var res = await this.anthropic.messages.create({
-    model: 'claude-sonnet-4-20250514', max_tokens: 4000,
+    model: 'claude-opus-4-6', max_tokens: 4000,
     system: 'あなたは容赦ない広告批評家です。各訴求の弱点・甘さ・見落としを徹底的に突いてください。ただし建設的な改善提案も必ず添えること。',
     messages: [{ role: 'user', content: '【Step1: 訴求パターン】\n' + step1Result +
       '\n\n各訴求について以下を批判：\n' +
@@ -89,7 +89,7 @@ OutputGenerator.prototype._phase2_step2 = async function(sessionId, outputType, 
 // Phase2 Step3: 訴求批判（ChatGPT）
 OutputGenerator.prototype._phase2_step3 = async function(sessionId, outputType, step1Result, step2Result) {
   var res = await this.openai.chat.completions.create({
-    model: 'gpt-4o', max_tokens: 4000,
+    model: 'gpt-5.4', max_completion_tokens: 4000,
     messages: [
       { role: 'system', content: 'あなたは実際の消費者代表です。法律事務所の広告を見る一般人の視点で、各訴求が本当に響くか率直に評価してください。' },
       { role: 'user', content: '【訴求パターン】\n' + step1Result +
@@ -109,9 +109,9 @@ OutputGenerator.prototype._phase2_step3 = async function(sessionId, outputType, 
 
 // Phase2 Step4: 絞り込み（Claude）
 OutputGenerator.prototype._phase2_step4 = async function(sessionId, outputType, step1Result, step2Result, step3Result) {
-  var memory = this._getMemory(outputType);
+  var memory = this._getMemory(outputType, sessionId);
   var res = await this.anthropic.messages.create({
-    model: 'claude-sonnet-4-20250514', max_tokens: 4000,
+    model: 'claude-opus-4-6', max_tokens: 4000,
     system: 'あなたは訴求戦略の最終決定者です。全批判を踏まえ最強の訴求2案に絞ってください。前田さんの好み: ' + JSON.stringify(memory),
     messages: [{ role: 'user', content: '【Step1: 訴求パターン】\n' + step1Result +
       '\n\n【Step2: Claude批判】\n' + step2Result +
@@ -130,11 +130,11 @@ OutputGenerator.prototype._phase2_step4 = async function(sessionId, outputType, 
 // Phase2 Step5: コピーライティング（Claude）
 OutputGenerator.prototype._phase2_step5 = async function(sessionId, outputType, step4Result, params) {
   var session = this.db.prepare('SELECT * FROM sessions WHERE id = ?').get(sessionId);
-  var memory = this._getMemory(outputType);
+  var memory = this._getMemory(outputType, sessionId);
   var typeInst = this._getTypeInstructions(outputType);
 
   var res = await this.anthropic.messages.create({
-    model: 'claude-sonnet-4-20250514', max_tokens: 5000,
+    model: 'claude-opus-4-6', max_tokens: 5000,
     system: 'あなたは日本トップクラスのコピーライターです。訴求をキャッチコピー・ボディコピー・CTAに落とし込んでください。前田さんの好み: ' + JSON.stringify(memory),
     messages: [{ role: 'user', content: '【絞り込まれた訴求2案】\n' + step4Result +
       '\n\n【アウトプット種別】' + outputType +
@@ -155,7 +155,7 @@ OutputGenerator.prototype._phase2_step5 = async function(sessionId, outputType, 
 // Phase2 Step6: 最終訴求の統合（Claude）
 OutputGenerator.prototype._phase2_step6 = async function(sessionId, outputType, step4Result, step5Result) {
   var res = await this.anthropic.messages.create({
-    model: 'claude-sonnet-4-20250514', max_tokens: 3000,
+    model: 'claude-opus-4-6', max_tokens: 3000,
     system: 'あなたは最終統合者です。Phase3のアウトプット生成に渡す最終訴求設計書を作成してください。',
     messages: [{ role: 'user', content: '【絞り込み結果】\n' + step4Result +
       '\n\n【コピーライティング結果】\n' + step5Result +
@@ -184,7 +184,7 @@ OutputGenerator.prototype._phase2_step6 = async function(sessionId, outputType, 
 // Phase3 Step1: 初稿生成（Claude）- 4パターン同時
 OutputGenerator.prototype._phase3_step1 = async function(sessionId, outputType, phase2Final, params) {
   var session = this.db.prepare('SELECT * FROM sessions WHERE id = ?').get(sessionId);
-  var memory = this._getMemory(outputType);
+  var memory = this._getMemory(outputType, sessionId);
   var officeDocs = this._getOfficeDocs();
   var typeInst = this._getTypeInstructions(outputType);
   var qualityRules = this._getQualityRules();
@@ -196,29 +196,32 @@ OutputGenerator.prototype._phase3_step1 = async function(sessionId, outputType, 
     '\n【追加指示】' + JSON.stringify(params) +
     '\n【種別指示】' + typeInst;
 
-  // 4パターン並行生成
-  var results = await Promise.all(Object.keys(PATTERNS).map(async function(key) {
+  // 4パターン順次生成（レートリミット対策）
+  var results = [];
+  var keys = Object.keys(PATTERNS);
+  for (var ki = 0; ki < keys.length; ki++) {
+    var key = keys[ki];
     var p = PATTERNS[key];
+    console.log('[Phase3] Step1: パターン' + key + '（' + p.name + '）生成中...');
     var r = await this.anthropic.messages.create({
-      model: 'claude-sonnet-4-20250514', max_tokens: 5000,
-      system: 'あなたはトップコピーライターです。「' + p.name + '（' + p.desc + '）」のパターンで、Phase2の訴求設計書に基づいて最高品質のコンテンツを生成してください。' + qualityRules,
+      model: 'claude-opus-4-6', max_tokens: 16000,
+      system: 'あなたはトップコピーライターです。「' + p.name + '（' + p.desc + '）」のパターンで、Phase2の訴求設計書に基づいて最高品質のコンテンツを生成してください。HTML系アウトプット（LP、バナー等）の場合は、必ず<!DOCTYPE html>から</html>まで完結する単一HTMLファイルとして出力。CSSは全て<style>タグ内にインライン記述。外部ファイル参照禁止。CSSは簡潔にまとめること。' + qualityRules,
       messages: [{ role: 'user', content: basePrompt + '\n\nパターン「' + p.name + '」で生成してください。設計書のキャッチコピー・構成を活かしつつ、このパターンの特性を最大限発揮すること。' }]
     });
-    return { pattern: key, name: p.name, desc: p.desc, content: r.content[0].text };
-  }.bind(this)));
-
+    results.push({ pattern: key, name: p.name, desc: p.desc, content: r.content[0].text });
+  }
   return results;
 };
 
 // Phase3 Step2: コンテンツチェック（Claude）
-OutputGenerator.prototype._phase3_step2 = async function(patterns, phase2Final, outputType) {
-  var memory = this._getMemory(outputType);
+OutputGenerator.prototype._phase3_step2 = async function(patterns, phase2Final, outputType, sessionId) {
+  var memory = this._getMemory(outputType, sessionId);
   var patternsText = patterns.map(function(p) {
     return '【パターン' + p.pattern + ': ' + p.name + '】\n' + p.content;
   }).join('\n\n========\n\n');
 
   var res = await this.anthropic.messages.create({
-    model: 'claude-sonnet-4-20250514', max_tokens: 4000,
+    model: 'claude-opus-4-6', max_tokens: 4000,
     system: 'あなたはClaude批評役。Phase2の訴求設計書に照らし合わせ、各パターンを容赦なくチェックしてください。前田さんの好み: ' + JSON.stringify(memory),
     messages: [{ role: 'user', content: '【Phase2設計書】\n' + phase2Final +
       '\n\n【4パターン】\n' + patternsText +
@@ -243,7 +246,7 @@ OutputGenerator.prototype._phase3_step3 = async function(patterns, phase2Final, 
   }).join('\n\n========\n\n');
 
   var res = await this.openai.chat.completions.create({
-    model: 'gpt-4o', max_tokens: 4000,
+    model: 'gpt-5.4', max_completion_tokens: 4000,
     messages: [
       { role: 'system', content: 'あなたは一般消費者の代表です。法律事務所のコンテンツを見た率直な感想と改善点を述べてください。Claudeの批評も検証してください。' },
       { role: 'user', content: '【4パターン】\n' + patternsText +
@@ -267,7 +270,7 @@ OutputGenerator.prototype._phase3_step4 = async function(patterns, step2Result, 
   }).join('\n\n========\n\n');
 
   var res = await this.anthropic.messages.create({
-    model: 'claude-sonnet-4-20250514', max_tokens: 4000,
+    model: 'claude-opus-4-6', max_tokens: 4000,
     system: 'あなたは品質管理の専門家です。アウトプットの品質基準を厳密にチェックしてください。',
     messages: [{ role: 'user', content: '【4パターン】\n' + patternsText +
       '\n\n【Claude批評】\n' + step2Result +
@@ -294,7 +297,7 @@ OutputGenerator.prototype._phase3_step5 = async function(patterns, step4Result) 
   }).join('\n\n========\n\n');
 
   var res = await this.anthropic.messages.create({
-    model: 'claude-sonnet-4-20250514', max_tokens: 3000,
+    model: 'claude-opus-4-6', max_tokens: 3000,
     system: 'あなたは広告効果測定の専門家です。各パターンの実際の反応を予測し、インパクトを評価してください。',
     messages: [{ role: 'user', content: '【4パターン】\n' + patternsText +
       '\n\n【品質チェック結果】\n' + step4Result +
@@ -318,7 +321,7 @@ OutputGenerator.prototype._phase3_step6 = async function(patterns, outputType) {
   }).join('\n\n========\n\n');
 
   var res = await this.anthropic.messages.create({
-    model: 'claude-sonnet-4-20250514', max_tokens: 3000,
+    model: 'claude-opus-4-6', max_tokens: 3000,
     system: 'あなたはUI/UXの専門家です。スマートフォンでの表示・可読性を徹底チェックしてください。',
     messages: [{ role: 'user', content: '【アウトプット種別】' + outputType +
       '\n\n【4パターン】\n' + patternsText +
@@ -335,8 +338,8 @@ OutputGenerator.prototype._phase3_step6 = async function(patterns, outputType) {
 };
 
 // Phase3 Step7: 最終版生成（Claude）
-OutputGenerator.prototype._phase3_step7 = async function(patterns, phase2Final, step2Result, step3Result, step4Result, step5Result, step6Result, outputType) {
-  var memory = this._getMemory(outputType);
+OutputGenerator.prototype._phase3_step7 = async function(patterns, phase2Final, step2Result, step3Result, step4Result, step5Result, step6Result, outputType, sessionId) {
+  var memory = this._getMemory(outputType, sessionId);
 
   // 全チェック結果を統合して最終改善指示を作成
   var allFeedback = '【Claude批評】\n' + step2Result +
@@ -347,7 +350,7 @@ OutputGenerator.prototype._phase3_step7 = async function(patterns, phase2Final, 
 
   // 推奨パターン特定
   var recommendRes = await this.anthropic.messages.create({
-    model: 'claude-sonnet-4-20250514', max_tokens: 1000,
+    model: 'claude-opus-4-6', max_tokens: 1000,
     system: '全チェック結果を分析し、最終推奨パターンを決定してください。',
     messages: [{ role: 'user', content: allFeedback +
       '\n\nJSON形式で回答：{"recommended":"A|B|C|D","reason":"推奨理由","critique":"全体批評要約"}' }]
@@ -357,17 +360,20 @@ OutputGenerator.prototype._phase3_step7 = async function(patterns, phase2Final, 
   var jsonMatch = recText.match(/\{[\s\S]*\}/);
   if (jsonMatch) { try { recJson = JSON.parse(jsonMatch[0]); } catch(e) {} }
 
-  // 4パターン最終改善版を並行生成
-  var finalPatterns = await Promise.all(patterns.map(async function(p) {
+  // 4パターン最終改善版を順次生成（レートリミット対策）
+  var finalPatterns = [];
+  for (var fi = 0; fi < patterns.length; fi++) {
+    var p = patterns[fi];
+    console.log('[Phase3] Step7: パターン' + p.pattern + ' 最終版生成中...');
     var r = await this.anthropic.messages.create({
-      model: 'claude-sonnet-4-20250514', max_tokens: 5000,
-      system: 'あなたは最終仕上げ担当のトップコピーライターです。全チェック結果を反映し最高品質の最終版を生成してください。前田さんの好み: ' + JSON.stringify(memory),
+      model: 'claude-opus-4-6', max_tokens: 16000,
+      system: 'あなたは最終仕上げ担当のトップコピーライターです。全チェック結果を反映し最高品質の最終版を生成してください。HTML系アウトプット（LP、バナー等）の場合は、必ず<!DOCTYPE html>から</html>まで完結する単一HTMLファイルとして出力。CSSは全て<style>タグ内にインライン記述。外部ファイル参照禁止。CSSは簡潔にまとめること。前田さんの好み: ' + JSON.stringify(memory),
       messages: [{ role: 'user', content: '【元のパターン' + p.pattern + ': ' + p.name + '】\n' + p.content +
         '\n\n【全チェックからの改善指示】\n' + allFeedback +
         '\n\n全ての指摘を反映した最終版を生成してください。改善点を必ず全て反映すること。' }]
     });
-    return { pattern: p.pattern, name: p.name, desc: p.desc, content: r.content[0].text };
-  }.bind(this)));
+    finalPatterns.push({ pattern: p.pattern, name: p.name, desc: p.desc, content: r.content[0].text });
+  }
 
   return {
     patterns: finalPatterns,
@@ -434,7 +440,7 @@ OutputGenerator.prototype.generateFull = async function(sessionId, outputType, p
   this._saveOutputLog(sessionId, 3, 1, 'Phase3-初稿生成', JSON.stringify(patterns.map(function(p) { return p.pattern + ':' + p.name; })));
 
   console.log('[Phase3] Step2: コンテンツチェック（Claude）...');
-  var p3s2 = await this._phase3_step2(patterns, p2s6, outputType);
+  var p3s2 = await this._phase3_step2(patterns, p2s6, outputType, sessionId);
   this._saveOutputLog(sessionId, 3, 2, 'Phase3-チェックClaude', p3s2);
 
   console.log('[Phase3] Step3: コンテンツチェック（ChatGPT）...');
@@ -471,7 +477,7 @@ OutputGenerator.prototype.generateFull = async function(sessionId, outputType, p
   this._saveOutputLog(sessionId, 3, 6, 'Phase3-モバイルチェック', p3s6);
 
   console.log('[Phase3] Step7: 最終版生成...');
-  var finalResult = await this._phase3_step7(patterns, p2s6, p3s2, p3s3, p3s4, p3s5, p3s6, outputType);
+  var finalResult = await this._phase3_step7(patterns, p2s6, p3s2, p3s3, p3s4, p3s5, p3s6, outputType, sessionId);
   this._saveOutputLog(sessionId, 3, 7, 'Phase3-最終版生成', '推奨:' + finalResult.recommended);
 
   console.log('[OutputGen] ===== 全13ステップ完了 =====');
@@ -532,7 +538,7 @@ OutputGenerator.prototype.scoreOutput = async function(sessionId, queueId) {
     var content = p.content || (typeof p === 'string' ? p : JSON.stringify(p));
     try {
       var res = await this.anthropic.messages.create({
-        model: 'claude-sonnet-4-20250514', max_tokens: 800,
+        model: 'claude-opus-4-6', max_tokens: 800,
         system: 'アウトプットの品質を4軸で採点してください。各軸1-10点。JSON形式で回答。\n\n軸:\n- appeal: 訴求力（読者の心を動かせるか）\n- differentiation: 差別化（競合と明確に違うか）\n- format: 体裁（読みやすさ、構成、デザイン）\n- impact: インパクト（記憶に残るか、行動を促すか）',
         messages: [{ role: 'user', content: '以下のアウトプット（パターン' + p.pattern + '）を採点してください。\n\n' + content.substring(0, 3000) + '\n\nJSON形式: {"appeal":N,"differentiation":N,"format":N,"impact":N,"improvement":"改善ポイント1文"}' }]
       });
@@ -607,8 +613,8 @@ OutputGenerator.prototype._saveOutputLog = function(sessionId, phase, step, labe
 // アウトプット種別ごとの指示
 OutputGenerator.prototype._getTypeInstructions = function(type) {
   var map = {
-    'lp': 'レスポンシブHTML/CSSでLP全体を生成。セクション: ファーストビュー→悩み共感→解決策→実績/証拠→サービス詳細→料金→FAQ→CTA。',
-    'banner': '複数サイズ（300x250, 728x90, 1200x628）のHTML/SVGバナーを生成。',
+    'lp': '完全な単一HTMLファイルでLP全体を生成。CSSは全て<style>タグ内にインライン記述（外部CSS参照禁止）。JavaScriptも全て<script>タグ内にインライン記述（外部JS参照禁止）。画像はSVGインラインまたはCSS背景のみ使用（外部画像URL禁止）。bodyやコンテナにdisplay:noneやvisibility:hiddenを設定しない。<!DOCTYPE html>から</html>まで完結すること。セクション: ファーストビュー→悩み共感→解決策→実績/証拠→サービス詳細→料金→FAQ→CTA。レスポンシブ対応必須。',
+    'banner': '完全な単一HTMLファイルで複数サイズ（300x250, 728x90, 1200x628）のHTML/SVGバナーを生成。CSSは全て<style>タグ内にインライン記述。外部ファイル参照禁止。<!DOCTYPE html>から</html>まで完結すること。',
     'sns_post': 'X(Twitter)・Instagram・Facebook・LinkedIn用の投稿文を各1つ生成。ハッシュタグ付き。',
     'blog': 'SEO最適化記事。H1/H2/H3構成、メタディスクリプション、内部リンク候補を含む。3000文字以上。',
     'youtube_script': 'YouTube動画台本。フック→本題→CTA構成。タイムスタンプ付き。',
@@ -618,7 +624,7 @@ OutputGenerator.prototype._getTypeInstructions = function(type) {
     'seo_article': 'SEO記事。構成案→本文→メタ情報まで一括。schema.org構造化データ付き。',
     'aio_content': 'AI検索回答に選ばれるFAQ/構造化コンテンツ。',
     'proposal': '提案書。目次→概要→課題分析→提案内容→実績→スケジュール→費用。',
-    'dm': 'DM/手紙/営業メール。件名+本文。',
+    'dm': '完全な単一HTMLファイルでDMを生成。CSSは全て<style>タグ内にインライン記述。JavaScriptも全て<script>タグ内にインライン記述。外部ファイル参照禁止。<!DOCTYPE html>から</html>まで完結すること。件名+本文。印刷向けレイアウト推奨。',
     'sales_script': '営業トーク台本・FAQ集。場面別の対応スクリプト。',
     'company_profile': '会社概要・サービス資料。',
     'legal_content': '法律解説コンテンツ。一般向け・わかりやすい表現。',
@@ -627,9 +633,12 @@ OutputGenerator.prototype._getTypeInstructions = function(type) {
   return map[type] || '指定された種別のコンテンツを高品質で生成してください。';
 };
 
-OutputGenerator.prototype._getMemory = function(outputType) {
+OutputGenerator.prototype._getMemory = function(outputType, sessionId) {
   var rows;
-  if (outputType) {
+  if (sessionId && outputType) {
+    // プロジェクト固有 + グローバル（source_session_id=NULLまたは該当セッション）
+    rows = this.db.prepare("SELECT category, key, value FROM memory_db WHERE (output_type = ? OR output_type IS NULL) AND (source_session_id = ? OR source_session_id IS NULL OR category IN ('tone','style','cta','pattern_preference')) ORDER BY confidence DESC LIMIT 30").all(outputType, sessionId);
+  } else if (outputType) {
     rows = this.db.prepare("SELECT category, key, value FROM memory_db WHERE output_type = ? OR output_type IS NULL ORDER BY confidence DESC LIMIT 20").all(outputType);
   } else {
     rows = this.db.prepare("SELECT category, key, value FROM memory_db ORDER BY confidence DESC LIMIT 20").all();
@@ -642,7 +651,7 @@ OutputGenerator.prototype._getMemory = function(outputType) {
 OutputGenerator.prototype._getOfficeDocs = function() {
   var fs = require('fs');
   var path = require('path');
-  var dir = path.join(__dirname, '..', '..', 'data', 'office-docs');
+  var dir = path.join(__dirname, 'data', 'office-docs');
   if (!fs.existsSync(dir)) return null;
   var result = [];
   this._readDir(dir, result);

@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>「仕事に迷惑をかけて申し訳ない」その心配、もういりません｜前田法律事務所</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', Meiryo, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #fefefe;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* ヘッダー */
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            text-align: center;
+            padding: 80px 20px 60px;
+            position: relative;
+        }
+        
+        .urgent-notice {
+            background: #ff4444;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            margin-bottom: 25px;
+            display: inline-block;
+        }
+        
+        .main-catchcopy {
+            font-size: 2rem;
+            font-weight: bold;
+            line-height: 1.4;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+        }
+        
+        .sub-catch {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 35px;
+            opacity: 0.95;
+        }
+        
+        .cta-primary {
+            background: #ff4444;
+            color: white;
+            padding: 18px 35px;
+            border: none;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255,68,68,0.3);
+        }
+        
+        .cta-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255,68,68,0.4);
+        }
+        
+        /* ストーリーセクション */
+        .story-section {
+            background: white;
+            padding: 80px 0;
+        }
+        
+        .section-title {
+            font-size: 1.8rem;
+            color: #2a5298;
+            text-align: center;
+            margin-bottom: 50px;
+            font-weight: bold;
+        }
+        
+        .story-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 40px;
+            margin: 40px 0;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+            position: relative;
+        }
+        
+        .story-card::before {
+            content: '"';
+            font-size: 3rem;
+            color: #2a5298;
+            position: absolute;
+            top: -5px;
+            left: 25px;
+            font-family: serif;
+        }
+        
+        .customer-name {
+            color: #2a5298;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            padding-left: 20px;
+        }
+        
+        .story-text {
+            font-size: 1rem;
+            line-height: 1.8;
+            padding-left: 20px;
+            color: #444;
+        }
+        
+        .story-highlight {
+            background: #e3f2fd;
+            padding: 20px;
+            border-left: 4px solid #2196f3;
+            margin: 25px 0;
+            border-radius: 0 5px 5px 0;
+        }
+        
+        /* 問題提起セクション */
+        .problem-section {
+            background: #fff8f0;
+            padding: 80px 0;
+        }
+        
+        .problem-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin: 50px 0;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 35px 25px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            border-top: 4px solid #ff9800;
+        }
+        
+        .stat-number {
+            font-size: 2.8rem;
+            color: #d32f2f;
+            font-weight: bold;
+            display: block;
+            margin-bottom: 10px;
+        }
+        
+        .stat-description {
+            color: #666;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+        
+        /* 解決策セクション */
+        .solution-section {
+            background: white;
+            padding: 80px 0;
+        }
+        
+        .solution-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            margin: 50px 0;
+        }
+        
+        .solution-card {
+            background: #f8f9fa;
+            padding: 35px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+            transition: transform 0.3s ease;
+        }
+        
+        .solution-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .solution-icon {
+            width: 70px;
+            height: 70px;
+            background: #2a5298;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 1.8rem;
+            color: white;
+        }
+        
+        .solution-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #2a5298;
+            margin-bottom: 15px;
+        }
+        
+        .solution-text {
+            color: #555;
+            line-height: 1.7;
+        }
+        
+        /* 法改正対応セクション */
+        .law-update-section {
+            background: #e8f4f8;
+            padding: 80px 0;
+        }
+        
+        .law-warning {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 10px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+        
+        .law-warning-title {
+            color: #856404;
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        
+        .law-warning-text {
+            color: #856404;
+            line-height: 1.7;
+        }
+        
+        .law-benefit {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            border-radius: 10px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+        
+        .law-benefit-title {
+            color: #155724;
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        
+        /* 実績・信頼セクション */
+        .trust-section {
+            background: white;
+            padding: 80px 0;
+        }
+        
+        .achievement-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin: 50px 0;
+        }
+        
+        .achievement-card {
+            background: #f8f9fa;
+            padding: 30px 20px;
+            border-radius: 12px;
+            text-align: center;
+            border-top: 3px solid #2a5298;
+        }
+        
+        .achievement-number {
+            font-size: 2.2rem;
+            color: #2a5298;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        
+        .achievement-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        /* サービス詳細セクション */
+        .service-section {
+            background: #f8f9fa;
+            padding: 80px 0;
+        }
+        
+        .service-detail {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            margin: 40px 0;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+        }
+        
+        .service-category {
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+        
+        .service-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            list-style: none;
+            margin: 20px 0;
+        }
+        
+        .service-list li {
+            padding: 8px 0;
+            position: relative;
+            padding-left: 25px;
+            font-size: 0.95rem;
+        }
+        
+        .service-list li::before {
+            content: '✓';
+            color: #4caf50;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+        
+        /* 料金セクション */
+        .pricing-section {
+            background: white;
+            padding: 80px 0;
+        }
+        
+        .pricing-card {
+            background: #f8f9fa;
+            border: 2px solid #e0e0e0;
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            margin: 40px 0;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .pricing-title {
+            font-size: 1.6rem;
+            color: #2a5298;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        
+        .pricing-main {
+            font-size: 3rem;
+            color: #d32f2f;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .pricing-sub {
+            color: #666;
+            margin-bottom: 30px;
+        }
+        
+        .pricing-features {
+            list-style: none;
+            text-align: left;
+            margin: 30px 0;
+        }
+        
+        .pricing-features li {
+            padding: 10px 0;
+            border-bottom: 1px solid #e0e0e0;
+            position: relative;
+            padding-left: 25px;
+        }
+        
+        .pricing-features li::before {
+            content: '✓';
+            color: #4caf50;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+        
+        /* お客様の声 */
+        .testimonial-section {
+            background: #f5f5f5;
+            padding: 80px 0;
+        }
+        
+        .testimonial-card {
+            background: white;
+            border-radius: 12px;
+            padding: 35px;
+            margin: 30px 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+        
+        .testimonial-text {
+            font-style: italic;
+            line-height: 1.8;
+            margin-bottom: 20px;
+            color: #444;
+        }
+        
+        .testimonial-author {
+            text-align: right;
+            font-weight: bold;
+            color: #666;
+            font-size: 0.95rem;
+        }
+        
+        /* FAQ */
+        .faq-section {
+            background: white;
+            padding: 80px 0;
+        }
+        
+        .faq-item {
+            background: #f8f9fa;
+            border-radius: 10px;
+            margin: 20px 0;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+        
+        .faq-question {
+            background: #2a5298;
+            color: white;
+            padding: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            position: relative;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .faq-question::after {
+            content: '+';
+            position: absolute;
+            right: 20px;
+            font-size: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+        
+        .faq-question.active::after {
+            transform: rotate(45deg);
+        }
+        
+        .faq-answer {
+            padding: 0 20px;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            background: white;
+        }
+        
+        .faq-answer.active {
+            padding: 20px;
+            max-height: 300px;
+        }
+        
+        /* 最終CTA */
+        .final-cta {
+            background: linear-gradient(135deg, #d32f2f 0%, #f57c00 100%);
+            color: white;
+            padding: 80px 0;
+            text-align: center;
+        }
+        
+        .final-cta-title {
+            font-size: 2.2rem;
+            font-weight: bold;
+            margin-bottom: 30px;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+        }
+        
+        .final-cta-text {
+            font-size: 1.1rem;
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+        
+        .cta-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            margin: 40px 0;
+        }
+        
+        .cta-secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+            padding: 18px 35px;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .cta-secondary:hover {
+            background: white;
+            color: #d32f2f;
+        }
+        
+        .contact-info {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255,255,255,0.3);
+        }
+        
+        .phone-number {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #ffeb3b;
+            margin: 15px 0;
+        }
+        
+        /* フッター */
+        .footer {
+            background: #333;
+            color: #ccc;
+            padding: 40px 0;
+            text-align: center;
+        }
+        
+        /* レスポンシブ対応 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 15px;
+            }
+            
+            .header {
+                padding: 60px 15px 40px;
+            }
+            
+            .main-catchcopy {
+                font-size: 1.4rem;
+                line-height: 1.3;
+                margin-bottom: 15px;
+            }
+            
+            .sub-catch {
+                font-size: 1rem;
+            }
+            
+            .section-title {
+                font-size: 1.5rem;
+            }
+            
+            .story-card {
+                padding: 25px 20px;
+            }
+            
+            .story-card::before {
+                font-size: 2rem;
+                left: 15px;
+            }
+            
+            .problem-stats {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+            }
+            
+            .stat-number {
+                font-size: 2.2rem;
+            }
+            
+            .solution-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+            
+            .achievement-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+            }
+            
+            .service-list {
+                grid-template-columns: 1fr;
+            }
+            
+            .pricing-main {
+                font-size: 2.5rem;
+            }
+            
+            .final-cta-title {
+                font-size: 1.8rem;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .cta-primary, .cta-secondary {
+                width: 90%;
+                max-width: 300px;
+                text-align: center;
+                display: block;
+            }
+            
+            .phone-number {
+                font-size: 1.5rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .story-text {
+                font-size: 0.95rem;
+                line-height: 1.7;
+            }
+            
+            .testimonial-card {
+                padding: 25px 15px;
+            }
+            
+            .stat-card {
+                padding: 25px 15px;
+            }
+            
+            .solution-card {
+                padding: 25px 20px;
+            }
+            
+            .pricing-card {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ヘッダー・ファーストビュー -->
+    <section class="header">
+        <div class="container">
+            <div class="urgent-notice">東京23区対応・初回相談無料（今月残り3名）</div>
+            <h1 class="main-catchcopy">「仕事に迷惑をかけて申し訳ない」<br>その心配、もういりません。</h1>
+            <p class="sub-catch">143の死後手続きを平日代行、今から最期まで前田弁護士が伴走サポート<br>子供に迷惑をかけない最期の準備を弁護士が生前から責任サポート</p>
+            <a href="#contact" class="cta-primary">無料相談を今すぐ予約</a>
+        </div>
+    </section>
+
+    <!-- ストーリーセクション -->
+    <section class="story-section">
+        <div class="container">
+            <h2 class="section-title">田中さん（73歳）の実体験</h2>
+            
+            <div class="story-card">
+                <div class="customer-name">東京都世田谷区在住 田中和夫さん（73歳・元会社員）</div>
+                <div class="story-text">
+                    息子は管理職で忙しく、「親の死後手続きで何日も仕事を休むなんて申し訳ない」と悩んでいました。
+                </div>
+            </div>
+
+            <div class="story-highlight">
+                <strong>そこで前田弁護士に生前から依頼</strong><br>
+                昨年、田中さんが亡くなった際、息子さんは<strong>一日も仕事を休むことなく</strong>、すべての手続きが完了しました。
+            </div>
+
+            <div class="story-card">
+                <div class="customer-name">田中さんのご長男（48歳・製造業管理職）</div>
+                <div class="story-text">
+                    「父が生前にお願いしていたおかげで、私は一日も仕事を休まずに済みました。同僚からも『お父さん思いだね』と言われ、父に感謝しています。前田先生が平日昼間にすべて処理してくださったので、本当に助かりました。」
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 問題提起 -->
+    <section class="problem-section">
+        <div class="container">
+            <h2 class="section-title">多くの家族が直面する現実</h2>
+            
+            <div class="problem-stats">
+                <div class="stat-card">
+                    <span class="stat-number">143</span>
+                    <div class="stat-description">項目もの死後手続き<br>すべて平日昼間のみ対応</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">14</span>
+                    <div class="stat-description">日間の平均有休消化<br>子供の職場負担</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">85</span>
+                    <div class="stat-description">%の遺言書が法改正で<br>書き直しが必要に</div>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 40px;">
+                <p style="font-size: 1.1rem; color: #d32f2f; font-weight: bold;">
+                    あなたの子供も、連日職場を早退・欠勤して手続きに奔走することになります。
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 解決策 -->
+    <section class="solution-section">
+        <div class="container">
+            <h2 class="section-title">前田法律事務所の完全サポートシステム</h2>
+            
+            <div class="solution-grid">
+                <div class="solution-card">
+                    <div class="solution-icon">📋</div>
+                    <h3 class="solution-title">143項目完全代行</h3>
+                    <div class="solution-text">
+                        金融関係47項目、行政手続き38項目、生活インフラ32項目、その他26項目を弁護士が平日昼間に代行。子供は一切仕事を休む必要がありません。
+                    </div>
+                </div>
+                <div class="solution-card">
+                    <div class="solution-icon">🏛️</div>
+                    <h3 class="solution-title">寺院連携システム</h3>
+                    <div class="solution-text">
+                        提携寺院12ヶ所（曹洞宗3・真言宗4・日蓮宗3・浄土宗2）との連携により、葬儀から納骨まで一括対応。家族の精神的負担も軽減します。
+                    </div>
+                </div>
+                <div class="solution-card">
+                    <div class="solution-icon">🔄</div>
+                    <h3 class="solution-title">20年継続伴走</h3>
+                    <div class="solution-text">
+                        契約から最期まで前田弁護士が継続サポート。法改正・家族状況変化に対応した無制限更新で、常に最新の準備を維持します。
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 法改正対応の価値 -->
+    <section class="law-update-section">
+        <div class="container">
+            <h2 class="section-title">なぜ今、準備が必要なのか？</h2>
+            
+            <div class="law-warning">
+                <div class="law-warning-title">⚠️ 2025年重要法改正</div>
+                <div class="law-warning-text">
+                    相続法・民法の大幅改正により、現在の遺言書の85%が効力を失うか、手続きが複雑化する可能性があります。法改正後に慌てて準備しても、すでに手遅れです。
+                </div>
+            </div>
+            
+            <div class="law-benefit">
+                <div class="law-benefit-title">✅ 前田法律事務所の自動対応</div>
+                <div class="law-benefit-title">契約者様は法改正の心配が一切不要</div>
+                <div style="color: #155724; line-height: 1.7;">
+                    20年継続サポートにより、法改正に応じて遺言書・手続き内容を自動更新。追加費用なしで常に最新の法律に対応した準備を維持します。
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 実績・信頼 -->
+    <section class="trust-section">
+        <div class="container">
+            <h2 class="section-title">15年の実績で安心をお届け</h2>
+            
+            <div class="achievement-grid">
+                <div class="achievement-card">
+                    <div class="achievement-number">15</div>
+                    <div class="achievement-label">年間の専門実績</div>
+                </div>
+                <div class="achievement-card">
+                    <div class="achievement-number">200</div>
+                    <div class="achievement-label">件以上の完了実績</div>
+                </div>
+                <div class="achievement-card">
+                    <div class="achievement-number">100</div>
+                    <div class="achievement-label">%のトラブル回避率</div>
+                </div>
+                <div class="achievement-card">
+                    <div class="achievement-number">12</div>
+                    <div class="achievement-label">ヶ所の提携寺院</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- サービス詳細 -->
+    <section class="service-section">
+        <div class="container">
+            <h2 class="section-title">143項目完全代行の詳細内容</h2>
+            
+            <div class="service-detail">
+                <div class="service-category">金融関係（47項目）</div>
+                <ul class="service-list">
+                    <li>銀行17行の口座解約・相続手続き</li>
+                    <li>証券会社3社の取引終了手続き</li>
+                    <li>生命保険12社の保険金請求</li>
+                    <li>クレジットカード15社の解約</li>
+                </ul>
+            </div>
+
+            <div class="service-detail">
+                <div class="service-category">行政手続き（38項目）</div>
+                <ul class="service-list">
+                    <li>年金受給停止・遺族年金請求</li>
+                    <li>健康保険・介護保険の資格喪失</li>
+                    <li>住民票・戸籍謄本の各種手続き</li>
+                    <li>所得税・住民税の準確定申告</li>
+                </ul>
+            </div>
+
+            <div class="service-detail">
+                <div class="service-category">生活インフラ（32項目）</div>
+                <ul class="service-list">
+                    <li>電気・ガス・水道の名義変更・解約</li>
+                    <li>電話・インターネットの解約手続き</li>
+                    <li>NHK受信料の停止手続き</li>
+                    <li>各種サブスクリプションサービス解約</li>
+                </ul>
+            </div>
+
+            <div class="service-detail">
+                <div class="service-category">その他（26項目）</div>
+                <ul class="service-list">
+                    <li>運転免許証・パスポートの返納</li>
+                    <li>各種会員証・カードの解約</li>
+                    <li>不動産登記の相続手続き</li>
+                    <li>遺品整理・処分の手配</li>
+                </ul>
+            </div>
+        </div>
+    </section></body></html>

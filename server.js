@@ -1,3 +1,4 @@
+var path = require("path");
 require('dotenv').config();
 var express = require('express');
 var helmet = require('helmet');
@@ -26,6 +27,17 @@ try {
   var savedState = stateManager.loadState();
   if (savedState && savedState.mode) operationMode = savedState.mode;
 } catch (e) { /* デフォルトaws */ }
+
+// 静的ファイル配信（LP等のHTML）- helmetの前に配置
+app.disable("x-powered-by");
+var fs = require("fs");
+app.get("/outputs/:filename", function(req, res) {
+  var filePath = path.join(__dirname, "src/public/outputs", req.params.filename);
+  if (!fs.existsSync(filePath)) return res.status(404).send("Not Found");
+  var html = fs.readFileSync(filePath, "utf8");
+  res.set("Content-Type", "text/html; charset=UTF-8");
+  res.send(html);
+});
 
 app.use(helmet());
 app.use(compression());
@@ -396,6 +408,45 @@ async function processLineCommand(text, userId) {
     }
   }
 
+  // ============ 質問・ステータス問い合わせ判定 ============
+  var questionPatterns = [
+    /教えて/, /は[？?]$/, /どう(いう|なって)/, /状況/, /進捗/,
+    /動いてる/, /いまの/, /何してる/, /何やってる/, /どうなった/,
+    /作業.*教/, /確認.*して/, /見せて/, /報告/, /途中経過/
+  ];
+  var isQuestion = questionPatterns.some(function(p) { return p.test(t); });
+  if (isQuestion) {
+    var allSessions = db.prepare("SELECT * FROM sessions WHERE status IN ('active','sleep') ORDER BY updated_at DESC LIMIT 5").all();
+    var pendingQ = db.prepare("SELECT * FROM output_queue WHERE status = 'awaiting_approval'").all();
+    if (allSessions.length === 0 && pendingQ.length === 0) {
+      return '現在進行中のプロジェクトはありません';
+    }
+    var statusMsg = '【現在の状況】\n';
+    allSessions.forEach(function(s) {
+      statusMsg += '\n\u{1F4CB} ' + s.title + '\n  Phase' + s.phase + ' / ラウンド' + s.current_round + '/' + s.total_rounds + ' (' + s.status + ')';
+    });
+    if (pendingQ.length > 0) {
+      statusMsg += '\n\n【承認待ち: ' + pendingQ.length + '件】';
+      pendingQ.forEach(function(q) {
+        statusMsg += '\n・' + q.output_type + '（推奨: パターン' + q.recommended_pattern + '）';
+      });
+      statusMsg += '\n→「承認」または「却下 理由」で返信';
+    }
+    return statusMsg;
+  }
+
+  // ============ 明示的メモ保存 ============
+  var memoPatterns = [/メモ(して|しといて|保存)/, /覚えて/, /覚えておいて/, /記録して/];
+  var isMemoRequest = memoPatterns.some(function(p) { return p.test(t); });
+  if (isMemoRequest) {
+    var memoText = t.replace(/メモして|メモしといて|メモ保存|覚えて|覚えておいて|記録して/g, '').trim();
+    if (!memoText) memoText = t;
+    db.prepare('INSERT INTO voice_memos (text) VALUES (?)').run(memoText);
+    return 'メモ保存しました: 「' + memoText.substring(0, 30) + '」';
+  }
+
+  // それ以外は壁打ちコマンドとして処理を試みる
+  return '「' + t.substring(0, 20) + '」を受け付けました。\n\n使えるコマンド:\n・承認 / 却下 / 状態\n・コード○○ / 修正○○\n・PCモード / AWSモード\n・CC状態 / モード確認\n\nメモ保存は「○○をメモして」と送ってください';
   // 音声メモとして保存
   db.prepare('INSERT INTO voice_memos (text) VALUES (?)').run(t);
   return 'メモ保存しました: 「' + t.substring(0, 30) + '...」';
