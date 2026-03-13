@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>弁護士事務所 勢力図分析レポート</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Meiryo UI', 'メイリオ', sans-serif; background: #F5F7FA; color: #222; }
+  .header { background: linear-gradient(135deg, #1A3A5C 0%, #2E75B6 100%); color: white; padding: 40px 48px; }
+  .header h1 { font-size: 28px; font-weight: bold; margin-bottom: 8px; }
+  .header p  { font-size: 14px; opacity: 0.8; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 32px 24px; }
+  .section { background: white; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.07); margin-bottom: 32px; overflow: hidden; }
+  .section-header { background: #1A3A5C; color: white; padding: 16px 24px; }
+  .section-header h2 { font-size: 18px; font-weight: bold; }
+  .section-header p  { font-size: 13px; opacity: 0.75; margin-top: 4px; }
+  .section-body { padding: 24px; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th { background: #EAF3FB; color: #1A3A5C; padding: 10px 14px; text-align: left; font-size: 13px; border-bottom: 2px solid #2E75B6; }
+  td { padding: 10px 14px; border-bottom: 1px solid #eee; vertical-align: middle; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #F8FBFF; }
+  .matrix-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .matrix-cell { border-radius: 8px; padding: 16px; }
+  .matrix-cell h3 { font-size: 14px; font-weight: bold; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 2px solid rgba(0,0,0,0.1); }
+  .note { font-size: 12px; color: #888; margin-top: 12px; padding: 8px 12px; background: #f9f9f9; border-radius: 6px; }
+  .footer { text-align: center; font-size: 12px; color: #aaa; padding: 24px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>弁護士事務所 勢力図分析レポート</h1>
+  <p>生成日時：2026年03月12日 11:04　／　対象：6都市 × 3分野　／　仕様書 v2.0</p>
+</div>
+
+<div class="container">
+
+  <!-- ① 参入判定サマリー -->
+  <div class="section">
+    <div class="section-header">
+      <h2>① 参入判定サマリー</h2>
+      <p>WSSスコアに基づく都市×分野ごとの参入判定一覧</p>
+    </div>
+    <div class="section-body">
+      <table>
+        <thead><tr>
+          <th>都市</th><th>分野</th><th>判定</th><th>WSSスコア</th><th>推定掲載件数</th>
+        </tr></thead>
+        <tbody>
+        <tr>
+          <td>新潟</td>
+          <td>刑事事件</td>
+          <td><span style="background:#E8F5ED;color:#1E6B3A;padding:3px 10px;border-radius:12px;font-weight:bold;font-size:13px;">◎ 参入推奨</span></td>
+          <td><div style="display:flex;align-items:center;gap:8px;"><div style="width:100px;max-width:100px;height:10px;background:#1E6B3A;border-radius:5px;"></div><span style="font-weight:bold;color:#1E6B3A">100.0</span></div></td>
+          <td style="text-align:right">60</td>
+        </tr>
+        <tr>
+          <td>新潟</td>
+          <td>離婚・男女問題</td>
+          <td><span style="background:#E8F5ED;color:#1E6B3A;padding:3px 10px;border-radius:12px;font-weight:bold;font-size:13px;">◎ 参入推奨</span></td>
+          <td><div style="display:flex;align-items:center;gap:8px;"><div style="width:70px;max-width:100px;height:10px;background:#1E6B3A;border-radius:5px;"></div><span style="font-weight:bold;color:#1E6B3A">70.5</span></div></td>
+          <td style="text-align:right">80</td>
+        </tr>
+        <tr>
+          <td>新潟</td>
+          <td>交通事故</td>
+          <td><span style="background:#E8F5ED;color:#1E6B3A;padding:3px 10px;border-radius:12px;font-weight:bold;font-size:13px;">◎ 参入推奨</span></td>
+          <td><div style="display:flex;align-items:center;gap:8px;"><div style="width:70px;max-width:100px;height:10px;background:#1E6B3A;border-radius:5px;"></div><span style="font-weight:bold;color:#1E6B3A">70.5</span></div></td>
+          <td style="text-align:right">80</td>
+        </tr>
+        <tr>
+          <td>長野</td>
+          <td>刑事事件</td>
+          <td><span style="background:#FFEBEE;color:#B71C1C;padding:3px 10px;border-radius:12px;font-weight:bold;font-size:13px;">✕ レッドオーシャン</span></td>
+          <td><div style="display:flex;align-items:center;gap:8px;"><div style="width:27px;max-width:100px;height:10px;background:#B71C1C;border-radius:5px;"></div><span style="font-weight:bold;color:#B71C1C">27.8</span></div></td>
+          <td style="text-align:right">60</td>
+        </tr>
+        <tr>
+          <td>熊本</td>
+          <td>刑事事件</td>
+          <td><span style="background:#FFEBEE;color:#B71C1C;padding:3px 10px;border-radius:12px;font-weight:bold;font-size:13px;">✕ レッドオーシャン</span></td>
+          <td><div style="display:flex;align-items:center;gap:8px;"><div style="width:25px;max-width:100px;height:10px;background:#B71C1C;border-radius:5px;"></div><span style="font-weight:bold;color:#B71C1C">25.7</span></div></td>
+          <td style="text-align:right">60</td>
+        </tr>
+        <tr>
+          <td>栃木</td>
+          <td>離婚・男女問題</td>
+          <td><span style="background:#FFEBEE;color:#B71C1C;padding:3px 10px;border-radius:12px;font-weight:bold;font-size:13px;">✕ レッドオーシャン</span></td>
+          <td><div style="display:flex;align-items:center;gap:8px;"><div style="width:25px;max-width:100px;height:10px;background:#B71C1C;border-radius:5px;"></div><span style="font-weight:bold;color:#B71C1C">25.4</span></div></td>
+          <td style="text-align:right">60</td>
+        </tr>
+        <tr>
+          <td>栃木</td>
+          <td>刑事事件</td>
+          <td><span style="background:#FFEBEE;color:#B71C1C;padding:3px 10px;border-radius:12px;font-weight:bold;font-size:13px;">✕ レッドオーシャン</span></td>
+          <td><div style="display:flex;align-items:center;gap:8px;"><div style="width:25px;max-width:100px;height:10px;background:#B71C1C;border-radius:5px;"></div><span style="font-weight:bold;color:#B71C1C">25.4</span></div></td>
+          <td style="text-align:right">60</td>
+        </tr>
+        <tr>
+          <td>静岡</td>
+          <td>刑事事件</td>
+          <td><span style="background:#FFEBEE;color:#B71C1C;padding:3px 10px;border-radius:12px;font-weight:bold;font-size:13px;">✕ レッドオーシャン</span></td>
+          <td><div style="display:flex;align-items:center;gap:8px;"><div style="width:18px;max-width:100px;height:10px;background:#B71C1C;border-radius:5px;"></div><span style="font-weight:bold;color:#B71C1C">18.5</span></div></td>
+          <td style="text-align:right">120</td>
+        </tr>
+        <tr>
+          <td>岡山</td>
+          <td>刑事事件</td>
+          <td><span style="background:#FFEBEE;color:#B71C1C;padding:3px 10px;border-radius:12px;font-weight:bold;font-size:13px;">✕ レッドオーシャン</span></td>
+          <td><div style="display:flex;align-items:center;gap:8px;"><div style="width:18px;max-width:100px;height:10px;background:#B71C1C;border-radius:5px;"></div><span style="font-weight:bold;color:#B71C1C">18.5</span></div></td>
+          <td style="text-align:right">80</td>
+        </tr>
+        <tr>
+          <td>千葉</td>
+          <td>刑事事件</td>
+          <td><span style="background:#FFEBEE;color:#B71C1C;padding:3px 10px;border-radius:12px;font-weight:bold;font-size:13px;">✕ レッドオーシャン</span></td>
+          <td><div style="display:flex;align-items:center;gap:8px;"><div style="width:17px;max-width:100px;height:10px;background:#B71C1C;border-radius:5px;"></div><span style="font-weight:bold;color:#B71C1C">17.2</span></div></td>
+          <td style="text-align:right">200</td>
+        </tr>
+        <tr>
+          <td>群馬</td>
+          <td>刑事事件</td>
+          <td><span style="background:#FFEBEE;color:#B71C1C;padding:3px 10px;border-radius:12px;font-weight:bold;font-size:13px;">✕ レッドオーシャン</span></td>
+          <td><div style="display:flex;align-items:center;gap:8px;"><div style="width:16px;max-width:100px;height:10px;background:#B71C1C;border-radius:5px;"></div><span style="font-weight:bold;color:#B71C1C">16.9</span></div></td>
+          <td style="text-align:right">80</td>
+        </tr>
+        <tr>
+          <td>長野</td>
+          <td>離婚・男女問題</td>
+          <td><span style="background:#FFEBEE;color:#B71C1C;padding:3px 10px;border-radius:12px;font-weight:bold;font-size:13px;">✕ レッドオーシャン</span></td>
+          <td><div style="display:flex;align-items:center;gap:8px;"><div style="width:16px;max-width:100px;height:10px;background:#B71C1C;border-radius:5px;"></div><span style="font-weight:bold;color:#B71C1C">16.4</span></div></td>
+          <td style="text-align:right">80</td>
+        </tr>
+        <tr>
+          <td>長野</td>
+          <td>交通事故</td>
+          <td><span style="background:#FFEBEE;color:#B71C1C;padding:3px 10px;border-radius:12px;font-weight:bold;font-size:13px;">✕ レッドオーシャン</span></td>
+          <td><div style="display:flex;align-items:center;gap:8px;"><div style="width:16px;max-width:100px;height:10px;background:#B71C1C;border-radius:5px;"></div><span style="font-weight:bold;color:#B71C1C">16.4</span></div></td>
+          <td style="text-align:right">80</td>
+        </tr>
+        <tr>
+          <td>熊本</td>
+          <td>離婚・男女問題</td>
+          <td><span style="background:#FFEBEE;color:#B71C1C;padding:3px 10px;border-radius:12px;font-weight:bold;font-size:13px;">✕ レッドオーシャン</span></td>
+          <td><div style="display:flex;align-items:center;gap:8px;"><div style="width:14px;max-width:100px;height:10px;background:#B71C1C;border-radius:5px;"></div><span style="font-weight:bold;color:#B71C1C">14.9</span></div></td>
+          <td style="text-align:right">80</td>
+        </tr>
+        <tr>
+          <td>熊本</td>
+          <td>交通事故</td>
+          <td><span style="background:#FFEBEE;color:#B71C1C;padding:3px 10px;border-radius:12px;font-weight:bold;font-size:13px;">✕ レッドオーシャン</span></td>
+          <td><div style="display:flex;align-items:center;gap:8px;"><div style="width:14px;max-width:100px;height:10px;background:#B71C1C;border-radius:5px;"></div><span style="font-weight:bold;color:#B71C1C">14.9</span></div></td>
+          <td style="text-align:right">80</td>
+        </tr>
+        <tr>
+          <td>栃木</td>
+          <td>交通事故</td>
+          <td><span style="background:#FFEBEE;color:#B71C1C;padding:3px 10px;border-radius:12px;font-weight:bold;font-size:13px;">✕ レッドオーシャン</span></td>
+          <td><div style="display:flex;align-items:center;gap:8px;"><div style="width:14px;max-width:100px;height:10px;background:#B71C1C;border-radius:5px;"></div><span style="font-weight:bold;color:#B71C1C">14.6</span></div></td>
+          <td style="text-align:right">80</td>
+        </tr>
+        <tr>
+          <td>群馬</td>
+          <td>離婚・男女問題</td>
+          <td><span style="background:#FFEBEE;color:#B71C1C;padding:3px 10px;border-radius:12px;font-weight:bold;font-size:13px;">✕ レッドオーシャン</span></td>
+          <td><div style="display:flex;align-items:center;gap:8px;"><div style="width:9px;max-width:100px;height:10px;background:#B71C1C;border-radius:5px;"></div><span style="font-weight:bold;color:#B71C1C">9.7</span></div></td>
+          <td style="text-align:right">100</td>
+        </tr>
+        <tr>
+          <td>群馬</td>
+          <td>交通事故</td>
+          <td><span style="background:#FFEBEE;color:#B71C1C;padding:3px 10px;border-radius:12px;font-weight:bold;font-size:13px;">✕ レッドオーシャン</span></td>
+          <td><div style="display:flex;align-items:center;gap:8px;"><div style="width:9px;max-width:100px;height:10px;background:#B71C1C;border-radius:5px;"></div><span style="font-weight:bold;color:#B71C1C">9.7</span></div></td>
+          <td style="text-align:right">100</td>
+        </tr>
+        <tr>
+          <td>広島</td>
+          <td>刑事事件</td>
+          <td><span style="background:#FFEBEE;color:#B71C1C;padding:3px 10px;border-radius:12px;font-weight:bold;font-size:13px;">✕ レッドオーシャン</span></td>
+          <td><div style="display:flex;align-items:center;gap:8px;"><div style="width:9px;max-width:100px;height:10px;background:#B71C1C;border-radius:5px;"></div><span style="font-weight:bold;color:#B71C1C">9.6</span></div></td>
+          <td style="text-align:right">140</td>
+        </tr>
+        <tr>
+          <td>静岡</td>
+          <td>離婚・男女問題</td>
+          <td><span style="background:#FFEBEE;color:#B71C1C;padding:3px 10px;border-radius:12px;font-weight:bold;font-size:13px;">✕ レッドオーシャン</span></td>
+          <td><div style="display:flex;align-items:center;gap:8px;"><div style="width:8px;max-width:100px;height:10px;background:#B71C1C;border-radius:5px;"></div><span style="font-weight:bold;color:#B71C1C">8.4</span></div></td>
+          <td style="text-align:right">160</td>
+        </tr>
+        <tr>
+          <td>静岡</td>
+          <td>交通事故</td>
+          <td><span style="background:#FFEBEE;color:#B71C1C;padding:3px 10px;border-radius:12px;font-weight:bold;font-size:13px;">✕ レッドオーシャン</span></td>
+          <td><div style="display:flex;align-items:center;gap:8px;"><div style="width:8px;max-width:100px;height:10px;background:#B71C1C;border-radius:5px;"></div><span style="font-weight:bold;color:#B71C1C">8.4</span></div></td>
+          <td style="text-align:right">160</td>
+        </tr>
+        <tr>
+          <td>埼玉</td>
+          <td>刑事事件</td>
+          <td><span style="background:#FFEBEE;color:#B71C1C;padding:3px 10px;border-radius:12px;font-weight:bold;font-size:13px;">✕ レッドオーシャン</span></td>
+          <td><div style="display:flex;align-items:center;gap:8px;"><div style="width:7px;max-width:100px;height:10px;background:#B71C1C;border-radius:5px;"></div><span style="font-weight:bold;color:#B71C1C">7.3</span></div></td>
+          <td style="text-align:right">300</td>
+        </tr>
+        <tr>
+          <td>岡山</td>
+          <td>離婚・男女問題</td>
+          <td><span style="background:#FFEBEE;color:#B71C1C;padding:3px 10px;border-radius:12px;font-weight:bold;font-size:13px;">✕ レッドオーシャン</span></td>
+          <td><div style="display:flex;align-items:center;gap:8px;"><div style="width:5px;max-width:100px;height:10px;background:#B71C1C;border-radius:5px;"></div><span style="font-weight:bold;color:#B71C1C">5.8</span></div></td>
+          <td style="text-align:right">120</td>
+        </tr>
+        <tr>
+          <td>岡山</td>
+          <td>交通事故</td>
+          <td><span style="background:#FFEBEE;color:#B71C1C;padding:3px 10px;border-radius:12px;font-weight:bold;font-size:13px;">✕ レッドオーシャン</span></td>
+          <td><div style="display:flex;align-items:center;gap:8px;"><div style="width:5px;max-width:100px;height:10px;background:#B71C1C;border-radius:5px;"></div><span style="font-weight:bold;color:#B71C1C">5.8</span></div></td>
+          <td style="text-align:right">120</td>
+        </tr>
+        <tr>
+          <td>千葉</td>
+          <td>離婚・男女問題</td>
+          <td><span style="background:#FFEBEE;color:#B71C1C;padding:3px 10px;border-radius:12px;font-weight:bold;font-size:13px;">✕ レッドオーシャン</span></td>
+          <td><div style="display:flex;align-items:center;gap:8px;"><div style="width:5px;max-width:100px;height:10px;background:#B71C1C;border-radius:5px;"></div><span style="font-weight:bold;color:#B71C1C">5.5</span></div></td>
+          <td style="text-align:right">280</td>
+        </tr>
+        <tr>
+          <td>千葉</td>
+          <td>交通事故</td>
+          <td><span style="background:#FFEBEE;color:#B71C1C;padding:3px 10px;border-radius:12px;font-weight:bold;font-size:13px;">✕ レッドオーシャン</span></td>
+          <td><div style="display:flex;align-items:center;gap:8px;"><div style="width:5px;max-width:100px;height:10px;background:#B71C1C;border-radius:5px;"></div><span style="font-weight:bold;color:#B71C1C">5.5</span></div></td>
+          <td style="text-align:right">280</td>
+        </tr>
+        <tr>
+          <td>埼玉</td>
+          <td>離婚・男女問題</td>
+          <td><span style="background:#FFEBEE;color:#B71C1C;padding:3px 10px;border-radius:12px;font-weight:bold;font-size:13px;">✕ レッドオーシャン</span></td>
+          <td><div style="display:flex;align-items:center;gap:8px;"><div style="width:2px;max-width:100px;height:10px;background:#B71C1C;border-radius:5px;"></div><span style="font-weight:bold;color:#B71C1C">2.1</span></div></td>
+          <td style="text-align:right">360</td>
+        </tr>
+        <tr>
+          <td>埼玉</td>
+          <td>交通事故</td>
+          <td><span style="background:#FFEBEE;color:#B71C1C;padding:3px 10px;border-radius:12px;font-weight:bold;font-size:13px;">✕ レッドオーシャン</span></td>
+          <td><div style="display:flex;align-items:center;gap:8px;"><div style="width:2px;max-width:100px;height:10px;background:#B71C1C;border-radius:5px;"></div><span style="font-weight:bold;color:#B71C1C">2.0</span></div></td>
+          <td style="text-align:right">360</td>
+        </tr>
+        <tr>
+          <td>広島</td>
+          <td>離婚・男女問題</td>
+          <td><span style="background:#FFEBEE;color:#B71C1C;padding:3px 10px;border-radius:12px;font-weight:bold;font-size:13px;">✕ レッドオーシャン</span></td>
+          <td><div style="display:flex;align-items:center;gap:8px;"><div style="width:0px;max-width:100px;height:10px;background:#B71C1C;border-radius:5px;"></div><span style="font-weight:bold;color:#B71C1C">0.0</span></div></td>
+          <td style="text-align:right">200</td>
+        </tr>
+        <tr>
+          <td>広島</td>
+          <td>交通事故</td>
+          <td><span style="background:#FFEBEE;color:#B71C1C;padding:3px 10px;border-radius:12px;font-weight:bold;font-size:13px;">✕ レッドオーシャン</span></td>
+          <td><div style="display:flex;align-items:center;gap:8px;"><div style="width:0px;max-width:100px;height:10px;background:#B71C1C;border-radius:5px;"></div><span style="font-weight:bold;color:#B71C1C">0.0</span></div></td>
+          <td style="text-align:right">200</td>
+        </tr></tbody>
+      </table>
+      <div class="note">
+        ◎ 参入推奨（WSS 70以上）　○ 余地あり（50〜69）　△ 競合強い（30〜49）　✕ レッドオーシャン（30未満）
+      </div>
+    </div>
+  </div>
+
+  <!-- ② WSSランキング -->
+  <div class="section">
+    <div class="section-header">
+      <h2>② White Space Score ランキング</h2>
+      <p>SDS（供給密度）・DVR（デジタル可視化率）・SCI（SEO競合強度）の統合スコア</p>
+    </div>
+    <div class="section-body">
+      <table>
+        <thead><tr>
+          <th>#</th><th>都市</th><th>分野</th><th>WSS</th><th>SDS</th><th>DVR</th><th>SCI（モック）</th>
+        </tr></thead>
+        <tbody>
+        <tr>
+          <td style="text-align:center;font-weight:bold;color:#888">1</td>
+          <td>新潟</td>
+          <td>刑事事件</td>
+          <td><div style="display:flex;align-items:center;gap:8px;"><div style="width:100px;max-width:100px;height:10px;background:#1E6B3A;border-radius:5px;"></div><span style="font-weight:bold;color:#1E6B3A">100.0</span></div></td>
+          <td style="text-align:right">0.0396</td>
+          <td style="text-align:right">0.0600</td>
+          <td style="text-align:right">0.1531</td>
+        </tr>
+        <tr>
+          <td style="text-align:center;font-weight:bold;color:#888">2</td>
+          <td>新潟</td>
+          <td>離婚・男女問題</td>
+          <td><div style="display:flex;align-items:center;gap:8px;"><div style="width:70px;max-width:100px;height:10px;background:#1E6B3A;border-radius:5px;"></div><span style="font-weight:bold;color:#1E6B3A">70.5</span></div></td>
+          <td style="text-align:right">0.0528</td>
+          <td style="text-align:right">0.0800</td>
+          <td style="text-align:right">0.1681</td>
+        </tr>
+        <tr>
+          <td style="text-align:center;font-weight:bold;color:#888">3</td>
+          <td>新潟</td>
+          <td>交通事故</td>
+          <td><div style="display:flex;align-items:center;gap:8px;"><div style="width:70px;max-width:100px;height:10px;background:#1E6B3A;border-radius:5px;"></div><span style="font-weight:bold;color:#1E6B3A">70.5</span></div></td>
+          <td style="text-align:right">0.0528</td>
+          <td style="text-align:right">0.0800</td>
+          <td style="text-align:right">0.1681</td>
+        </tr>
+        <tr>
+          <td style="text-align:center;font-weight:bold;color:#888">4</td>
+          <td>長野</td>
+          <td>刑事事件</td>
+          <td><div style="display:flex;align-items:center;gap:8px;"><div style="width:27px;max-width:100px;height:10px;background:#B71C1C;border-radius:5px;"></div><span style="font-weight:bold;color:#B71C1C">27.8</span></div></td>
+          <td style="text-align:right">0.0990</td>
+          <td style="text-align:right">0.2206</td>
+          <td style="text-align:right">0.1531</td>
+        </tr>
+        <tr>
+          <td style="text-align:center;font-weight:bold;color:#888">5</td>
+          <td>熊本</td>
+          <td>刑事事件</td>
+          <td><div style="display:flex;align-items:center;gap:8px;"><div style="width:25px;max-width:100px;height:10px;background:#B71C1C;border-radius:5px;"></div><span style="font-weight:bold;color:#B71C1C">25.7</span></div></td>
+          <td style="text-align:right">0.1131</td>
+          <td style="text-align:right">0.2062</td>
+          <td style="text-align:right">0.1396</td>
+        </tr>
+        <tr>
+          <td style="text-align:center;font-weight:bold;color:#888">6</td>
+          <td>栃木</td>
+          <td>離婚・男女問題</td>
+          <td><div style="display:flex;align-items:center;gap:8px;"><div style="width:25px;max-width:100px;height:10px;background:#B71C1C;border-radius:5px;"></div><span style="font-weight:bold;color:#B71C1C">25.4</span></div></td>
+          <td style="text-align:right">0.1042</td>
+          <td style="text-align:right">0.2575</td>
+          <td style="text-align:right">0.1477</td>
+        </tr>
+        <tr>
+          <td style="text-align:center;font-weight:bold;color:#888">7</td>
+          <td>栃木</td>
+          <td>刑事事件</td>
+          <td><div style="display:flex;align-items:center;gap:8px;"><div style="width:25px;max-width:100px;height:10px;background:#B71C1C;border-radius:5px;"></div><span style="font-weight:bold;color:#B71C1C">25.4</span></div></td>
+          <td style="text-align:right">0.1042</td>
+          <td style="text-align:right">0.2575</td>
+          <td style="text-align:right">0.1477</td>
+        </tr>
+        <tr>
+          <td style="text-align:center;font-weight:bold;color:#888">8</td>
+          <td>静岡</td>
+          <td>刑事事件</td>
+          <td><div style="display:flex;align-items:center;gap:8px;"><div style="width:18px;max-width:100px;height:10px;background:#B71C1C;border-radius:5px;"></div><span style="font-weight:bold;color:#B71C1C">18.5</span></div></td>
+          <td style="text-align:right">0.1100</td>
+          <td style="text-align:right">0.2243</td>
+          <td style="text-align:right">0.2846</td>
+        </tr>
+        <tr>
+          <td style="text-align:center;font-weight:bold;color:#888">9</td>
+          <td>岡山</td>
+          <td>刑事事件</td>
+          <td><div style="display:flex;align-items:center;gap:8px;"><div style="width:18px;max-width:100px;height:10px;background:#B71C1C;border-radius:5px;"></div><span style="font-weight:bold;color:#B71C1C">18.5</span></div></td>
+          <td style="text-align:right">0.1389</td>
+          <td style="text-align:right">0.2046</td>
+          <td style="text-align:right">0.1627</td>
+        </tr>
+        <tr>
+          <td style="text-align:center;font-weight:bold;color:#888">10</td>
+          <td>千葉</td>
+          <td>刑事事件</td>
+          <td><div style="display:flex;align-items:center;gap:8px;"><div style="width:17px;max-width:100px;height:10px;background:#B71C1C;border-radius:5px;"></div><span style="font-weight:bold;color:#B71C1C">17.2</span></div></td>
+          <td style="text-align:right">0.1048</td>
+          <td style="text-align:right">0.2179</td>
+          <td style="text-align:right">0.4905</td>
+        </tr>
+        <tr>
+          <td style="text-align:center;font-weight:bold;color:#888">11</td>
+          <td>群馬</td>
+          <td>刑事事件</td>
+          <td><div style="display:flex;align-items:center;gap:8px;"><div style="width:16px;max-width:100px;height:10px;background:#B71C1C;border-radius:5px;"></div><span style="font-weight:bold;color:#B71C1C">16.9</span></div></td>
+          <td style="text-align:right">0.1389</td>
+          <td style="text-align:right">0.2469</td>
+          <td style="text-align:right">0.1627</td>
+        </tr>
+        <tr>
+          <td style="text-align:center;font-weight:bold;color:#888">12</td>
+          <td>長野</td>
+          <td>離婚・男女問題</td>
+          <td><div style="display:flex;align-items:center;gap:8px;"><div style="width:16px;max-width:100px;height:10px;background:#B71C1C;border-radius:5px;"></div><span style="font-weight:bold;color:#B71C1C">16.4</span></div></td>
+          <td style="text-align:right">0.1320</td>
+          <td style="text-align:right">0.2941</td>
+          <td style="text-align:right">0.1681</td>
+        </tr>
+        <tr>
+          <td style="text-align:center;font-weight:bold;color:#888">13</td>
+          <td>長野</td>
+          <td>交通事故</td>
+          <td><div style="display:flex;align-items:center;gap:8px;"><div style="width:16px;max-width:100px;height:10px;background:#B71C1C;border-radius:5px;"></div><span style="font-weight:bold;color:#B71C1C">16.4</span></div></td>
+          <td style="text-align:right">0.1320</td>
+          <td style="text-align:right">0.2941</td>
+          <td style="text-align:right">0.1681</td>
+        </tr>
+        <tr>
+          <td style="text-align:center;font-weight:bold;color:#888">14</td>
+          <td>熊本</td>
+          <td>離婚・男女問題</td>
+          <td><div style="display:flex;align-items:center;gap:8px;"><div style="width:14px;max-width:100px;height:10px;background:#B71C1C;border-radius:5px;"></div><span style="font-weight:bold;color:#B71C1C">14.9</span></div></td>
+          <td style="text-align:right">0.1509</td>
+          <td style="text-align:right">0.2749</td>
+          <td style="text-align:right">0.1546</td>
+        </tr>
+        <tr>
+          <td style="text-align:center;font-weight:bold;color:#888">15</td>
+          <td>熊本</td>
+          <td>交通事故</td>
+          <td><div style="display:flex;align-items:center;gap:8px;"><div style="width:14px;max-width:100px;height:10px;background:#B71C1C;border-radius:5px;"></div><span style="font-weight:bold;color:#B71C1C">14.9</span></div></td>
+          <td style="text-align:right">0.1509</td>
+          <td style="text-align:right">0.2749</td>
+          <td style="text-align:right">0.1546</td>
+        </tr>
+        <tr>
+          <td style="text-align:center;font-weight:bold;color:#888">16</td>
+          <td>栃木</td>
+          <td>交通事故</td>
+          <td><div style="display:flex;align-items:center;gap:8px;"><div style="width:14px;max-width:100px;height:10px;background:#B71C1C;border-radius:5px;"></div><span style="font-weight:bold;color:#B71C1C">14.6</span></div></td>
+          <td style="text-align:right">0.1389</td>
+          <td style="text-align:right">0.3433</td>
+          <td style="text-align:right">0.1627</td>
+        </tr>
+        <tr>
+          <td style="text-align:center;font-weight:bold;color:#888">17</td>
+          <td>群馬</td>
+          <td>離婚・男女問題</td>
+          <td><div style="display:flex;align-items:center;gap:8px;"><div style="width:9px;max-width:100px;height:10px;background:#B71C1C;border-radius:5px;"></div><span style="font-weight:bold;color:#B71C1C">9.7</span></div></td>
+          <td style="text-align:right">0.1737</td>
+          <td style="text-align:right">0.3086</td>
+          <td style="text-align:right">0.1777</td>
+        </tr>
+        <tr>
+          <td style="text-align:center;font-weight:bold;color:#888">18</td>
+          <td>群馬</td>
+          <td>交通事故</td>
+          <td><div style="display:flex;align-items:center;gap:8px;"><div style="width:9px;max-width:100px;height:10px;background:#B71C1C;border-radius:5px;"></div><span style="font-weight:bold;color:#B71C1C">9.7</span></div></td>
+          <td style="text-align:right">0.1737</td>
+          <td style="text-align:right">0.3086</td>
+          <td style="text-align:right">0.1777</td>
+        </tr>
+        <tr>
+          <td style="text-align:center;font-weight:bold;color:#888">19</td>
+          <td>広島</td>
+          <td>刑事事件</td>
+          <td><div style="display:flex;align-items:center;gap:8px;"><div style="width:9px;max-width:100px;height:10px;background:#B71C1C;border-radius:5px;"></div><span style="font-weight:bold;color:#B71C1C">9.6</span></div></td>
+          <td style="text-align:right">0.1650</td>
+          <td style="text-align:right">0.2247</td>
+          <td style="text-align:right">0.2564</td>
+        </tr>
+        <tr>
+          <td style="text-align:center;font-weight:bold;color:#888">20</td>
+          <td>静岡</td>
+          <td>離婚・男女問題</td>
+          <td><div style="display:flex;align-items:center;gap:8px;"><div style="width:8px;max-width:100px;height:10px;background:#B71C1C;border-radius:5px;"></div><span style="font-weight:bold;color:#B71C1C">8.4</span></div></td>
+          <td style="text-align:right">0.1467</td>
+          <td style="text-align:right">0.2991</td>
+          <td style="text-align:right">0.3146</td>
+        </tr>
+        <tr>
+          <td style="text-align:center;font-weight:bold;color:#888">21</td>
+          <td>静岡</td>
+          <td>交通事故</td>
+          <td><div style="display:flex;align-items:center;gap:8px;"><div style="width:8px;max-width:100px;height:10px;background:#B71C1C;border-radius:5px;"></div><span style="font-weight:bold;color:#B71C1C">8.4</span></div></td>
+          <td style="text-align:right">0.1467</td>
+          <td style="text-align:right">0.2991</td>
+          <td style="text-align:right">0.3146</td>
+        </tr>
+        <tr>
+          <td style="text-align:center;font-weight:bold;color:#888">22</td>
+          <td>埼玉</td>
+          <td>刑事事件</td>
+          <td><div style="display:flex;align-items:center;gap:8px;"><div style="width:7px;max-width:100px;height:10px;background:#B71C1C;border-radius:5px;"></div><span style="font-weight:bold;color:#B71C1C">7.3</span></div></td>
+          <td style="text-align:right">0.1338</td>
+          <td style="text-align:right">0.3000</td>
+          <td style="text-align:right">0.6250</td>
+        </tr>
+        <tr>
+          <td style="text-align:center;font-weight:bold;color:#888">23</td>
+          <td>岡山</td>
+          <td>離婚・男女問題</td>
+          <td><div style="display:flex;align-items:center;gap:8px;"><div style="width:5px;max-width:100px;height:10px;background:#B71C1C;border-radius:5px;"></div><span style="font-weight:bold;color:#B71C1C">5.8</span></div></td>
+          <td style="text-align:right">0.2084</td>
+          <td style="text-align:right">0.3069</td>
+          <td style="text-align:right">0.1927</td>
+        </tr>
+        <tr>
+          <td style="text-align:center;font-weight:bold;color:#888">24</td>
+          <td>岡山</td>
+          <td>交通事故</td>
+          <td><div style="display:flex;align-items:center;gap:8px;"><div style="width:5px;max-width:100px;height:10px;background:#B71C1C;border-radius:5px;"></div><span style="font-weight:bold;color:#B71C1C">5.8</span></div></td>
+          <td style="text-align:right">0.2084</td>
+          <td style="text-align:right">0.3069</td>
+          <td style="text-align:right">0.1927</td>
+        </tr>
+        <tr>
+          <td style="text-align:center;font-weight:bold;color:#888">25</td>
+          <td>千葉</td>
+          <td>離婚・男女問題</td>
+          <td><div style="display:flex;align-items:center;gap:8px;"><div style="width:5px;max-width:100px;height:10px;background:#B71C1C;border-radius:5px;"></div><span style="font-weight:bold;color:#B71C1C">5.5</span></div></td>
+          <td style="text-align:right">0.1467</td>
+          <td style="text-align:right">0.3050</td>
+          <td style="text-align:right">0.5505</td>
+        </tr>
+        <tr>
+          <td style="text-align:center;font-weight:bold;color:#888">26</td>
+          <td>千葉</td>
+          <td>交通事故</td>
+          <td><div style="display:flex;align-items:center;gap:8px;"><div style="width:5px;max-width:100px;height:10px;background:#B71C1C;border-radius:5px;"></div><span style="font-weight:bold;color:#B71C1C">5.5</span></div></td>
+          <td style="text-align:right">0.1467</td>
+          <td style="text-align:right">0.3050</td>
+          <td style="text-align:right">0.5505</td>
+        </tr>
+        <tr>
+          <td style="text-align:center;font-weight:bold;color:#888">27</td>
+          <td>埼玉</td>
+          <td>離婚・男女問題</td>
+          <td><div style="display:flex;align-items:center;gap:8px;"><div style="width:2px;max-width:100px;height:10px;background:#B71C1C;border-radius:5px;"></div><span style="font-weight:bold;color:#B71C1C">2.1</span></div></td>
+          <td style="text-align:right">0.1605</td>
+          <td style="text-align:right">0.3600</td>
+          <td style="text-align:right">0.6700</td>
+        </tr>
+        <tr>
+          <td style="text-align:center;font-weight:bold;color:#888">28</td>
+          <td>埼玉</td>
+          <td>交通事故</td>
+          <td><div style="display:flex;align-items:center;gap:8px;"><div style="width:2px;max-width:100px;height:10px;background:#B71C1C;border-radius:5px;"></div><span style="font-weight:bold;color:#B71C1C">2.0</span></div></td>
+          <td style="text-align:right">0.1605</td>
+          <td style="text-align:right">0.3600</td>
+          <td style="text-align:right">0.6700</td>
+        </tr>
+        <tr>
+          <td style="text-align:center;font-weight:bold;color:#888">29</td>
+          <td>広島</td>
+          <td>離婚・男女問題</td>
+          <td><div style="display:flex;align-items:center;gap:8px;"><div style="width:0px;max-width:100px;height:10px;background:#B71C1C;border-radius:5px;"></div><span style="font-weight:bold;color:#B71C1C">0.0</span></div></td>
+          <td style="text-align:right">0.2357</td>
+          <td style="text-align:right">0.3210</td>
+          <td style="text-align:right">0.3014</td>
+        </tr>
+        <tr>
+          <td style="text-align:center;font-weight:bold;color:#888">30</td>
+          <td>広島</td>
+          <td>交通事故</td>
+          <td><div style="display:flex;align-items:center;gap:8px;"><div style="width:0px;max-width:100px;height:10px;background:#B71C1C;border-radius:5px;"></div><span style="font-weight:bold;color:#B71C1C">0.0</span></div></td>
+          <td style="text-align:right">0.2357</td>
+          <td style="text-align:right">0.3210</td>
+          <td style="text-align:right">0.3014</td>
+        </tr></tbody>
+      </table>
+      <div class="note">SDS・DVRは値が小さいほど供給不足（ホワイトスペース）を示す。SCI・人口データはv2.0モック値。</div>
+    </div>
+  </div>
+
+  <!-- ③ HHI一強マップ -->
+  <div class="section">
+    <div class="section-header">
+      <h2>③ HHI 一強マップ</h2>
+      <p>分野ごとの市場集中度（HHI）と支配的都市</p>
+    </div>
+    <div class="section-body">
+      <table>
+        <thead><tr>
+          <th>分野</th><th>HHI（集中度）</th><th>支配都市</th><th>都市別件数</th>
+        </tr></thead>
+        <tbody>
+        <tr>
+          <td>刑事事件</td>
+          <td><div style="display:flex;align-items:center;gap:8px;"><div style="width:14px;max-width:100px;height:10px;background:#1565C0;border-radius:5px;"></div><span style="font-weight:bold;color:#1565C0">1421 (分散)</span></div></td>
+          <td>埼玉</td>
+          <td style="font-size:12px;color:#555"><span style='font-weight:bold'>埼玉</span>(300件)　<span style='font-weight:bold'>千葉</span>(200件)　<span style='font-weight:bold'>広島</span>(140件)　<span style='font-weight:bold'>静岡</span>(120件)　<span style='font-weight:bold'>岡山</span>(80件)　<span style='font-weight:bold'>群馬</span>(80件)　<span style='font-weight:bold'>新潟</span>(60件)　<span style='font-weight:bold'>長野</span>(60件)　<span style='font-weight:bold'>熊本</span>(60件)　<span style='font-weight:bold'>栃木</span>(60件)</td>
+        </tr>
+        <tr>
+          <td>離婚・男女問題</td>
+          <td><div style="display:flex;align-items:center;gap:8px;"><div style="width:13px;max-width:100px;height:10px;background:#1565C0;border-radius:5px;"></div><span style="font-weight:bold;color:#1565C0">1388 (分散)</span></div></td>
+          <td>埼玉</td>
+          <td style="font-size:12px;color:#555"><span style='font-weight:bold'>埼玉</span>(360件)　<span style='font-weight:bold'>千葉</span>(280件)　<span style='font-weight:bold'>広島</span>(200件)　<span style='font-weight:bold'>静岡</span>(160件)　<span style='font-weight:bold'>岡山</span>(120件)　<span style='font-weight:bold'>群馬</span>(100件)　<span style='font-weight:bold'>新潟</span>(80件)　<span style='font-weight:bold'>長野</span>(80件)　<span style='font-weight:bold'>熊本</span>(80件)　<span style='font-weight:bold'>栃木</span>(60件)</td>
+        </tr>
+        <tr>
+          <td>交通事故</td>
+          <td><div style="display:flex;align-items:center;gap:8px;"><div style="width:13px;max-width:100px;height:10px;background:#1565C0;border-radius:5px;"></div><span style="font-weight:bold;color:#1565C0">1364 (分散)</span></div></td>
+          <td>埼玉</td>
+          <td style="font-size:12px;color:#555"><span style='font-weight:bold'>埼玉</span>(360件)　<span style='font-weight:bold'>千葉</span>(280件)　<span style='font-weight:bold'>広島</span>(200件)　<span style='font-weight:bold'>静岡</span>(160件)　<span style='font-weight:bold'>岡山</span>(120件)　<span style='font-weight:bold'>群馬</span>(100件)　<span style='font-weight:bold'>新潟</span>(80件)　<span style='font-weight:bold'>長野</span>(80件)　<span style='font-weight:bold'>熊本</span>(80件)　<span style='font-weight:bold'>栃木</span>(80件)</td>
+        </tr></tbody>
+      </table>
+      <div class="note">HHI 2500以上＝一強、1500〜2500＝寡占、1500未満＝分散。今回は推定件数ベースのため参考値。</div>
+    </div>
+  </div>
+
+  <!-- ④ 優先度マトリクス -->
+  <div class="section">
+    <div class="section-header">
+      <h2>④ 優先度マトリクス ― 支店を出すならどこか？</h2>
+      <p>WSS中央値 14.9 ／ 件数中央値 100件 を基準に4象限で分類</p>
+    </div>
+    <div class="section-body">
+      <div class="matrix-grid">
+
+        <div class="matrix-cell" style="background:#E8F5ED;border:2px solid #1E6B3A">
+          <h3 style="color:#1E6B3A">◎ 即参入推奨　高WSS × 少件数<br><small style="font-weight:normal">競合が少なくホワイトスペースが大きい</small></h3>
+          <div style="background:white;border:1px solid #ddd;border-radius:6px;padding:8px 12px;margin-bottom:6px;"><span style="font-weight:bold">新潟</span> × 刑事事件<span style="float:right;color:#1E6B3A;font-weight:bold">WSS 100.0</span></div><div style="background:white;border:1px solid #ddd;border-radius:6px;padding:8px 12px;margin-bottom:6px;"><span style="font-weight:bold">新潟</span> × 離婚・男女問題<span style="float:right;color:#1E6B3A;font-weight:bold">WSS 70.5</span></div><div style="background:white;border:1px solid #ddd;border-radius:6px;padding:8px 12px;margin-bottom:6px;"><span style="font-weight:bold">新潟</span> × 交通事故<span style="float:right;color:#1E6B3A;font-weight:bold">WSS 70.5</span></div><div style="background:white;border:1px solid #ddd;border-radius:6px;padding:8px 12px;margin-bottom:6px;"><span style="font-weight:bold">長野</span> × 刑事事件<span style="float:right;color:#1E6B3A;font-weight:bold">WSS 27.8</span></div><div style="background:white;border:1px solid #ddd;border-radius:6px;padding:8px 12px;margin-bottom:6px;"><span style="font-weight:bold">熊本</span> × 刑事事件<span style="float:right;color:#1E6B3A;font-weight:bold">WSS 25.7</span></div><div style="background:white;border:1px solid #ddd;border-radius:6px;padding:8px 12px;margin-bottom:6px;"><span style="font-weight:bold">栃木</span> × 離婚・男女問題<span style="float:right;color:#1E6B3A;font-weight:bold">WSS 25.4</span></div><div style="background:white;border:1px solid #ddd;border-radius:6px;padding:8px 12px;margin-bottom:6px;"><span style="font-weight:bold">栃木</span> × 刑事事件<span style="float:right;color:#1E6B3A;font-weight:bold">WSS 25.4</span></div><div style="background:white;border:1px solid #ddd;border-radius:6px;padding:8px 12px;margin-bottom:6px;"><span style="font-weight:bold">岡山</span> × 刑事事件<span style="float:right;color:#1E6B3A;font-weight:bold">WSS 18.5</span></div><div style="background:white;border:1px solid #ddd;border-radius:6px;padding:8px 12px;margin-bottom:6px;"><span style="font-weight:bold">群馬</span> × 刑事事件<span style="float:right;color:#1E6B3A;font-weight:bold">WSS 16.9</span></div><div style="background:white;border:1px solid #ddd;border-radius:6px;padding:8px 12px;margin-bottom:6px;"><span style="font-weight:bold">長野</span> × 離婚・男女問題<span style="float:right;color:#1E6B3A;font-weight:bold">WSS 16.4</span></div><div style="background:white;border:1px solid #ddd;border-radius:6px;padding:8px 12px;margin-bottom:6px;"><span style="font-weight:bold">長野</span> × 交通事故<span style="float:right;color:#1E6B3A;font-weight:bold">WSS 16.4</span></div><div style="background:white;border:1px solid #ddd;border-radius:6px;padding:8px 12px;margin-bottom:6px;"><span style="font-weight:bold">熊本</span> × 離婚・男女問題<span style="float:right;color:#1E6B3A;font-weight:bold">WSS 14.9</span></div><div style="background:white;border:1px solid #ddd;border-radius:6px;padding:8px 12px;margin-bottom:6px;"><span style="font-weight:bold">熊本</span> × 交通事故<span style="float:right;color:#1E6B3A;font-weight:bold">WSS 14.9</span></div>
+        </div>
+
+        <div class="matrix-cell" style="background:#E3F2FD;border:2px solid #1565C0">
+          <h3 style="color:#1565C0">○ 参入余地あり　高WSS × 多件数<br><small style="font-weight:normal">市場規模は大きく、まだ余地がある</small></h3>
+          <div style="background:white;border:1px solid #ddd;border-radius:6px;padding:8px 12px;margin-bottom:6px;"><span style="font-weight:bold">静岡</span> × 刑事事件<span style="float:right;color:#1565C0;font-weight:bold">WSS 18.5</span></div><div style="background:white;border:1px solid #ddd;border-radius:6px;padding:8px 12px;margin-bottom:6px;"><span style="font-weight:bold">千葉</span> × 刑事事件<span style="float:right;color:#1565C0;font-weight:bold">WSS 17.2</span></div>
+        </div>
+
+        <div class="matrix-cell" style="background:#FFF3E0;border:2px solid #E65100">
+          <h3 style="color:#E65100">△ 要検討　低WSS × 少件数<br><small style="font-weight:normal">市場自体が小さい可能性あり</small></h3>
+          <div style="background:white;border:1px solid #ddd;border-radius:6px;padding:8px 12px;margin-bottom:6px;"><span style="font-weight:bold">栃木</span> × 交通事故<span style="float:right;color:#E65100;font-weight:bold">WSS 14.6</span></div>
+        </div>
+
+        <div class="matrix-cell" style="background:#FFEBEE;border:2px solid #B71C1C">
+          <h3 style="color:#B71C1C">✕ レッドオーシャン　低WSS × 多件数<br><small style="font-weight:normal">競合が多く参入余地が小さい</small></h3>
+          <div style="background:white;border:1px solid #ddd;border-radius:6px;padding:8px 12px;margin-bottom:6px;"><span style="font-weight:bold">群馬</span> × 離婚・男女問題<span style="float:right;color:#B71C1C;font-weight:bold">WSS 9.7</span></div><div style="background:white;border:1px solid #ddd;border-radius:6px;padding:8px 12px;margin-bottom:6px;"><span style="font-weight:bold">群馬</span> × 交通事故<span style="float:right;color:#B71C1C;font-weight:bold">WSS 9.7</span></div><div style="background:white;border:1px solid #ddd;border-radius:6px;padding:8px 12px;margin-bottom:6px;"><span style="font-weight:bold">広島</span> × 刑事事件<span style="float:right;color:#B71C1C;font-weight:bold">WSS 9.6</span></div><div style="background:white;border:1px solid #ddd;border-radius:6px;padding:8px 12px;margin-bottom:6px;"><span style="font-weight:bold">静岡</span> × 離婚・男女問題<span style="float:right;color:#B71C1C;font-weight:bold">WSS 8.4</span></div><div style="background:white;border:1px solid #ddd;border-radius:6px;padding:8px 12px;margin-bottom:6px;"><span style="font-weight:bold">静岡</span> × 交通事故<span style="float:right;color:#B71C1C;font-weight:bold">WSS 8.4</span></div><div style="background:white;border:1px solid #ddd;border-radius:6px;padding:8px 12px;margin-bottom:6px;"><span style="font-weight:bold">埼玉</span> × 刑事事件<span style="float:right;color:#B71C1C;font-weight:bold">WSS 7.3</span></div><div style="background:white;border:1px solid #ddd;border-radius:6px;padding:8px 12px;margin-bottom:6px;"><span style="font-weight:bold">岡山</span> × 離婚・男女問題<span style="float:right;color:#B71C1C;font-weight:bold">WSS 5.8</span></div><div style="background:white;border:1px solid #ddd;border-radius:6px;padding:8px 12px;margin-bottom:6px;"><span style="font-weight:bold">岡山</span> × 交通事故<span style="float:right;color:#B71C1C;font-weight:bold">WSS 5.8</span></div><div style="background:white;border:1px solid #ddd;border-radius:6px;padding:8px 12px;margin-bottom:6px;"><span style="font-weight:bold">千葉</span> × 離婚・男女問題<span style="float:right;color:#B71C1C;font-weight:bold">WSS 5.5</span></div><div style="background:white;border:1px solid #ddd;border-radius:6px;padding:8px 12px;margin-bottom:6px;"><span style="font-weight:bold">千葉</span> × 交通事故<span style="float:right;color:#B71C1C;font-weight:bold">WSS 5.5</span></div><div style="background:white;border:1px solid #ddd;border-radius:6px;padding:8px 12px;margin-bottom:6px;"><span style="font-weight:bold">埼玉</span> × 離婚・男女問題<span style="float:right;color:#B71C1C;font-weight:bold">WSS 2.1</span></div><div style="background:white;border:1px solid #ddd;border-radius:6px;padding:8px 12px;margin-bottom:6px;"><span style="font-weight:bold">埼玉</span> × 交通事故<span style="float:right;color:#B71C1C;font-weight:bold">WSS 2.0</span></div><div style="background:white;border:1px solid #ddd;border-radius:6px;padding:8px 12px;margin-bottom:6px;"><span style="font-weight:bold">広島</span> × 離婚・男女問題<span style="float:right;color:#B71C1C;font-weight:bold">WSS 0.0</span></div><div style="background:white;border:1px solid #ddd;border-radius:6px;padding:8px 12px;margin-bottom:6px;"><span style="font-weight:bold">広島</span> × 交通事故<span style="float:right;color:#B71C1C;font-weight:bold">WSS 0.0</span></div>
+        </div>
+
+      </div>
+      <div class="note">※ 人口・日弁連登録数はモック値。地方都市（茨城・福島等）追加後に再スコアリング推奨。</div>
+    </div>
+  </div>
+
+</div>
+<div class="footer">弁護士事務所 勢力図分析システム v2.0　／　CONFIDENTIAL</div>
+</body>
+</html>
