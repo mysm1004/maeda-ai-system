@@ -1,6 +1,6 @@
 {
   "mode": "aws",
-  "last_updated": "2026-03-13T13:30:00.111Z",
+  "last_updated": "2026-03-13T14:00:00.377Z",
   "last_updated_by": "aws",
   "system_version": "2.0",
   "active_projects": [
@@ -24,7 +24,7 @@
       "phase": 1,
       "current_round": 1,
       "total_rounds": 8,
-      "status": "進行中",
+      "status": "sleep",
       "next_action": "ラウンド2/8の議論を継続",
       "last_log_summary": "以下、**このテーマのみ**に絞って整理します。  \nただし先に重要な前提を明示します。\n\n## 重要な前提\n- 私はこの環境では**リアルタイムWeb閲覧をしていません**。  \n- そのため、**競合LPのURL・料金の「最新公開値」を断定的に確定することはできません**。  \n- ただし、**士業コンサル業界で一般に公開されている相場・公開実績・典型的なLP構成・料金慣行**に基づき、**実",
       "pending_output": null,
@@ -37,7 +37,7 @@
       "phase": 1,
       "current_round": 5,
       "total_rounds": 8,
-      "status": "進行中",
+      "status": "sleep",
       "next_action": "ラウンド6/8の議論を継続",
       "last_log_summary": "以下、**このテーマのみに限定**して、これまでの市場調査・顧客調査を統合し、**売れるメニュー設計・料金設計・LTV設計**まで一気通貫で再構築します。  \n前提は、文字化け文面の文脈から **「企業向け顧問・企業法務コンサル／外部法務部・法務責任者代行の料金・商品設計」** と解釈します。  \n**memory_dbや他案件の別テーマには引っ張りません。**\n\n---\n\n# 0. 先に結論\n\n",
       "pending_output": null,
