@@ -1,6 +1,6 @@
 {
   "mode": "aws",
-  "last_updated": "2026-03-14T13:30:00.333Z",
+  "last_updated": "2026-03-14T14:00:00.202Z",
   "last_updated_by": "aws",
   "system_version": "2.0",
   "active_projects": [
@@ -11,7 +11,7 @@
       "phase": 1,
       "current_round": 1,
       "total_rounds": 8,
-      "status": "進行中",
+      "status": "sleep",
       "next_action": "ラウンド2/8の議論を継続",
       "last_log_summary": "申し訳ございませんが、提供されたテーマ「TC3.5������̋��n�^�v�����݌v」は文字化けしており、正確な市場調査対象を特定できません。\n\n## 🚨 緊急対応が必要な事項\n\n### 文字エンコードエラーの問題\n- 提供されたテーマが完全に文字化けしている\n- UTF-8エンコードエラーまたはデータ転送時の問題と推測\n- 具体的な業界・サービス・市場が特定不可能\n\n## 📋 調査実",
       "pending_output": null,
