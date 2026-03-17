@@ -733,6 +733,32 @@ async function processLineCommand(text, userId) {
       return '⚠️ Claude Code呼び出しエラー: ' + e.message;
     }
   }
+<<<<<<< Updated upstream
+=======
+  // Claude Code コマンド（コード修正・実装・デプロイ）
+  var ccPrefixes = ['コード', '修正', '実装', '追加', 'バグ', 'デプロイ', 'claude'];
+  var isCodeCmd = ccPrefixes.some(function(p) { return t.startsWith(p); });
+  if (isCodeCmd) {
+    try {
+      var instruction = t;
+      var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
+      var ccResult = await new Promise(function(resolve) {
+        var ccReq = http.request({
+          hostname: '127.0.0.1', port: 3001, path: '/task', method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'x-api-key': process.env.API_SECRET, 'Content-Length': Buffer.byteLength(ccData) }
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        });
+        ccReq.on('error', function(e) { resolve({ error: e.message }); });
+        ccReq.write(ccData); ccReq.end();
+      });
+      if (ccResult.error) return '⚠️ Claude Code接続エラー: ' + ccResult.error;
+      return '🔧 Claude Codeにタスク投入しました\nタスクID: ' + ccResult.taskId + '\n完了時にLINEで結果を通知します';
+    } catch (e) {
+      return '⚠️ Claude Code呼び出しエラー: ' + e.message;
+    }
+  }
+>>>>>>> Stashed changes
 
   // Claude Code 状態確認
   if (t === 'CC状態' || t === 'Claude状態') {
@@ -762,6 +788,9 @@ async function processLineCommand(text, userId) {
       return '⚠️ Claude Code状態取得エラー';
     }
   }
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 
   // 音声メモとして保存
