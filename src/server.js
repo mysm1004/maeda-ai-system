@@ -511,31 +511,7 @@ async function processLineCommand(text, userId) {
     return operationMode === 'aws' ? 'AWSモード稼働中' : 'PCモード';
   }
 
-  // ========== タスク（maeda-ai-system） ==========
-  if (t.startsWith('タスク ') || t.startsWith('タスク　')) {
-    var taskInstruction = t.replace(/^タスク[s　]+/, '').trim();
-    if (!taskInstruction) return 'タスク内容を入力してください
-例：タスク 管理会社リストを整理して';
-    try {
-      var taskData = JSON.stringify({ instruction: taskInstruction, cwd: '/home/ubuntu/maeda-ai-system', autoRestart: false });
-      var taskResult = await new Promise(function(resolve) {
-        var tReq = http.request({
-          hostname: '127.0.0.1', port: 3001, path: '/task', method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'x-api-key': process.env.API_SECRET, 'Content-Length': Buffer.byteLength(taskData) }
-        }, function(res2) {
-          var b = ''; res2.on('data', function(c) { b += c; }); res2.on('end', function() { try { resolve(JSON.parse(b)); } catch(e) { resolve({error:b}); } });
-        });
-        tReq.on('error', function(e) { resolve({ error: e.message }); });
-        tReq.write(taskData); tReq.end();
-      });
-      if (taskResult.error) return 'タスクエラー: ' + taskResult.error;
-      return 'タスク投入完了
-ID: ' + taskResult.taskId + '
-完了後LINEに通知します';
-    } catch (e) { return 'タスク投入エラー: ' + e.message; }
-  }
-
-    // ========== Claude Code コマンド ==========
+  // ========== Claude Code コマンド ==========
   var ccPrefixes = ['コード', '修正', '実装', '追加', 'バグ', 'デプロイ', 'claude'];
   var isCodeCmd = ccPrefixes.some(function(p) { return t.startsWith(p); });
   if (isCodeCmd) {
