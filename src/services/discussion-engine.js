@@ -47,6 +47,7 @@ var OpenAI = require('openai');
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 // v2.0仕様: Phase1は8ステップ。Claude5回、GPT-5.4が3回
 var PHASE1_STEPS = [
   { num: 1, name: '市場・競合調査（Claude）', ai: 'claude', role: '市場調査の専門家' },
@@ -63,6 +64,8 @@ var PHASE1_STEPS = [
 var CLAUDE_MODEL = 'claude-sonnet-4-20250514';
 
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -209,6 +212,9 @@ var PHASE1_STEPS = [
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -306,6 +312,7 @@ function DiscussionEngine(db, lineQA, sendLineFn) {
   this.sendLineFn = sendLineFn || null;
   this.anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
   this.openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
@@ -499,6 +506,8 @@ DiscussionEngine.prototype.runResearch = async function(topic, projectId) {
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 }
 
 // セッション作成
@@ -565,6 +574,9 @@ DiscussionEngine.prototype.runResearch = async function(topic) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -707,6 +719,7 @@ DiscussionEngine.prototype.runResearch = async function(topic) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 DiscussionEngine.prototype.runStep = async function(sessionId, topic, stepNum, research, isSleep, projectId) {
   var step = PHASE1_STEPS[stepNum - 1];
   if (!step) throw new Error('Invalid step: ' + stepNum);
@@ -803,11 +816,14 @@ DiscussionEngine.prototype.runStep = async function(sessionId, topic, stepNum, r
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 DiscussionEngine.prototype.runStep = async function(sessionId, topic, stepNum, research, isSleep) {
   var step = PHASE1_STEPS[stepNum - 1];
   if (!step) throw new Error('Invalid step: ' + stepNum);
   var history = this._getHistory(sessionId);
   var memory = this._getMemoryForContext();
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
@@ -6580,6 +6596,130 @@ DiscussionEngine.prototype._getOfficeDocsSummary = function() {
   return d ? d.substring(0, 1500) : null;
 >>>>>>> Stashed changes
 =======
+=======
+  var officeDocs = this._getOfficeDocsSummary();
+  var sm = isSleep ? 1 : 0;
+
+  var prevResults = history.filter(function(h) { return h.role !== 'user'; })
+    .map(function(h) { return '【Step' + h.round_number + ': ' + h.round_theme + '】\n' + h.content; }).join('\n\n===\n\n');
+  var baseCtx = '★★★ 分析テーマ：「' + topic + '」 ★★★\n※以下の記憶DBや事務所資料に別テーマの情報があっても、上記テーマのみを分析すること。\n\n【テーマ】' + topic + '\n【事前調査】' + (research || '未実施') +
+    '\n【事務所資料要約】' + (officeDocs || 'なし') + '\n【前田さんの記憶DB】' + JSON.stringify(memory);
+  if (prevResults) baseCtx += '\n\n【これまでの結果】\n' + prevResults;
+
+  var result;
+  switch (stepNum) {
+    case 1: result = await this._step1(baseCtx, topic); break;
+    case 2: result = await this._step2(baseCtx, topic, history); break;
+    case 3: result = await this._step3(baseCtx, topic, history); break;
+    case 4: result = await this._step4(baseCtx, topic, history); break;
+    case 5:
+      result = await this._step5(baseCtx, topic, history);
+      // Step5後: 方向性確認（非就寝モード時）
+      if (this.lineQA && this.sendLineFn && !isSleep) {
+        try {
+          var dirCheck = await this._checkNeedsConfirmation(result, topic);
+          if (dirCheck.needsConfirmation) {
+            var userDir = await this.lineQA.askUserViaLine({
+              sessionId: sessionId, question: dirCheck.question,
+              context: { step: 5, topic: topic }, engineType: 'discussion',
+              engineStep: 'phase1_step5', pushLineFn: this.sendLineFn
+            });
+            if (userDir) result += '\n\n【前田さんの方向性指示】\n' + userDir;
+          }
+        } catch (e) { console.log('[Discussion] Step5確認スキップ:', e.message); }
+      }
+      break;
+    case 6: result = await this._step6(baseCtx, topic, history); break;
+    case 7: result = await this._step7(baseCtx, topic, history); break;
+    case 8: result = await this._step8(baseCtx, topic, history, memory, sessionId); break;
+  }
+
+  this._saveLog(sessionId, 1, stepNum, step.name, step.ai === 'claude' ? 'claude' : 'chatgpt', step.name, result, sm);
+  this.db.prepare('UPDATE sessions SET current_round = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?').run(stepNum, sessionId);
+  return { step: stepNum, totalSteps: 8, name: step.name, ai: step.ai, content: result, sessionId: sessionId };
+};
+
+// 旧互換
+DiscussionEngine.prototype.runRound = function(sessionId, topic, roundNum, research, isSleep) {
+  return this.runStep(sessionId, topic, roundNum, research, isSleep);
+};
+
+// Step1: 市場・競合調査（Claude）
+DiscussionEngine.prototype._step1 = async function(ctx, topic) {
+  var res = await this.anthropic.messages.create({
+    model: 'claude-sonnet-4-20250514', max_tokens: 4000,
+    system: '【最重要】分析対象テーマ：「' + topic + '」\nこのテーマのみを分析してください。記憶DBや過去案件の別テーマに絶対に引っ張られないこと。\n\nあなたは市場調査の専門家です。「' + topic + '」に関する競合のLP・料金体系・強み・弱みを徹底的に分析してください。具体的な競合名と数字を出すこと。',
+    messages: [{ role: 'user', content: ctx + '\n\n以下を網羅調査：\n1. 競合サービスのリスト（名称・URL・特徴）\n2. 各競合の料金体系・価格帯\n3. 各競合LPの構成・訴求ポイント\n4. 各競合の強み・弱み\n5. 市場規模（TAM/SAM/SOM）\n6. 市場の成長率・トレンド\n7. 参入障壁\n8. 業界の課題・ペインポイント' }]
+  });
+  return res.content[0].text;
+};
+
+// Step2: 市場・競合調査（ChatGPT）
+DiscussionEngine.prototype._step2 = async function(ctx, topic, history) {
+  var s1 = this._getStepResult(history, 1);
+  var res = await this.openai.chat.completions.create({
+    model: 'gpt-4o', max_tokens: 4000,
+    messages: [
+      { role: 'system', content: '【最重要】分析対象テーマ：「' + topic + '」\nこのテーマのみを分析してください。記憶DBや過去案件の別テーマに絶対に引っ張られないこと。\n\nあなたは市場調査の専門家です。「' + topic + '」に関するClaudeの調査を検証し、見落とし・別視点を補完してください。' },
+      { role: 'user', content: ctx + '\n\n【Claudeの調査結果】\n' + s1 + '\n\n実行事項：\n1. 見落とし競合\n2. 料金データ補完・修正\n3. 海外の類似サービス\n4. 過大評価の指摘\n5. 市場規模の別推定\n6. 最新トレンド・ニュース' }
+    ]
+  });
+  return res.choices[0].message.content;
+};
+
+// Step3: 顧客ニーズ深掘り（Claude）
+DiscussionEngine.prototype._step3 = async function(ctx, topic, history) {
+  var res = await this.anthropic.messages.create({
+    model: 'claude-sonnet-4-20250514', max_tokens: 4000,
+    system: '【最重要】分析対象テーマ：「' + topic + '」\nこのテーマのみを分析してください。記憶DBや過去案件の別テーマに絶対に引っ張られないこと。\n\nあなたは消費者心理の専門家です。「' + topic + '」のターゲットの不安・欲求・使う言葉を深層心理まで掘り下げてください。',
+    messages: [{ role: 'user', content: ctx + '\n\n徹底分析：\n1. ペルソナ3人以上\n2. 顕在・潜在ニーズ\n3. 購入を阻む不安トップ5\n4. 検索キーワード20個以上\n5. リアルな口コミ表現15個以上\n6. 買わない理由トップ5と克服法\n7. 感情の流れ（認知→検討→決定→後悔防止）\n8. 情報収集チャネル\n9. 決定トリガー\n10. 競合を選ぶ理由と奪い返す方法' }]
+  });
+  return res.content[0].text;
+};
+
+// Step4: 顧客ニーズ深掘り（ChatGPT）
+DiscussionEngine.prototype._step4 = async function(ctx, topic, history) {
+  var s3 = this._getStepResult(history, 3);
+  var res = await this.openai.chat.completions.create({
+    model: 'gpt-4o', max_tokens: 4000,
+    messages: [
+      { role: 'system', content: '【最重要】分析対象テーマ：「' + topic + '」\nこのテーマのみを分析してください。記憶DBや過去案件の別テーマに絶対に引っ張られないこと。\n\nあなたは消費者行動分析の専門家です。「' + topic + '」に関するClaudeの分析を検証し、全く異なる顧客像やニーズを対抗提示してください。' },
+      { role: 'user', content: ctx + '\n\n【Claudeの顧客分析】\n' + s3 + '\n\n実行：\n1. 想定外の顧客セグメント\n2. 見落とし心理的障壁\n3. 別角度ペルソナ\n4. 購買決定の別モデル\n5. SNS・Q&Aでの声\n6. Claudeへの反論と代替仮説' }
+    ]
+  });
+  return res.choices[0].message.content;
+};
+
+// Step5: 構築・アイデア拡張（Claude）
+DiscussionEngine.prototype._step5 = async function(ctx, topic, history) {
+  var s1 = this._getStepResult(history, 1);
+  var s2 = this._getStepResult(history, 2);
+  var s3 = this._getStepResult(history, 3);
+  var s4 = this._getStepResult(history, 4);
+  var res = await this.anthropic.messages.create({
+    model: 'claude-sonnet-4-20250514', max_tokens: 5000,
+    system: '【最重要】分析対象テーマ：「' + topic + '」\nこのテーマのみを分析してください。記憶DBや過去案件の別テーマに絶対に引っ張られないこと。\n\nあなたは事業戦略の天才です。「' + topic + '」に関する全調査結果を統合し、アイデアを最大限に膨らませてください。異業種の成功事例も積極投入。',
+    messages: [{ role: 'user', content: ctx +
+      '\n\n【Step1: 市場調査Claude】\n' + s1 + '\n\n【Step2: 市場調査GPT】\n' + s2 +
+      '\n\n【Step3: 顧客ニーズClaude】\n' + s3 + '\n\n【Step4: 顧客ニーズGPT】\n' + s4 +
+      '\n\n実行：\n1. 全調査の統合サマリー\n2. 最有望戦略3案\n3. 各案の差別化ポイント\n4. 異業種成功事例の応用3つ以上\n5. テクノロジー活用の可能性\n6. 収益モデル設計\n7. 実行ロードマップ（3ヶ月・6ヶ月・1年）\n8. 最推奨案と理由' }]
+  });
+  return res.content[0].text;
+};
+
+// Step6: 批判・対抗（Claude）
+DiscussionEngine.prototype._step6 = async function(ctx, topic, history) {
+  var s5 = this._getStepResult(history, 5);
+  var res = await this.anthropic.messages.create({
+    model: 'claude-sonnet-4-20250514', max_tokens: 4000,
+    system: '【最重要】分析対象テーマ：「' + topic + '」\nこのテーマのみを分析してください。記憶DBや過去案件の別テーマに絶対に引っ張られないこと。\n\nあなたは容赦ない悪魔の代弁者です。「' + topic + '」について、なぜ失敗するかを徹底的に突いてください。甘い見通し・楽観的数字・見落としリスクを全て指摘。ただし建設的提案も必ず添えること。',
+    messages: [{ role: 'user', content: ctx + '\n\n【Step5: アイデア拡張】\n' + s5 +
+      '\n\n批判観点：\n1. 市場規模が楽観的すぎないか\n2. 競合の反撃シナリオ\n3. 法的リスク（弁護士法・景表法・個情法等）\n4. オペレーション破綻ポイント\n5. 顧客獲得コストの現実性\n6. やらない理由トップ5\n7. 類似事業の失敗パターン\n8. 前田事務所のリソースで可能か\n9. 3年後に市場が変わる可能性\n10. 致命的欠陥と回避策' }]
+  });
+  return res.content[0].text;
+};
+
+>>>>>>> Stashed changes
 // Step7: さらなる批判（ChatGPT）
 DiscussionEngine.prototype._step7 = async function(ctx, topic, history) {
   var s5 = this._getStepResult(history, 5);
@@ -6750,6 +6890,9 @@ DiscussionEngine.prototype._readDir = function(dir, result) {
 DiscussionEngine.prototype._getOfficeDocsSummary = function() {
   var d = this._getOfficeDocs();
   return d ? d.substring(0, 1500) : null;
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 };
 
@@ -6805,9 +6948,15 @@ DiscussionEngine.prototype._getSimilarCases = function(topic) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 DiscussionEngine.prototype._saveLog = function(sid, phase, round, theme, role, label, content, sm, projectId) {
   this.db.prepare('INSERT INTO discussion_logs (session_id, project_id, phase, round_number, round_theme, role, role_label, content, is_sleep_mode) VALUES (?,?,?,?,?,?,?,?,?)')
     .run(sid, projectId || null, phase, round, theme, role, label, content, sm);
+=======
+DiscussionEngine.prototype._saveLog = function(sid, phase, round, theme, role, label, content, sm) {
+  this.db.prepare('INSERT INTO discussion_logs (session_id, phase, round_number, round_theme, role, role_label, content, is_sleep_mode) VALUES (?,?,?,?,?,?,?,?)')
+    .run(sid, phase, round, theme, role, label, content, sm);
+>>>>>>> Stashed changes
 =======
 DiscussionEngine.prototype._saveLog = function(sid, phase, round, theme, role, label, content, sm) {
   this.db.prepare('INSERT INTO discussion_logs (session_id, phase, round_number, round_theme, role, role_label, content, is_sleep_mode) VALUES (?,?,?,?,?,?,?,?)')
