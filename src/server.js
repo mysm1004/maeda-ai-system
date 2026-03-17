@@ -41,7 +41,10 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 var path = require("path");
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -133,6 +136,7 @@ var express = require('express');
 var helmet = require('helmet');
 var compression = require('compression');
 var cron = require('node-cron');
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
@@ -7545,6 +7549,8 @@ app.post('/api/deploy', function(req, res) {
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 var https = require('https');
 var { initDatabase } = require('./db/schema');
 var DiscussionEngine = require('./services/discussion-engine');
@@ -7554,6 +7560,9 @@ var LineQA = require('./services/line-qa');
 var ListGenerator = require('./services/list-generator');
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -7719,6 +7728,9 @@ app.post('/api/output/generate', async function(req, res) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -7867,6 +7879,9 @@ app.post('/api/session/phase-plan', function(req, res) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -8045,6 +8060,9 @@ function extractHTMLFromContent(raw) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -8207,6 +8225,9 @@ app.post('/api/line/webhook', async function(req, res) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -8379,6 +8400,9 @@ function resolveSmartInstruction(t) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -8555,97 +8579,6 @@ async function processLineCommand(text, userId) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-    }
-    return 'アクティブなセッションがありません';
-  }
-
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-  // プロジェクト一覧（Feature 1）
-  if (t === '一覧' || t === 'リスト' || t === 'プロジェクト') {
-    var all = db.prepare("SELECT * FROM sessions WHERE status IN ('active','sleep') ORDER BY priority ASC, updated_at DESC").all();
-    if (all.length === 0) return 'アクティブなプロジェクトなし';
-    return 'プロジェクト一覧\n\n' + all.map(function(s) {
-      var pri = s.priority || 5;
-      var star = pri <= 3 ? '[優先' + pri + '] ' : '';
-      var dl = s.deadline ? ' 〆' + s.deadline : '';
-      return star + s.title + ' → Phase' + s.phase + ' Step' + s.current_round + ' (' + s.status + ')' + dl;
-    }).join('\n');
-=======
-  // 却下
-  if (t.startsWith('却下') || t.startsWith('NG')) {
-    var comment = t.replace(/^(却下|NG)\s*/, '');
-    var latest2 = db.prepare("SELECT * FROM sessions WHERE status = 'active' ORDER BY priority ASC, updated_at DESC LIMIT 1").get();
-    if (latest2) {
-      db.prepare('INSERT INTO decisions (session_id, decision, comment) VALUES (?,?,?)').run(latest2.id, 'rejected', comment || null);
-      return '却下しました' + (comment ? '（理由: ' + comment + '）' : '');
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-  // 却下
-  if (t.startsWith('却下') || t.startsWith('NG')) {
-    var comment = t.replace(/^(却下|NG)\s*/, '');
-    var latest2 = db.prepare("SELECT * FROM sessions WHERE status = 'active' ORDER BY priority ASC, updated_at DESC LIMIT 1").get();
-    if (latest2) {
-      db.prepare('INSERT INTO decisions (session_id, decision, comment) VALUES (?,?,?)').run(latest2.id, 'rejected', comment || null);
-      return '却下しました' + (comment ? '（理由: ' + comment + '）' : '');
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-  // 却下
-  if (t.startsWith('却下') || t.startsWith('NG')) {
-    var comment = t.replace(/^(却下|NG)\s*/, '');
-    var latest2 = db.prepare("SELECT * FROM sessions WHERE status = 'active' ORDER BY priority ASC, updated_at DESC LIMIT 1").get();
-    if (latest2) {
-      db.prepare('INSERT INTO decisions (session_id, decision, comment) VALUES (?,?,?)').run(latest2.id, 'rejected', comment || null);
-      return '却下しました' + (comment ? '（理由: ' + comment + '）' : '');
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 >>>>>>> Stashed changes
 =======
@@ -8670,6 +8603,106 @@ async function processLineCommand(text, userId) {
     return 'アクティブなセッションがありません';
   }
 
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+  // プロジェクト一覧（Feature 1）
+  if (t === '一覧' || t === 'リスト' || t === 'プロジェクト') {
+    var all = db.prepare("SELECT * FROM sessions WHERE status IN ('active','sleep') ORDER BY priority ASC, updated_at DESC").all();
+    if (all.length === 0) return 'アクティブなプロジェクトなし';
+    return 'プロジェクト一覧\n\n' + all.map(function(s) {
+      var pri = s.priority || 5;
+      var star = pri <= 3 ? '[優先' + pri + '] ' : '';
+      var dl = s.deadline ? ' 〆' + s.deadline : '';
+      return star + s.title + ' → Phase' + s.phase + ' Step' + s.current_round + ' (' + s.status + ')' + dl;
+    }).join('\n');
+=======
+=======
+>>>>>>> Stashed changes
+  // 却下
+  if (t.startsWith('却下') || t.startsWith('NG')) {
+    var comment = t.replace(/^(却下|NG)\s*/, '');
+    var latest2 = db.prepare("SELECT * FROM sessions WHERE status = 'active' ORDER BY priority ASC, updated_at DESC LIMIT 1").get();
+    if (latest2) {
+      db.prepare('INSERT INTO decisions (session_id, decision, comment) VALUES (?,?,?)').run(latest2.id, 'rejected', comment || null);
+      return '却下しました' + (comment ? '（理由: ' + comment + '）' : '');
+<<<<<<< Updated upstream
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+  // 却下
+  if (t.startsWith('却下') || t.startsWith('NG')) {
+    var comment = t.replace(/^(却下|NG)\s*/, '');
+    var latest2 = db.prepare("SELECT * FROM sessions WHERE status = 'active' ORDER BY priority ASC, updated_at DESC LIMIT 1").get();
+    if (latest2) {
+      db.prepare('INSERT INTO decisions (session_id, decision, comment) VALUES (?,?,?)').run(latest2.id, 'rejected', comment || null);
+      return '却下しました' + (comment ? '（理由: ' + comment + '）' : '');
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+  // 却下
+  if (t.startsWith('却下') || t.startsWith('NG')) {
+    var comment = t.replace(/^(却下|NG)\s*/, '');
+    var latest2 = db.prepare("SELECT * FROM sessions WHERE status = 'active' ORDER BY priority ASC, updated_at DESC LIMIT 1").get();
+    if (latest2) {
+      db.prepare('INSERT INTO decisions (session_id, decision, comment) VALUES (?,?,?)').run(latest2.id, 'rejected', comment || null);
+      return '却下しました' + (comment ? '（理由: ' + comment + '）' : '');
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+    }
+    return 'アクティブなセッションがありません';
+  }
+
   // プロジェクト一覧（Feature 1）
   if (t === '一覧' || t === 'リスト' || t === 'プロジェクト') {
     var all = db.prepare("SELECT * FROM sessions WHERE status IN ('active','sleep') ORDER BY priority ASC, updated_at DESC").all();
@@ -8691,6 +8724,9 @@ async function processLineCommand(text, userId) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -8757,6 +8793,9 @@ async function processLineCommand(text, userId) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -8930,6 +8969,9 @@ async function processLineCommand(text, userId) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -9175,6 +9217,9 @@ async function runSleepMode() {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -9673,6 +9718,9 @@ app.get('/api/competitors/changes', function(req, res) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -9763,6 +9811,7 @@ app.get('/api/competitors/changes', function(req, res) {
 app.get('/health', function(req, res) {
   var sessionCount = db.prepare('SELECT COUNT(*) as cnt FROM sessions').get();
   var caseCount = db.prepare('SELECT COUNT(*) as cnt FROM case_library').get();
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
@@ -9914,6 +9963,8 @@ app.get('/dashboard', function(req, res) {
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
   res.json({
     status: 'ok',
     time: new Date().toISOString(),
@@ -9965,6 +10016,9 @@ app.get('/dashboard', function(req, res) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -10099,6 +10153,7 @@ app.get('/dashboard', function(req, res) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 app.listen(PORT, '0.0.0.0', function() { console.log('前田AIシステム v2.0 起動 port:' + PORT); });
 
 process.on('unhandledRejection', function(reason) {
@@ -10112,6 +10167,9 @@ process.on('uncaughtException', function(err) {
     console.log('[Recovery] API制限エラー、続行');
   }
 });
+=======
+app.listen(PORT, '0.0.0.0', function() { console.log('前田AIシステム起動 port:' + PORT); });
+>>>>>>> Stashed changes
 =======
 app.listen(PORT, '0.0.0.0', function() { console.log('前田AIシステム起動 port:' + PORT); });
 >>>>>>> Stashed changes
