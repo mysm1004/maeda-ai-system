@@ -37,7 +37,10 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 var path = require("path");
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -121,6 +124,7 @@ var express = require('express');
 var helmet = require('helmet');
 var compression = require('compression');
 var cron = require('node-cron');
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
@@ -263,6 +267,8 @@ var AUTO_APPROVE_CONFIG = {
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 var https = require('https');
 var { initDatabase } = require('./db/schema');
 var DiscussionEngine = require('./services/discussion-engine');
@@ -270,6 +276,7 @@ var PreferenceLearner = require('./services/preference-learner');
 var OutputGenerator = require('./services/output-generator');
 var LineQA = require('./services/line-qa');
 var ListGenerator = require('./services/list-generator');
+<<<<<<< Updated upstream
 var AdDesigner = require('./services/ad-designer');
 var MediaOptimizer = require('./services/media-optimizer');
 var Anthropic = require('@anthropic-ai/sdk');
@@ -7520,6 +7527,165 @@ app.post('/api/deploy', function(req, res) {
 =======
 =======
 =======
+=======
+var AdDesigner = require('./services/ad-designer');
+var MediaOptimizer = require('./services/media-optimizer');
+var Anthropic = require('@anthropic-ai/sdk');
+var crypto = require('crypto');
+
+var fs = require("fs");
+var pathMod = require("path");
+
+var app = express();
+var PORT = process.env.PORT || 3000;
+var db = initDatabase(process.env.DB_PATH || './data/kabeuchi.db');
+var lineQA = new LineQA(db);
+var engine = new DiscussionEngine(db, lineQA, sendLine);
+var prefLearner = new PreferenceLearner(db);
+var outputGen = new OutputGenerator(db, lineQA, sendLine);
+var listGen = new ListGenerator(db, lineQA, sendLine);
+var adDesigner = new AdDesigner(db, lineQA, sendLine);
+var mediaOptimizer = new MediaOptimizer(db, lineQA, sendLine);
+
+app.use(helmet());
+app.use(compression());
+app.use(express.json({ limit: '10mb' }));
+app.use('/outputs', express.static(pathMod.join(__dirname, 'public/outputs')));
+
+// 認証（LINE Webhookは除外）
+app.use('/api', function(req, res, next) {
+  if (req.path === '/line/webhook' || req.path === '/deploy') return next();
+  if (req.headers['x-api-key'] !== process.env.API_SECRET) {
+    return res.status(401).json({ error: '認証エラー' });
+  }
+  next();
+});
+
+// ============================================
+// Phase 1: 壁打ち（8ステップ）
+// ============================================
+
+// 新規壁打ち開始 or 続行
+app.post('/api/discussion', async function(req, res) {
+  try {
+    var body = req.body;
+    var sid = body.sessionId;
+
+    // 新規セッション作成
+    if (!sid) {
+      if (!body.topic) return res.status(400).json({ error: 'topicは必須' });
+      sid = engine.createSession(body.title || body.topic, body.topic);
+
+      // フェーズプラン設定
+      var planMap = { A:'1,2,3,4,5,6', B:'1,2,3,4,6', C:'1,2,3', D:'1,4', E:'4,6', F:'1,2,3,5' };
+      var phasePlan = planMap[body.planPattern] || body.phasePlan || '1,2,3,4,5,6';
+      var listCount = body.listCount || 100;
+      db.prepare('UPDATE sessions SET phase_plan = ?, list_count = ? WHERE id = ?').run(phasePlan, listCount, sid);
+
+      // 事前調査実行
+      var research = await engine.runResearch(body.topic);
+      db.prepare('UPDATE sessions SET research_data = ? WHERE id = ?').run(research, sid);
+    }
+
+    // ユーザーコメント保存
+    if (body.userComment) {
+      var lr = db.prepare('SELECT MAX(round_number) as mr FROM discussion_logs WHERE session_id = ?').get(sid);
+      db.prepare('INSERT INTO discussion_logs (session_id, phase, role, role_label, content, round_number, round_theme) VALUES (?,1,?,?,?,?,?)')
+        .run(sid, 'user', '前田さん', body.userComment, lr ? lr.mr || 1 : 1, '');
+    }
+
+    // 次のラウンド番号を決定
+    var lr2 = db.prepare('SELECT MAX(round_number) as mr FROM discussion_logs WHERE session_id = ? AND role != ?').get(sid, 'user');
+    var round = (lr2 && lr2.mr ? lr2.mr : 0) + 1;
+
+    if (round > 8) {
+      // 全8ステップ完了 → 最終統合
+      var summary = await engine.generateFinalSummary(sid);
+      // Phase1レポート生成 + LINE通知
+      try {
+        var report = await engine.generatePhase1Report(sid);
+        var reportUrl = generatePhase1ReportHTML(report, sid);
+        var reportText = formatPhase1ReportText(report);
+        await sendLine(reportText + '\n\n詳細レポート:\n' + reportUrl);
+        console.log('[Phase1] レポート送信完了: ' + reportUrl);
+      } catch (reportErr) {
+        console.error('[Phase1Report] エラー:', reportErr.message);
+      }
+      // フェーズ自動進行
+      advanceToNextPhase(sid, false).catch(function(e) { console.error('[Phase進行エラー]', e.message); });
+      return res.json({ phase: 'complete', sessionId: sid, summary: summary, message: '全8ステップ完了。次フェーズに進む準備ができました。' });
+    }
+
+    var session = db.prepare('SELECT * FROM sessions WHERE id = ?').get(sid);
+    var result = await engine.runRound(sid, session.topic, round, session.research_data, false);
+    res.json(result);
+  } catch (err) {
+    console.error('[discussion]', err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// 壁打ち承認/却下
+app.post('/api/discussion/decide', function(req, res) {
+  var body = req.body;
+  if (!body.sessionId || !body.decision) return res.status(400).json({ error: 'sessionId, decision必須' });
+  var last = db.prepare('SELECT * FROM discussion_logs WHERE session_id = ? ORDER BY id DESC LIMIT 1').get(body.sessionId);
+  db.prepare('INSERT INTO decisions (session_id, log_id, decision, comment) VALUES (?,?,?,?)')
+    .run(body.sessionId, last ? last.id : null, body.decision, body.comment || null);
+  if (last) prefLearner.learnFromDecision(body.sessionId, body.decision, body.comment, last.content);
+  res.json({ success: true });
+});
+
+// セッション一覧
+app.get('/api/discussion/sessions', function(req, res) {
+  res.json(db.prepare('SELECT * FROM sessions ORDER BY updated_at DESC LIMIT 20').all());
+});
+
+// セッション詳細
+app.get('/api/discussion/session/:id', function(req, res) {
+  var session = db.prepare('SELECT * FROM sessions WHERE id = ?').get(req.params.id);
+  if (!session) return res.status(404).json({ error: 'セッション未発見' });
+  res.json(session);
+});
+
+// 議論ログ取得
+app.get('/api/discussion/logs/:id', function(req, res) {
+  res.json(db.prepare('SELECT * FROM discussion_logs WHERE session_id = ? ORDER BY created_at ASC').all(req.params.id));
+});
+
+// 最終サマリー手動生成
+app.post('/api/discussion/finalize', async function(req, res) {
+  try {
+    var body = req.body;
+    if (!body.sessionId) return res.status(400).json({ error: 'sessionId必須' });
+    var summary = await engine.generateFinalSummary(body.sessionId);
+    res.json({ summary: summary });
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+// ============================================
+// Phase 2-3: アウトプット生成
+// ============================================
+
+// アウトプット生成（設計書→4パターン→批評→推奨）
+app.post('/api/output/generate', async function(req, res) {
+  try {
+    var body = req.body;
+    if (!body.sessionId || !body.outputType) return res.status(400).json({ error: 'sessionId, outputType必須' });
+    // 即レスポンス（バックグラウンドで生成）
+    res.json({ status: 'generating', sessionId: body.sessionId, outputType: body.outputType });
+    (async function() {
+      try {
+        var session = db.prepare('SELECT * FROM sessions WHERE id = ?').get(body.sessionId);
+        var typeLabels = {lp:'LP', proposal:'提案書', dm:'DM', sales_script:'営業スクリプト', blog:'ブログ', sns_post:'SNS投稿', banner:'バナー', fax:'FAX DM', email:'営業メール'};
+        var result = await outputGen.generateFull(body.sessionId, body.outputType, body.params || {});
+        var htmlFile = generateOutputHTML(result, body.outputType, body.sessionId);
+        var title = session ? session.title : '';
+        await sendLine('ID:' + body.sessionId + ' ' + title + ' ' + (typeLabels[body.outputType] || body.outputType) + '全パターン完成。URL→ https://176-32-87-118.sslip.io/outputs/' + htmlFile);
+      } catch(e) {
+        console.error('[output API]', e);
+        await sendLine('ID:' + body.sessionId + ' ' + (body.outputType || 'output') + '生成エラー。' + e.message);
+>>>>>>> Stashed changes
       }
     })();
     return;
@@ -7657,6 +7823,9 @@ app.post('/api/session/phase-plan', function(req, res) {
   if (!body.sessionId) return res.status(400).json({ error: 'sessionId必須' });
   var planMap = { A:'1,2,3,4,5,6', B:'1,2,3,4,6', C:'1,2,3', D:'1,4', E:'4,6', F:'1,2,3,5' };
   var plan = planMap[body.planPattern] || body.phasePlan;
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
   if (!plan) return res.status(400).json({ error: 'planPattern or phasePlan必須' });
   db.prepare('UPDATE sessions SET phase_plan = ? WHERE id = ?').run(plan, body.sessionId);
@@ -7823,6 +7992,9 @@ function extractHTMLFromContent(raw) {
     if (m) html = m[1].trim();
   }
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -7973,6 +8145,9 @@ app.post('/api/line/webhook', async function(req, res) {
       if (reply) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -8133,6 +8308,9 @@ function resolveSmartInstruction(t) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -8297,6 +8475,9 @@ async function processLineCommand(text, userId) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -8310,6 +8491,7 @@ async function processLineCommand(text, userId) {
     return 'アクティブなセッションがありません';
   }
 
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
@@ -8354,6 +8536,8 @@ async function processLineCommand(text, userId) {
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
   // 却下
   if (t.startsWith('却下') || t.startsWith('NG')) {
     var comment = t.replace(/^(却下|NG)\s*/, '');
@@ -8365,6 +8549,9 @@ async function processLineCommand(text, userId) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -8397,6 +8584,9 @@ async function processLineCommand(text, userId) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -8451,6 +8641,9 @@ async function processLineCommand(text, userId) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -8612,6 +8805,9 @@ async function processLineCommand(text, userId) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -8845,6 +9041,9 @@ async function runSleepMode() {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -9331,6 +9530,9 @@ app.get('/api/competitors/changes', function(req, res) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -9413,6 +9615,7 @@ app.get('/api/competitors/changes', function(req, res) {
 app.get('/health', function(req, res) {
   var sessionCount = db.prepare('SELECT COUNT(*) as cnt FROM sessions').get();
   var caseCount = db.prepare('SELECT COUNT(*) as cnt FROM case_library').get();
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
@@ -9552,6 +9755,8 @@ app.get('/dashboard', function(req, res) {
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
   res.json({
     status: 'ok',
     time: new Date().toISOString(),
@@ -9599,6 +9804,9 @@ app.get('/dashboard', function(req, res) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -9721,6 +9929,7 @@ app.get('/dashboard', function(req, res) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 app.listen(PORT, '0.0.0.0', function() { console.log('前田AIシステム v2.0 起動 port:' + PORT); });
 
 process.on('unhandledRejection', function(reason) {
@@ -9734,6 +9943,9 @@ process.on('uncaughtException', function(err) {
     console.log('[Recovery] API制限エラー、続行');
   }
 });
+=======
+app.listen(PORT, '0.0.0.0', function() { console.log('前田AIシステム起動 port:' + PORT); });
+>>>>>>> Stashed changes
 =======
 app.listen(PORT, '0.0.0.0', function() { console.log('前田AIシステム起動 port:' + PORT); });
 >>>>>>> Stashed changes
