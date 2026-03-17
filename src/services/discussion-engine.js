@@ -33,6 +33,7 @@ var OpenAI = require('openai');
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 // v2.0仕様: Phase1は8ステップ。Claude5回、GPT-5.4が3回
 var PHASE1_STEPS = [
   { num: 1, name: '市場・競合調査（Claude）', ai: 'claude', role: '市場調査の専門家' },
@@ -49,6 +50,8 @@ var PHASE1_STEPS = [
 var CLAUDE_MODEL = 'claude-sonnet-4-20250514';
 
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -153,6 +156,9 @@ var PHASE1_STEPS = [
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -222,6 +228,7 @@ function DiscussionEngine(db, lineQA, sendLineFn) {
   this.sendLineFn = sendLineFn || null;
   this.anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
   this.openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
@@ -373,6 +380,8 @@ DiscussionEngine.prototype.runResearch = async function(topic, projectId) {
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 }
 
 // セッション作成
@@ -425,6 +434,9 @@ DiscussionEngine.prototype.runResearch = async function(topic) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -525,12 +537,15 @@ DiscussionEngine.prototype.runResearch = async function(topic) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 DiscussionEngine.prototype.runStep = async function(sessionId, topic, stepNum, research, isSleep, projectId) {
   var step = PHASE1_STEPS[stepNum - 1];
   if (!step) throw new Error('Invalid step: ' + stepNum);
   var history = this._getHistory(sessionId);
   var memory = this._getMemoryForContext(projectId);
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -629,6 +644,9 @@ DiscussionEngine.prototype.runStep = async function(sessionId, topic, stepNum, r
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -729,12 +747,16 @@ DiscussionEngine.prototype.runStep = async function(sessionId, topic, stepNum, r
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 
   // v2.0仕様: テーマ固定ルール強制挿入 + project_id
   var baseCtx = '【最重要】分析対象テーマ：「' + topic + '」。' +
     (projectId ? 'project_id: ' + projectId + '。' : '') +
     'このテーマのみを分析すること。memory_dbや他プロジェクトの別テーマに絶対に引っ張られないこと。\n\n' +
     '【テーマ】' + topic + '\n【事前調査】' + (research || '未実施') +
+=======
+  var baseCtx = '★★★ 分析テーマ：「' + topic + '」 ★★★\n※以下の記憶DBや事務所資料に別テーマの情報があっても、上記テーマのみを分析すること。\n\n【テーマ】' + topic + '\n【事前調査】' + (research || '未実施') +
+>>>>>>> Stashed changes
 =======
   var baseCtx = '★★★ 分析テーマ：「' + topic + '」 ★★★\n※以下の記憶DBや事務所資料に別テーマの情報があっても、上記テーマのみを分析すること。\n\n【テーマ】' + topic + '\n【事前調査】' + (research || '未実施') +
 >>>>>>> Stashed changes
@@ -874,9 +896,12 @@ DiscussionEngine.prototype.runStep = async function(sessionId, topic, stepNum, r
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
       // v2.1: Step5方向性確認スキップ（自動で最有望案を選択して続行）
       console.log('[Discussion] Step5: 方向性確認スキップ（自動続行モード）');
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -984,6 +1009,9 @@ DiscussionEngine.prototype.runStep = async function(sessionId, topic, stepNum, r
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -1085,8 +1113,13 @@ DiscussionEngine.prototype.runStep = async function(sessionId, topic, stepNum, r
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
   this._saveLog(sessionId, 1, stepNum, step.name, step.ai === 'claude' ? 'claude' : 'chatgpt', step.name, result, sm, projectId);
   this.db.prepare('UPDATE sessions SET current_round = ?, last_operated_at = CURRENT_TIMESTAMP, updated_at = CURRENT_TIMESTAMP WHERE id = ?').run(stepNum, sessionId);
+=======
+  this._saveLog(sessionId, 1, stepNum, step.name, step.ai === 'claude' ? 'claude' : 'chatgpt', step.name, result, sm);
+  this.db.prepare('UPDATE sessions SET current_round = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?').run(stepNum, sessionId);
+>>>>>>> Stashed changes
 =======
   this._saveLog(sessionId, 1, stepNum, step.name, step.ai === 'claude' ? 'claude' : 'chatgpt', step.name, result, sm);
   this.db.prepare('UPDATE sessions SET current_round = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?').run(stepNum, sessionId);
@@ -1251,8 +1284,13 @@ DiscussionEngine.prototype.runStep = async function(sessionId, topic, stepNum, r
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 DiscussionEngine.prototype.runRound = function(sessionId, topic, roundNum, research, isSleep, projectId) {
   return this.runStep(sessionId, topic, roundNum, research, isSleep, projectId);
+=======
+DiscussionEngine.prototype.runRound = function(sessionId, topic, roundNum, research, isSleep) {
+  return this.runStep(sessionId, topic, roundNum, research, isSleep);
+>>>>>>> Stashed changes
 =======
 DiscussionEngine.prototype.runRound = function(sessionId, topic, roundNum, research, isSleep) {
   return this.runStep(sessionId, topic, roundNum, research, isSleep);
@@ -1418,7 +1456,11 @@ DiscussionEngine.prototype._step1 = async function(ctx, topic) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     model: CLAUDE_MODEL, max_tokens: 4000,
+=======
+    model: 'claude-sonnet-4-20250514', max_tokens: 4000,
+>>>>>>> Stashed changes
 =======
     model: 'claude-sonnet-4-20250514', max_tokens: 4000,
 >>>>>>> Stashed changes
@@ -1553,12 +1595,15 @@ DiscussionEngine.prototype._step1 = async function(ctx, topic) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 // Step2: 市場・競合調査（ChatGPT / GPT-5.4）
 DiscussionEngine.prototype._step2 = async function(ctx, topic, history) {
   var s1 = this._getStepResult(history, 1);
   var res = await this.openai.chat.completions.create({
     model: 'gpt-5.4', max_completion_tokens: 16000,
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -1657,6 +1702,9 @@ DiscussionEngine.prototype._step2 = async function(ctx, topic, history) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -1757,7 +1805,11 @@ DiscussionEngine.prototype._step2 = async function(ctx, topic, history) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
   return res.choices[0].message.content || res.choices[0].message.refusal || '（GPT-5.4応答なし）';
+=======
+  return res.choices[0].message.content;
+>>>>>>> Stashed changes
 =======
   return res.choices[0].message.content;
 >>>>>>> Stashed changes
@@ -1891,7 +1943,11 @@ DiscussionEngine.prototype._step3 = async function(ctx, topic, history) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     model: CLAUDE_MODEL, max_tokens: 4000,
+=======
+    model: 'claude-sonnet-4-20250514', max_tokens: 4000,
+>>>>>>> Stashed changes
 =======
     model: 'claude-sonnet-4-20250514', max_tokens: 4000,
 >>>>>>> Stashed changes
@@ -2026,6 +2082,7 @@ DiscussionEngine.prototype._step3 = async function(ctx, topic, history) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 // Step4: 顧客ニーズ深掘り（ChatGPT / GPT-5.4）
 DiscussionEngine.prototype._step4 = async function(ctx, topic, history) {
   var s3 = this._getStepResult(history, 3);
@@ -2098,6 +2155,9 @@ DiscussionEngine.prototype._step4 = async function(ctx, topic, history) {
 =======
 // Step4: 顧客ニーズ深掘り（ChatGPT）
 >>>>>>> Stashed changes
+=======
+// Step4: 顧客ニーズ深掘り（ChatGPT）
+>>>>>>> Stashed changes
 DiscussionEngine.prototype._step4 = async function(ctx, topic, history) {
   var s3 = this._getStepResult(history, 3);
   var res = await this.openai.chat.completions.create({
@@ -2133,6 +2193,9 @@ DiscussionEngine.prototype._step4 = async function(ctx, topic, history) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -2233,7 +2296,11 @@ DiscussionEngine.prototype._step4 = async function(ctx, topic, history) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
   return res.choices[0].message.content || res.choices[0].message.refusal || '（GPT-5.4応答なし）';
+=======
+  return res.choices[0].message.content;
+>>>>>>> Stashed changes
 =======
   return res.choices[0].message.content;
 >>>>>>> Stashed changes
@@ -2371,7 +2438,11 @@ DiscussionEngine.prototype._step5 = async function(ctx, topic, history) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     model: CLAUDE_MODEL, max_tokens: 5000,
+=======
+    model: 'claude-sonnet-4-20250514', max_tokens: 5000,
+>>>>>>> Stashed changes
 =======
     model: 'claude-sonnet-4-20250514', max_tokens: 5000,
 >>>>>>> Stashed changes
@@ -2509,6 +2580,7 @@ DiscussionEngine.prototype._step5 = async function(ctx, topic, history) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 // Step6: 批判・対抗（Claude）- 悪魔の代弁者
 DiscussionEngine.prototype._step6 = async function(ctx, topic, history) {
   var s5 = this._getStepResult(history, 5);
@@ -2577,11 +2649,14 @@ DiscussionEngine.prototype._step6 = async function(ctx, topic, history) {
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 // Step6: 批判・対抗（Claude）
 DiscussionEngine.prototype._step6 = async function(ctx, topic, history) {
   var s5 = this._getStepResult(history, 5);
   var res = await this.anthropic.messages.create({
     model: 'claude-sonnet-4-20250514', max_tokens: 4000,
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
@@ -2874,6 +2949,8 @@ DiscussionEngine.prototype._step7 = async function(ctx, topic, history) {
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
     system: '【最重要】分析対象テーマ：「' + topic + '」\nこのテーマのみを分析してください。記憶DBや過去案件の別テーマに絶対に引っ張られないこと。\n\nあなたは容赦ない悪魔の代弁者です。「' + topic + '」について、なぜ失敗するかを徹底的に突いてください。甘い見通し・楽観的数字・見落としリスクを全て指摘。ただし建設的提案も必ず添えること。',
     messages: [{ role: 'user', content: ctx + '\n\n【Step5: アイデア拡張】\n' + s5 +
       '\n\n批判観点：\n1. 市場規模が楽観的すぎないか\n2. 競合の反撃シナリオ\n3. 法的リスク（弁護士法・景表法・個情法等）\n4. オペレーション破綻ポイント\n5. 顧客獲得コストの現実性\n6. やらない理由トップ5\n7. 類似事業の失敗パターン\n8. 前田事務所のリソースで可能か\n9. 3年後に市場が変わる可能性\n10. 致命的欠陥と回避策' }]
@@ -2883,6 +2960,7 @@ DiscussionEngine.prototype._step7 = async function(ctx, topic, history) {
 
 // Step7: さらなる批判（ChatGPT）
 DiscussionEngine.prototype._step7 = async function(ctx, topic, history) {
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
@@ -3194,17 +3272,22 @@ DiscussionEngine.prototype._step8 = async function(ctx, topic, history, memory, 
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
   var s5 = this._getStepResult(history, 5);
   var s6 = this._getStepResult(history, 6);
   var res = await this.openai.chat.completions.create({
     model: 'gpt-4o', max_tokens: 4000,
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
     model: 'gpt-4o', max_tokens: 4000,
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -3228,6 +3311,7 @@ DiscussionEngine.prototype._step8 = async function(ctx, topic, history, memory, 
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -3245,6 +3329,8 @@ DiscussionEngine.prototype._step8 = async function(ctx, topic, history, memory, 
 >>>>>>> Stashed changes
 =======
     model: 'claude-sonnet-4-20250514', max_tokens: 5000,
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
     system: '【最重要】分析対象テーマ：「' + topic + '」\nこのテーマのみを分析してください。記憶DBや過去案件の別テーマに絶対に引っ張られないこと。\n\nあなたは最終統合者です。「' + topic + '」に関する全批判を受け止め穴を全て潰した最強のアイデアを提示してください。各批判に対する具体的解決策を必ず示すこと。前田さんの好み: ' + JSON.stringify(memory),
     messages: [{ role: 'user', content: ctx +
@@ -3292,9 +3378,12 @@ DiscussionEngine.prototype._step8 = async function(ctx, topic, history, memory, 
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
       // v2.1: JSON解析失敗時もLINE確認スキップ（自動再試行）
       console.log('[Discussion] Step8 JSON解析失敗、テキストからの自動抽出を試行');
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -3400,6 +3489,9 @@ DiscussionEngine.prototype._step8 = async function(ctx, topic, history, memory, 
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -3506,11 +3598,14 @@ DiscussionEngine.prototype.generateFinalSummary = async function(sessionId) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
   return this._step8('【テーマ】' + session.topic, session.topic, history, this._getMemoryForContext(session.project_id), sessionId);
 };
 
 // Phase1完了レポート（v2.0: claude-sonnet-4-20250514, max_tokens: 6000）
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -3608,6 +3703,9 @@ DiscussionEngine.prototype.generateFinalSummary = async function(sessionId) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -3715,7 +3813,11 @@ DiscussionEngine.prototype.generatePhase1Report = async function(sessionId) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     model: CLAUDE_MODEL, max_tokens: 6000,
+=======
+    model: 'claude-sonnet-4-20250514', max_tokens: 6000,
+>>>>>>> Stashed changes
 =======
     model: 'claude-sonnet-4-20250514', max_tokens: 6000,
 >>>>>>> Stashed changes
@@ -3861,6 +3963,7 @@ DiscussionEngine.prototype.generatePhase1Report = async function(sessionId) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
   return { topic: session.topic, title: session.title, sessionId: sessionId, target: '', market: '', service: '', revenue: '', challenges: '', discussion: '', raw: text };
 };
 
@@ -3868,6 +3971,8 @@ DiscussionEngine.prototype.generatePhase1Report = async function(sessionId) {
 DiscussionEngine.prototype.clearStep = function(sessionId, stepNum) {
   this.db.prepare('DELETE FROM discussion_logs WHERE session_id = ? AND round_number = ? AND role != ?').run(sessionId, stepNum, 'user');
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -3969,6 +4074,9 @@ DiscussionEngine.prototype.clearStep = function(sessionId, stepNum) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -4071,10 +4179,13 @@ DiscussionEngine.prototype.clearStep = function(sessionId, stepNum) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 DiscussionEngine.prototype._checkNeedsConfirmation = async function(stepResult, topic) {
   var res = await this.anthropic.messages.create({
     model: CLAUDE_MODEL, max_tokens: 500,
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -4172,6 +4283,9 @@ DiscussionEngine.prototype._checkNeedsConfirmation = async function(stepResult, 
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -4285,6 +4399,7 @@ DiscussionEngine.prototype._getHistory = function(sid) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 // v2.0仕様: project_idでフィルタ + グローバル、confidence順上位30件
 DiscussionEngine.prototype._getMemoryForContext = function(projectId) {
   var rows;
@@ -4293,6 +4408,10 @@ DiscussionEngine.prototype._getMemoryForContext = function(projectId) {
   } else {
     rows = this.db.prepare('SELECT category, subcategory, key, value FROM memory_db ORDER BY confidence DESC LIMIT 30').all();
   }
+=======
+DiscussionEngine.prototype._getMemoryForContext = function() {
+  var rows = this.db.prepare('SELECT category, subcategory, key, value FROM memory_db ORDER BY confidence DESC LIMIT 30').all();
+>>>>>>> Stashed changes
 =======
 DiscussionEngine.prototype._getMemoryForContext = function() {
   var rows = this.db.prepare('SELECT category, subcategory, key, value FROM memory_db ORDER BY confidence DESC LIMIT 30').all();
@@ -4465,7 +4584,11 @@ DiscussionEngine.prototype._getOfficeDocs = function() {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
   var dir = path.join(__dirname, 'data', 'office-docs');
+=======
+  var dir = path.join(__dirname, '..', '..', 'data', 'office-docs');
+>>>>>>> Stashed changes
 =======
   var dir = path.join(__dirname, '..', '..', 'data', 'office-docs');
 >>>>>>> Stashed changes
@@ -4616,10 +4739,16 @@ DiscussionEngine.prototype._readDir = function(dir, result) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 // v2.0仕様: 事務所資料文字数制限 1500→3000に拡張
 DiscussionEngine.prototype._getOfficeDocsSummary = function() {
   var d = this._getOfficeDocs();
   return d ? d.substring(0, 3000) : null;
+=======
+DiscussionEngine.prototype._getOfficeDocsSummary = function() {
+  var d = this._getOfficeDocs();
+  return d ? d.substring(0, 1500) : null;
+>>>>>>> Stashed changes
 =======
 DiscussionEngine.prototype._getOfficeDocsSummary = function() {
   var d = this._getOfficeDocs();
@@ -4820,9 +4949,15 @@ DiscussionEngine.prototype._getSimilarCases = function(topic) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 DiscussionEngine.prototype._saveLog = function(sid, phase, round, theme, role, label, content, sm, projectId) {
   this.db.prepare('INSERT INTO discussion_logs (session_id, project_id, phase, round_number, round_theme, role, role_label, content, is_sleep_mode) VALUES (?,?,?,?,?,?,?,?,?)')
     .run(sid, projectId || null, phase, round, theme, role, label, content, sm);
+=======
+DiscussionEngine.prototype._saveLog = function(sid, phase, round, theme, role, label, content, sm) {
+  this.db.prepare('INSERT INTO discussion_logs (session_id, phase, round_number, round_theme, role, role_label, content, is_sleep_mode) VALUES (?,?,?,?,?,?,?,?)')
+    .run(sid, phase, round, theme, role, label, content, sm);
+>>>>>>> Stashed changes
 =======
 DiscussionEngine.prototype._saveLog = function(sid, phase, round, theme, role, label, content, sm) {
   this.db.prepare('INSERT INTO discussion_logs (session_id, phase, round_number, round_theme, role, role_label, content, is_sleep_mode) VALUES (?,?,?,?,?,?,?,?)')
