@@ -110,7 +110,7 @@ DiscussionEngine.prototype._step1 = async function(ctx, topic) {
 DiscussionEngine.prototype._step2 = async function(ctx, topic, history) {
   var s1 = this._getStepResult(history, 1);
   var res = await this.openai.chat.completions.create({
-    model: 'gpt-4o', max_tokens: 4000,
+    model: 'gpt-5.4', max_tokens: 4000,
     messages: [
       { role: 'system', content: '【最重要】分析対象テーマ：「' + topic + '」\nこのテーマのみを分析してください。記憶DBや過去案件の別テーマに絶対に引っ張られないこと。\n\nあなたは市場調査の専門家です。「' + topic + '」に関するClaudeの調査を検証し、見落とし・別視点を補完してください。' },
       { role: 'user', content: ctx + '\n\n【Claudeの調査結果】\n' + s1 + '\n\n実行事項：\n1. 見落とし競合\n2. 料金データ補完・修正\n3. 海外の類似サービス\n4. 過大評価の指摘\n5. 市場規模の別推定\n6. 最新トレンド・ニュース' }
@@ -133,7 +133,7 @@ DiscussionEngine.prototype._step3 = async function(ctx, topic, history) {
 DiscussionEngine.prototype._step4 = async function(ctx, topic, history) {
   var s3 = this._getStepResult(history, 3);
   var res = await this.openai.chat.completions.create({
-    model: 'gpt-4o', max_tokens: 4000,
+    model: 'gpt-5.4', max_tokens: 4000,
     messages: [
       { role: 'system', content: '【最重要】分析対象テーマ：「' + topic + '」\nこのテーマのみを分析してください。記憶DBや過去案件の別テーマに絶対に引っ張られないこと。\n\nあなたは消費者行動分析の専門家です。「' + topic + '」に関するClaudeの分析を検証し、全く異なる顧客像やニーズを対抗提示してください。' },
       { role: 'user', content: ctx + '\n\n【Claudeの顧客分析】\n' + s3 + '\n\n実行：\n1. 想定外の顧客セグメント\n2. 見落とし心理的障壁\n3. 別角度ペルソナ\n4. 購買決定の別モデル\n5. SNS・Q&Aでの声\n6. Claudeへの反論と代替仮説' }
@@ -176,7 +176,7 @@ DiscussionEngine.prototype._step7 = async function(ctx, topic, history) {
   var s5 = this._getStepResult(history, 5);
   var s6 = this._getStepResult(history, 6);
   var res = await this.openai.chat.completions.create({
-    model: 'gpt-4o', max_tokens: 4000,
+    model: 'gpt-5.4', max_tokens: 4000,
     messages: [
       { role: 'system', content: '【最重要】分析対象テーマ：「' + topic + '」\nこのテーマのみを分析してください。記憶DBや過去案件の別テーマに絶対に引っ張られないこと。\n\nあなたは競合企業の戦略コンサルタントです。「' + topic + '」に関する前田法律事務所の戦略を見て「競合ならどう潰すか」を徹底提示してください。' },
       { role: 'user', content: ctx + '\n\n【前田事務所のアイデア】\n' + s5 + '\n\n【Claude批判】\n' + s6 +

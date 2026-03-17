@@ -12,24 +12,8 @@ var DiscussionEngine = require('./discussion-engine');
 var PreferenceLearner = require('./preference-learner');
 var OutputGenerator = require('./output-generator');
 var StateManager = require('./state-manager');
-var ListGenerator = require('./src/services/list-generator');
-var AdDesigner = require('./src/services/ad-designer');
-var MediaOptimizer = require('./src/services/media-optimizer');
 var Anthropic = require('@anthropic-ai/sdk');
 var OpenAI = require('openai');
-
-// v2.1: 承認最小化設定
-var AUTO_APPROVE_CONFIG = {
-  gradeA_threshold: 32,  // 32点以上: 自動承認（通知なし）
-  gradeB_threshold: 28,  // 28-31点: 自動承認+LINE通知
-  // 27点以下: 前田さんに確認
-  skipPhase1Confirm: true,   // Phase1 Step5方向性確認スキップ
-  skipPhase2Confirm: true,   // Phase2 Step4訴求確認スキップ
-  autoFixQuality: true,      // Phase3品質不合格時の自動修正
-  maxAutoFixRetries: 3       // 自動修正最大回数
-};
-
-
 
 var app = express();
 var PORT = process.env.PORT || 3000;
@@ -41,9 +25,6 @@ var engine = new DiscussionEngine(db, lineQA, sendLine);
 var prefLearner = new PreferenceLearner(db);
 var outputGen = new OutputGenerator(db, lineQA, sendLine);
 var stateManager = new StateManager(db);
-var listGen = new ListGenerator(db, lineQA, sendLine);
-var adDesigner = new AdDesigner(db, lineQA, sendLine);
-var mediaOpt = new MediaOptimizer(db, lineQA, sendLine);
 
 // 運用モード管理
 var operationMode = 'aws';
@@ -374,27 +355,6 @@ async function processLineCommand(text, userId) {
       var phaseNum = parseInt(cmd.match(/(\d+)/)[1]);
       db.prepare('UPDATE active_projects SET current_phase = ?, last_operated_at = CURRENT_TIMESTAMP WHERE id = ?').run(phaseNum, targetId);
       db.prepare('INSERT INTO operation_logs (project_id, action, details) VALUES (?,?,?)').run(targetId, 'phase' + phaseNum + '_start', proj2.name);
-
-      // v2.1: Phase4-6は自動実行開始
-      if (phaseNum === 4 && proj2.current_session_id) {
-        listGen.generateFull(proj2.current_session_id, false).then(function() {
-          sendLine('[Phase4完了] ' + proj2.name + ' リスト生成完了');
-        }).catch(function(e) { sendLine('[Phase4エラー] ' + e.message); });
-        return proj2.name + ' Phase4 リスト生成開始（バックグラウンド実行中）';
-      }
-      if (phaseNum === 5 && proj2.current_session_id) {
-        adDesigner.generateFull(proj2.current_session_id, false).then(function() {
-          sendLine('[Phase5完了] ' + proj2.name + ' 広告デザイン完了');
-        }).catch(function(e) { sendLine('[Phase5エラー] ' + e.message); });
-        return proj2.name + ' Phase5 広告デザイン開始（バックグラウンド実行中）';
-      }
-      if (phaseNum === 6 && proj2.current_session_id) {
-        mediaOpt.generateFull(proj2.current_session_id, 'all', false).then(function() {
-          sendLine('[Phase6完了] ' + proj2.name + ' メディア最適化完了');
-        }).catch(function(e) { sendLine('[Phase6エラー] ' + e.message); });
-        return proj2.name + ' Phase6 メディア最適化開始（バックグラウンド実行中）';
-      }
-
       return proj2.name + ' Phase' + phaseNum + ' 開始準備完了';
     }
 
@@ -427,65 +387,6 @@ async function processLineCommand(text, userId) {
     }
 
     return proj2.name + ': コマンド「' + cmd + '」を認識できませんでした';
-  }
-
-  // ========== IDnまとめ ==========
-  var summaryMatch = t.match(/^ID\s*[:：]?\s*(\d+)\s*まとめ/i);
-  if (summaryMatch) {
-    var sId = parseInt(summaryMatch[1]);
-    var sProj = db.prepare('SELECT * FROM active_projects WHERE id = ?').get(sId);
-    if (!sProj) return 'プロジェクトID:' + sId + ' が見つかりません';
-    var sLogs = db.prepare('SELECT round_number, role, content FROM discussion_logs WHERE session_id = ? ORDER BY round_number ASC').all(sProj.current_session_id || 0);
-    if (sLogs.length === 0) return sProj.name + ': ディスカッションログなし';
-    var summary = sProj.name + ' まとめ\n';
-    sLogs.forEach(function(l) {
-      summary += 'Step' + l.round_number + '(' + l.role + '): ' + (l.content || '').substring(0, 80) + '\n';
-    });
-    var chunks = [];
-    for (var ci = 0; ci < summary.length; ci += 300) chunks.push(summary.substring(ci, ci + 300));
-    for (var cj = 1; cj < chunks.length; cj++) await sendLine(chunks[cj]);
-    return chunks[0];
-  }
-
-  // ========== 全部まとめ（詳細版） ==========
-  if (/^全部まとめ/.test(t)) {
-    var allP = db.prepare("SELECT * FROM active_projects WHERE status IN ('active','sleeping') ORDER BY id").all();
-    if (allP.length === 0) return '進行中プロジェクトなし';
-    var allSummary = '全プロジェクトまとめ\n';
-    allP.forEach(function(p) {
-      allSummary += '\nID:' + p.id + ' ' + p.name + ' Phase' + p.current_phase + '\n';
-      if (p.current_session_id) {
-        var lastLog = db.prepare('SELECT content FROM discussion_logs WHERE session_id = ? ORDER BY round_number DESC LIMIT 1').get(p.current_session_id);
-        if (lastLog) allSummary += '最新: ' + (lastLog.content || '').substring(0, 100) + '\n';
-      }
-    });
-    var aChunks = [];
-    for (var ai = 0; ai < allSummary.length; ai += 300) aChunks.push(allSummary.substring(ai, ai + 300));
-    for (var aj = 1; aj < aChunks.length; aj++) await sendLine(aChunks[aj]);
-    return aChunks[0];
-  }
-
-  // ========== フェーズ構成見せて ==========
-  if (/フェーズ構成|Phase構成|フェーズ(一覧|説明)/.test(t)) {
-    return 'フェーズ構成:\nPhase1: 壁打ち（8ステップ、3AI並列議論）\nPhase2: 訴求設計（6ステップ）\nPhase3: コンテンツ生成（7ステップ、4パターン）\nPhase4: リスト生成\nPhase5: 広告デザイン\nPhase6: メディア最適化\n\n例: ID1 フェーズ1開始';
-  }
-
-  // ========== API状態 ==========
-  if (/^API状態|^API確認|^api.?status/i.test(t)) {
-    var apiStatus = 'API状態確認\n';
-    try {
-      var anth = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
-      await anth.messages.create({ model: 'claude-sonnet-4-20250514', max_tokens: 10, messages: [{ role: 'user', content: 'test' }] });
-      apiStatus += 'Claude: OK\n';
-    } catch(ae) { apiStatus += 'Claude: NG (' + ae.message.substring(0, 50) + ')\n'; }
-    try {
-      var oai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-      await oai.chat.completions.create({ model: 'gpt-4o-mini', max_tokens: 10, messages: [{ role: 'user', content: 'test' }] });
-      apiStatus += 'OpenAI: OK\n';
-    } catch(oe) { apiStatus += 'OpenAI: NG (' + oe.message.substring(0, 50) + ')\n'; }
-    apiStatus += 'LINE: ' + (process.env.LINE_CHANNEL_ACCESS_TOKEN ? '設定済' : '未設定') + '\n';
-    apiStatus += 'Gemini: ' + (process.env.GEMINI_API_KEY ? '設定済' : '未設定');
-    return apiStatus;
   }
 
   // ========== 状態確認（全プロジェクト） ==========
@@ -618,16 +519,9 @@ function sendLine(message) {
   if (msg.indexOf('<!DOCTYPE') !== -1 || msg.indexOf('<html') !== -1) {
     msg = '（HTMLコンテンツは送信をスキップしました。プレビューURLをご確認ください）';
   }
-  // v2.1: .env優先 → DB fallback → broadcast
-  var userId = process.env.LINE_USER_ID;
-  if (!userId) {
-    try {
-      var user = db.prepare("SELECT DISTINCT user_id FROM line_messages WHERE user_id IS NOT NULL ORDER BY id DESC LIMIT 1").get();
-      if (user && user.user_id) userId = user.user_id;
-    } catch(e) { console.log("[sendLine] DB lookup failed:", e.message); }
-  }
-  if (userId) {
-    return pushLine(userId, msg);
+  var user = db.prepare("SELECT DISTINCT user_id FROM line_messages WHERE user_id IS NOT NULL ORDER BY id DESC LIMIT 1").get();
+  if (user && user.user_id) {
+    return pushLine(user.user_id, msg);
   }
   return new Promise(function(resolve) {
     var data = JSON.stringify({ messages: [{ type: 'text', text: msg.substring(0, 5000) }] });
@@ -663,26 +557,9 @@ app.post('/api/line/send', async function(req, res) {
 async function runSleepMode() {
   console.log('[就寝モード] 開始 ' + new Date().toISOString());
   var activeSessions = db.prepare("SELECT s.*, ap.id as proj_id FROM sessions s LEFT JOIN active_projects ap ON s.project_id = ap.id WHERE s.status = 'active' ORDER BY s.priority ASC, s.updated_at DESC LIMIT 5").all();
+
   if (activeSessions.length === 0) {
-    console.log('[就寝モード] アクティブなセッションなし → 新規事業アイデア調査モード');
-    try {
-      var ideaPrompt = 'あなたは弁護士事務所の経営戦略アドバイザーです。前田法律事務所（東京新橋、即独5年で年商5億、交通事故・相続・企業法務が主力）が新たに取り組むべき事業アイデアを3つ提案してください。' +
-        '\n\n各アイデアについて以下を簡潔に：' +
-        '\n1. 事業名' +
-        '\n2. 市場規模・成長性（具体的な数字）' +
-        '\n3. 前田事務所の強みとの親和性' +
-        '\n4. 初期投資・リスク' +
-        '\n5. 想定月間売上' +
-        '\n\n※法律事務所として適法な範囲内で。弁護士法・弁護士職務基本規程を遵守。';
-      var ideaResult = await aiSummarize(
-        '弁護士事務所の新規事業アイデアを提案する専門家。最新の市場データに基づき実現可能な提案をする。',
-        ideaPrompt, 2000
-      );
-      db.prepare('INSERT INTO sleep_logs (session_id, action, result) VALUES (0, ?, ?)').run('new_business_idea', ideaResult);
-      console.log('[就寝モード] 新規事業アイデア生成完了');
-    } catch(e) {
-      console.error('[就寝モード] アイデア生成エラー:', e.message);
-    }
+    console.log('[就寝モード] アクティブなセッションなし');
     return;
   }
 
@@ -733,118 +610,19 @@ async function runSleepMode() {
   console.log('[就寝モード] 完了');
 }
 
-
-// ============================================
-// Phase4: 営業リスト生成
-// ============================================
-app.post('/api/phase4/generate', async function(req, res) {
-  if (req.headers['x-api-key'] !== process.env.API_SECRET) return res.status(401).json({ error: '認証エラー' });
-  var body = req.body;
-  if (!body.sessionId) return res.status(400).json({ error: 'sessionId必須' });
-  try {
-    var result = await listGen.generateFull(body.sessionId, body.isSleep || false);
-    res.json({ success: true, result: result });
-  } catch(e) {
-    console.error('[Phase4] エラー:', e.message);
-    res.status(500).json({ error: e.message });
-  }
-});
-
-app.post('/api/phase4/step', async function(req, res) {
-  if (req.headers['x-api-key'] !== process.env.API_SECRET) return res.status(401).json({ error: '認証エラー' });
-  var body = req.body;
-  if (!body.sessionId || !body.step) return res.status(400).json({ error: 'sessionId, step必須' });
-  try {
-    var result = await listGen.runStep(body.sessionId, body.step, body.isSleep || false);
-    res.json({ success: true, step: body.step, result: result });
-  } catch(e) {
-    res.status(500).json({ error: e.message });
-  }
-});
-
-// ============================================
-// Phase5: 広告デザイン
-// ============================================
-app.post('/api/phase5/generate', async function(req, res) {
-  if (req.headers['x-api-key'] !== process.env.API_SECRET) return res.status(401).json({ error: '認証エラー' });
-  var body = req.body;
-  if (!body.sessionId) return res.status(400).json({ error: 'sessionId必須' });
-  try {
-    var result = await adDesigner.generateFull(body.sessionId, body.isSleep || false);
-    res.json({ success: true, result: result });
-  } catch(e) {
-    console.error('[Phase5] エラー:', e.message);
-    res.status(500).json({ error: e.message });
-  }
-});
-
-app.post('/api/phase5/step', async function(req, res) {
-  if (req.headers['x-api-key'] !== process.env.API_SECRET) return res.status(401).json({ error: '認証エラー' });
-  var body = req.body;
-  if (!body.sessionId || !body.step) return res.status(400).json({ error: 'sessionId, step必須' });
-  try {
-    var result = await adDesigner.runStep(body.sessionId, body.step, body.isSleep || false);
-    res.json({ success: true, step: body.step, result: result });
-  } catch(e) {
-    res.status(500).json({ error: e.message });
-  }
-});
-
-// ============================================
-// Phase6: メディア最適化
-// ============================================
-app.post('/api/phase6/generate', async function(req, res) {
-  if (req.headers['x-api-key'] !== process.env.API_SECRET) return res.status(401).json({ error: '認証エラー' });
-  var body = req.body;
-  if (!body.sessionId || !body.mediaType) return res.status(400).json({ error: 'sessionId, mediaType必須' });
-  try {
-    var result = await mediaOpt.generateFull(body.sessionId, body.mediaType, body.isSleep || false);
-    res.json({ success: true, result: result });
-  } catch(e) {
-    console.error('[Phase6] エラー:', e.message);
-    res.status(500).json({ error: e.message });
-  }
-});
-
-// ============================================
-// LINE Phase4-6コマンド処理用の拡張
-// ============================================
-
 // ============================================
 // 朝サマリー（7時LINE送信）
 // ============================================
 
 
 // AI summarize helper: Claude -> GPT-5.4 fallback
-// v2.1: リトライヘルパー（429→30s, 500/529→10s, timeout 60s）
-async function withRetry(fn, label, maxRetries) {
-  maxRetries = maxRetries || 3;
-  for (var attempt = 1; attempt <= maxRetries; attempt++) {
-    try {
-      return await Promise.race([
-        fn(),
-        new Promise(function(_, reject) { setTimeout(function() { reject(new Error('timeout 60s')); }, 60000); })
-      ]);
-    } catch(err) {
-      var status = err.status || (err.response && err.response.status) || 0;
-      var isRetryable = status === 429 || status === 500 || status === 529 || err.message === 'timeout 60s';
-      if (!isRetryable || attempt === maxRetries) throw err;
-      var delay = status === 429 ? 30000 : 10000;
-      console.log('[Retry] ' + label + ' attempt ' + attempt + '/' + maxRetries + ' status:' + status + ' wait:' + (delay/1000) + 's');
-      await new Promise(function(r) { setTimeout(r, delay); });
-    }
-  }
-}
-
 async function aiSummarize(systemPrompt, userContent, maxTokens) {
   try {
     var anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
-    var r = await withRetry(function() {
-      return anthropic.messages.create({
+    var r = await anthropic.messages.create({
       model: 'claude-sonnet-4-20250514', max_tokens: maxTokens || 1500,
       system: systemPrompt, messages: [{ role: 'user', content: userContent }]
-      });
-    }, 'Claude');
+    });
     return r.content[0].text;
   } catch (e) {
     console.error('[aiSummarize] Claude failed, falling back to GPT-5.4:', e.message);

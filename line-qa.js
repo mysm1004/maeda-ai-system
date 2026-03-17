@@ -111,7 +111,7 @@ LineQA.prototype.handleSmartQA = async function(text, userId) {
     recentQA.map(function(qa) { return 'Q: ' + qa.question + '\nA: ' + qa.answer; }).join('\n---\n');
 
   var res = await self.anthropic.messages.create({
-    model: 'claude-sonnet-4-20250514',
+    model: 'claude-opus-4-6',
     max_tokens: 1500,
     system: 'あなたは前田法律事務所の専属AIアシスタントです。前田弁護士からのLINE質問に、現在のプロジェクト状況・過去の議論・記憶DBを踏まえて簡潔に回答してください。\n\n注意:\n- LINEで読みやすい簡潔な回答（300文字以内推奨）\n- 該当セッションIDがあれば明示\n- 不明な場合は正直に「情報が不足しています」と言う\n- 法律事務所としての品位を保つ',
     messages: [{ role: 'user', content: '【前田さんの質問】\n' + text + '\n\n' + contextStr }]

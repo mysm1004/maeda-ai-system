@@ -42,12 +42,12 @@ var msg = 'ID:' + row.session_id + ' ' + title + ' LP全パターン完成。URL
 var data = JSON.stringify({ to: 'U61480433672e5161e2c5f9db4a405822', messages: [{ type: 'text', text: msg }] });
 var opts = {
   hostname: 'api.line.me', path: '/v2/bot/message/push', method: 'POST',
-  headers: { 'Content-Type': 'application/json; charset=UTF-8', 'Authorization': 'Bearer ' + process.env.LINE_CHANNEL_TOKEN, 'Content-Length': Buffer.byteLength(data, 'utf8') }
+  headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + process.env.LINE_CHANNEL_TOKEN, 'Content-Length': Buffer.byteLength(data) }
 };
 var req2 = https.request(opts, function(r) {
   var body = '';
   r.on('data', function(c) { body += c; });
   r.on('end', function() { console.log('[LINE] status:' + r.statusCode + ' ' + body); });
 });
-req2.write(data, 'utf8');
+req2.write(data);
 req2.end();

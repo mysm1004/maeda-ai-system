@@ -89,7 +89,7 @@ OutputGenerator.prototype._phase2_step2 = async function(sessionId, outputType, 
 // Phase2 Step3: 訴求批判（ChatGPT）
 OutputGenerator.prototype._phase2_step3 = async function(sessionId, outputType, step1Result, step2Result) {
   var res = await this.openai.chat.completions.create({
-    model: 'gpt-4o', max_tokens: 4000,
+    model: 'gpt-5.4', max_tokens: 4000,
     messages: [
       { role: 'system', content: 'あなたは実際の消費者代表です。法律事務所の広告を見る一般人の視点で、各訴求が本当に響くか率直に評価してください。' },
       { role: 'user', content: '【訴求パターン】\n' + step1Result +
@@ -243,7 +243,7 @@ OutputGenerator.prototype._phase3_step3 = async function(patterns, phase2Final, 
   }).join('\n\n========\n\n');
 
   var res = await this.openai.chat.completions.create({
-    model: 'gpt-4o', max_tokens: 4000,
+    model: 'gpt-5.4', max_tokens: 4000,
     messages: [
       { role: 'system', content: 'あなたは一般消費者の代表です。法律事務所のコンテンツを見た率直な感想と改善点を述べてください。Claudeの批評も検証してください。' },
       { role: 'user', content: '【4パターン】\n' + patternsText +
