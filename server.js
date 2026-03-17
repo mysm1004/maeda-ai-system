@@ -338,7 +338,6 @@ async function processLineCommand(text, userId) {
     }
     return 'アクティブなセッションがありません';
   }
-<<<<<<< Updated upstream
 
   // ========== 新規プロジェクト ==========
   if (t.startsWith('新規 ') || t.startsWith('新規　')) {
@@ -530,393 +529,121 @@ async function processLineCommand(text, userId) {
   }
 
   // ========== Claude Code コマンド ==========
-=======
-  // 状態確認
-  if (t === '状態' || t === 'ステータス') {
-    var sessions = db.prepare("SELECT * FROM sessions WHERE status = 'active' ORDER BY updated_at DESC LIMIT 3").all();
-    if (sessions.length === 0) return 'アクティブなセッションなし';
-    return sessions.map(function(s) {
-      return '[' + s.id + '] ' + s.title + ' (R' + s.current_round + '/' + s.total_rounds + ')';
-    }).join('\n');
-  }
-  // Claude Code コマンド（コード修正・実装・デプロイ）
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
   var ccPrefixes = ['コード', '修正', '実装', '追加', 'バグ', 'デプロイ', 'claude'];
   var isCodeCmd = ccPrefixes.some(function(p) { return t.startsWith(p); });
   if (isCodeCmd) {
     try {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
       var ccData = JSON.stringify({ instruction: t, autoRestart: true });
-=======
       var instruction = t;
       var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
->>>>>>> Stashed changes
-=======
       var instruction = t;
       var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
->>>>>>> Stashed changes
-=======
       var instruction = t;
       var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
->>>>>>> Stashed changes
-=======
       var instruction = t;
       var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
->>>>>>> Stashed changes
-=======
       var instruction = t;
       var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
->>>>>>> Stashed changes
-=======
       var instruction = t;
       var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
->>>>>>> Stashed changes
-=======
       var instruction = t;
       var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
->>>>>>> Stashed changes
-=======
       var instruction = t;
       var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
->>>>>>> Stashed changes
-=======
       var instruction = t;
       var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
->>>>>>> Stashed changes
-=======
       var instruction = t;
       var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
->>>>>>> Stashed changes
-=======
       var instruction = t;
       var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
->>>>>>> Stashed changes
-=======
       var instruction = t;
       var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
->>>>>>> Stashed changes
-=======
       var instruction = t;
       var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
->>>>>>> Stashed changes
-=======
       var instruction = t;
       var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
->>>>>>> Stashed changes
-=======
       var instruction = t;
       var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
->>>>>>> Stashed changes
-=======
       var instruction = t;
       var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
->>>>>>> Stashed changes
-=======
       var instruction = t;
       var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
->>>>>>> Stashed changes
-=======
       var instruction = t;
       var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
->>>>>>> Stashed changes
-=======
       var instruction = t;
       var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
->>>>>>> Stashed changes
-=======
       var instruction = t;
       var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
->>>>>>> Stashed changes
-=======
       var instruction = t;
       var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
->>>>>>> Stashed changes
-=======
       var instruction = t;
       var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
->>>>>>> Stashed changes
-=======
       var instruction = t;
       var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
->>>>>>> Stashed changes
-=======
       var instruction = t;
       var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
->>>>>>> Stashed changes
-=======
       var instruction = t;
       var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
->>>>>>> Stashed changes
-=======
-      var instruction = t;
-      var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
->>>>>>> Stashed changes
       var ccResult = await new Promise(function(resolve) {
         var ccReq = http.request({
           hostname: '127.0.0.1', port: 3001, path: '/task', method: 'POST',
           headers: { 'Content-Type': 'application/json', 'x-api-key': process.env.API_SECRET, 'Content-Length': Buffer.byteLength(ccData) }
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
         }, function(res2) {
           var b = ''; res2.on('data', function(c) { b += c; }); res2.on('end', function() { resolve(JSON.parse(b)); });
-=======
         }, function(res) {
           var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
->>>>>>> Stashed changes
-=======
         }, function(res) {
           var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
->>>>>>> Stashed changes
-=======
         }, function(res) {
           var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
->>>>>>> Stashed changes
-=======
         }, function(res) {
           var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
->>>>>>> Stashed changes
-=======
         }, function(res) {
           var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
->>>>>>> Stashed changes
-=======
         }, function(res) {
           var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
->>>>>>> Stashed changes
-=======
         }, function(res) {
           var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
->>>>>>> Stashed changes
-=======
         }, function(res) {
           var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
->>>>>>> Stashed changes
-=======
         }, function(res) {
           var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
->>>>>>> Stashed changes
-=======
         }, function(res) {
           var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
->>>>>>> Stashed changes
-=======
         }, function(res) {
           var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
->>>>>>> Stashed changes
-=======
         }, function(res) {
           var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
->>>>>>> Stashed changes
-=======
         }, function(res) {
           var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
->>>>>>> Stashed changes
-=======
         }, function(res) {
           var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
->>>>>>> Stashed changes
-=======
         }, function(res) {
           var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
->>>>>>> Stashed changes
-=======
         }, function(res) {
           var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
->>>>>>> Stashed changes
-=======
         }, function(res) {
           var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
->>>>>>> Stashed changes
-=======
         }, function(res) {
           var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
->>>>>>> Stashed changes
-=======
         }, function(res) {
           var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
->>>>>>> Stashed changes
-=======
         }, function(res) {
           var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
->>>>>>> Stashed changes
-=======
         }, function(res) {
           var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
->>>>>>> Stashed changes
-=======
         }, function(res) {
           var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
->>>>>>> Stashed changes
-=======
         }, function(res) {
           var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
->>>>>>> Stashed changes
-=======
         }, function(res) {
           var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
->>>>>>> Stashed changes
-=======
         }, function(res) {
           var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
->>>>>>> Stashed changes
-=======
-        }, function(res) {
-          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
->>>>>>> Stashed changes
         });
         ccReq.on('error', function(e) { resolve({ error: e.message }); });
         ccReq.write(ccData); ccReq.end();
       });
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
       if (ccResult.error) return 'CC接続エラー: ' + ccResult.error;
       return 'タスク投入完了 ID:' + ccResult.taskId;
     } catch (e) { return 'CC呼出エラー: ' + e.message; }
@@ -946,57 +673,6 @@ async function processLineCommand(text, userId) {
   }
 
   return '使えるコマンド:\n・新規 [テーマ]\n・承認 / 却下\n・状態\n・PCモード / AWSモード';
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
       if (ccResult.error) return '⚠️ Claude Code接続エラー: ' + ccResult.error;
       return '🔧 Claude Codeにタスク投入しました\nタスクID: ' + ccResult.taskId + '\n完了時にLINEで結果を通知します';
     } catch (e) {
@@ -1036,7 +712,6 @@ async function processLineCommand(text, userId) {
   // 音声メモとして保存
   db.prepare('INSERT INTO voice_memos (text) VALUES (?)').run(t);
   return 'メモ保存しました: 「' + t.substring(0, 30) + '...」';
->>>>>>> Stashed changes
 }
 
 // ============================================
