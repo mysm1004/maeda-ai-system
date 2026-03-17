@@ -488,6 +488,7 @@ async function processLineCommand(text, userId) {
     apiStatus += 'Gemini: ' + (process.env.GEMINI_API_KEY ? '設定済' : '未設定');
     return apiStatus;
   }
+<<<<<<< Updated upstream
 
   // ========== 状態確認（全プロジェクト） ==========
   if (/^(状態|ステータス|いまの状況|全部まとめ|状況教えて)/.test(t) || /教えて|は[？?]$|どう(いう|なって)|進捗|動いてる|何してる|どうなった|報告/.test(t)) {
@@ -744,6 +745,8 @@ async function processLineCommand(text, userId) {
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
   // Claude Code コマンド（コード修正・実装・デプロイ）
   var ccPrefixes = ['コード', '修正', '実装', '追加', 'バグ', 'デプロイ', 'claude'];
   var isCodeCmd = ccPrefixes.some(function(p) { return t.startsWith(p); });
@@ -770,6 +773,9 @@ async function processLineCommand(text, userId) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -810,6 +816,9 @@ async function processLineCommand(text, userId) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
