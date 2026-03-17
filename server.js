@@ -543,6 +543,9 @@ async function processLineCommand(text, userId) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -558,7 +561,12 @@ async function processLineCommand(text, userId) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
       var ccData = JSON.stringify({ instruction: t, autoRestart: true });
+=======
+      var instruction = t;
+      var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
+>>>>>>> Stashed changes
 =======
       var instruction = t;
       var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
@@ -583,8 +591,13 @@ async function processLineCommand(text, userId) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         }, function(res2) {
           var b = ''; res2.on('data', function(c) { b += c; }); res2.on('end', function() { resolve(JSON.parse(b)); });
+=======
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+>>>>>>> Stashed changes
 =======
         }, function(res) {
           var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
@@ -605,6 +618,7 @@ async function processLineCommand(text, userId) {
         ccReq.on('error', function(e) { resolve({ error: e.message }); });
         ccReq.write(ccData); ccReq.end();
       });
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
@@ -639,6 +653,8 @@ async function processLineCommand(text, userId) {
 
   return '使えるコマンド:\n・新規 [テーマ]\n・承認 / 却下\n・状態\n・PCモード / AWSモード';
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
