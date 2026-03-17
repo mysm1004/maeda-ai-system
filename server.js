@@ -505,6 +505,7 @@ async function processLineCommand(text, userId) {
     return statusMsg.trim();
   }
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 
   // ========== モード切替 ==========
   if (t === 'PCモード' || t === 'pcモード' || t === 'PC' || t === 'ローカル') {
@@ -738,6 +739,8 @@ async function processLineCommand(text, userId) {
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
   // Claude Code コマンド（コード修正・実装・デプロイ）
   var ccPrefixes = ['コード', '修正', '実装', '追加', 'バグ', 'デプロイ', 'claude'];
   var isCodeCmd = ccPrefixes.some(function(p) { return t.startsWith(p); });
@@ -762,6 +765,9 @@ async function processLineCommand(text, userId) {
     }
   }
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -796,6 +802,9 @@ async function processLineCommand(text, userId) {
   }
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
