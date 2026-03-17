@@ -8,7 +8,10 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 var path = require("path");
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -34,6 +37,7 @@ var express = require('express');
 var helmet = require('helmet');
 var compression = require('compression');
 var cron = require('node-cron');
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
@@ -89,6 +93,8 @@ var AUTO_APPROVE_CONFIG = {
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 var https = require('https');
 var { initDatabase } = require('./db/schema');
 var DiscussionEngine = require('./services/discussion-engine');
@@ -112,6 +118,9 @@ var pathMod = require("path");
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -135,6 +144,7 @@ var pathMod = require("path");
 var app = express();
 var PORT = process.env.PORT || 3000;
 var db = initDatabase(process.env.DB_PATH || './data/kabeuchi.db');
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
@@ -191,6 +201,8 @@ app.get("/outputs/:filename", function(req, res) {
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 var lineQA = new LineQA(db);
 var engine = new DiscussionEngine(db, lineQA, sendLine);
 var prefLearner = new PreferenceLearner(db);
@@ -207,6 +219,9 @@ var mediaOptimizer = new MediaOptimizer(db, lineQA, sendLine);
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -240,8 +255,14 @@ app.use(express.json({ limit: '10mb' }));
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 
 // 認証（LINE Webhook・health・dashboardは除外）
+=======
+app.use('/outputs', express.static(pathMod.join(__dirname, 'public/outputs')));
+
+// 認証（LINE Webhookは除外）
+>>>>>>> Stashed changes
 =======
 app.use('/outputs', express.static(pathMod.join(__dirname, 'public/outputs')));
 
@@ -314,6 +335,10 @@ app.use('/api', function(req, res, next) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+// 新規壁打ち開始 or 続行
+>>>>>>> Stashed changes
 =======
 // 新規壁打ち開始 or 続行
 >>>>>>> Stashed changes
@@ -358,7 +383,10 @@ app.post('/api/discussion', async function(req, res) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     var projectId = body.projectId || null;
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -383,6 +411,7 @@ app.post('/api/discussion', async function(req, res) {
     // 新規セッション作成
     if (!sid) {
       if (!body.topic) return res.status(400).json({ error: 'topicは必須' });
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
@@ -422,6 +451,8 @@ app.post('/api/discussion', async function(req, res) {
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
       sid = engine.createSession(body.title || body.topic, body.topic);
 
       // フェーズプラン設定
@@ -442,6 +473,9 @@ app.post('/api/discussion', async function(req, res) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -476,6 +510,7 @@ app.post('/api/discussion', async function(req, res) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
       var session0 = db.prepare('SELECT project_id FROM sessions WHERE id = ?').get(sid);
       db.prepare('INSERT INTO discussion_logs (session_id, project_id, phase, role, role_label, content, round_number, round_theme) VALUES (?,?,1,?,?,?,?,?)')
         .run(sid, session0 ? session0.project_id : null, 'user', '前田さん', body.userComment, lr ? lr.mr || 1 : 1, '');
@@ -494,6 +529,8 @@ app.post('/api/discussion', async function(req, res) {
     var session = db.prepare('SELECT * FROM sessions WHERE id = ?').get(sid);
     var result = await engine.runStep(sid, session.topic, round, session.research_data, false, session.project_id);
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -549,6 +586,9 @@ app.post('/api/discussion', async function(req, res) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -627,6 +667,10 @@ app.post('/api/discussion/finalize', async function(req, res) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+// アウトプット生成（設計書→4パターン→批評→推奨）
+>>>>>>> Stashed changes
 =======
 // アウトプット生成（設計書→4パターン→批評→推奨）
 >>>>>>> Stashed changes
@@ -671,9 +715,12 @@ app.post('/api/output/generate', async function(req, res) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     var result = await outputGen.generateFull(body.sessionId, body.outputType, body.params || {});
     res.json(result);
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -717,6 +764,9 @@ app.post('/api/output/generate', async function(req, res) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -742,6 +792,7 @@ app.post('/api/output/generate', async function(req, res) {
   }
 });
 
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
@@ -791,10 +842,14 @@ app.post('/api/output/design', async function(req, res) {
 =======
 // アウトプット承認
 >>>>>>> Stashed changes
+=======
+// アウトプット承認
+>>>>>>> Stashed changes
 app.post('/api/output/approve', function(req, res) {
   var body = req.body;
   if (!body.queueId) return res.status(400).json({ error: 'queueId必須' });
   var caseId = outputGen.approveOutput(body.queueId, body.pattern || 'A', body.filePath, body.deployUrl);
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
@@ -828,6 +883,8 @@ app.post('/api/output/approve', function(req, res) {
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
   var approvedItem = db.prepare('SELECT * FROM output_queue WHERE id = ?').get(body.queueId);
   if (body.pattern) prefLearner.learnFromPatternChoice(approvedItem ? approvedItem.session_id : null, body.pattern, approvedItem ? approvedItem.output_type : body.outputType);
   res.json({ success: true, caseId: caseId });
@@ -843,6 +900,9 @@ app.post('/api/output/approve', function(req, res) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -878,6 +938,7 @@ app.get('/api/output/queue', function(req, res) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 // プロジェクト管理（v2.0新規）
 // ============================================
 
@@ -893,6 +954,8 @@ app.post('/api/projects/:id/archive', function(req, res) {
   db.prepare("UPDATE active_projects SET status = 'archived' WHERE id = ?").run(req.params.id);
   db.prepare('INSERT INTO operation_logs (project_id, action, details) VALUES (?,?,?)').run(req.params.id, 'archive', 'プロジェクトをアーカイブ');
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -978,6 +1041,9 @@ app.post('/api/list/sample-check', function(req, res) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -1011,7 +1077,10 @@ app.post('/api/list/sample-check', function(req, res) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -1104,6 +1173,9 @@ app.post('/api/session/phase-advance', async function(req, res) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -1178,7 +1250,10 @@ app.get('/api/voice', function(req, res) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -1418,6 +1493,9 @@ function generateOutputHTML(result, outputType, sessionId) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -1457,6 +1535,7 @@ app.post('/api/line/webhook', async function(req, res) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
       console.log('[LINE Webhook] イベント受信:', JSON.stringify(ev.type));
 
       if (ev.type === 'follow') {
@@ -1465,6 +1544,8 @@ app.post('/api/line/webhook', async function(req, res) {
         db.prepare('INSERT INTO line_messages (direction, user_id, message) VALUES (?,?,?)').run('incoming', followUserId, '[友だち追加]');
         if (ev.replyToken) await replyLine(ev.replyToken, '前田法律事務所AIシステムに接続しました。');
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -1502,6 +1583,9 @@ app.post('/api/line/webhook', async function(req, res) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -1528,6 +1612,7 @@ app.post('/api/line/webhook', async function(req, res) {
       var text = ev.message.text;
       var userId = ev.source.userId;
 
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
@@ -1571,6 +1656,8 @@ app.post('/api/line/webhook', async function(req, res) {
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
       console.log('==============================');
       console.log('[LINE] メッセージ受信 ユーザーID: ' + userId);
       console.log('[LINE] 内容: ' + text);
@@ -1592,6 +1679,9 @@ app.post('/api/line/webhook', async function(req, res) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -1627,6 +1717,7 @@ app.post('/api/line/webhook', async function(req, res) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 // v2.0: LINE コマンド処理（プロジェクトID特定ルール準拠）
 async function processLineCommand(text, userId) {
   var t = text.trim();
@@ -1641,6 +1732,8 @@ async function processLineCommand(text, userId) {
       }
       return '承認しました（' + latest.title + '）';
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -1964,6 +2057,9 @@ async function processLineCommand(text, userId) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -1975,6 +2071,7 @@ async function processLineCommand(text, userId) {
     return 'アクティブなセッションがありません';
   }
 
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
@@ -2352,6 +2449,8 @@ async function processLineCommand(text, userId) {
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
   // 却下
   if (t.startsWith('却下') || t.startsWith('NG')) {
     var comment = t.replace(/^(却下|NG)\s*/, '');
@@ -2671,6 +2770,9 @@ async function processLineCommand(text, userId) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -2694,6 +2796,7 @@ function replyLine(replyToken, message) {
   var token = process.env.LINE_CHANNEL_ACCESS_TOKEN;
   if (!token) return Promise.resolve(false);
   return new Promise(function(resolve) {
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
@@ -2781,6 +2884,8 @@ function sendLine(message) {
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
     var data = JSON.stringify({ replyToken: replyToken, messages: [{ type: 'text', text: message.substring(0, 5000) }] });
     var req = https.request({
       hostname: 'api.line.me', path: '/v2/bot/message/reply', method: 'POST',
@@ -2840,6 +2945,9 @@ function sendLine(message) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -2876,6 +2984,10 @@ app.get('/api/line/users', function(req, res) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+// LINEテスト送信（特定ユーザーまたはブロードキャスト）
+>>>>>>> Stashed changes
 =======
 // LINEテスト送信（特定ユーザーまたはブロードキャスト）
 >>>>>>> Stashed changes
@@ -2920,8 +3032,11 @@ app.post('/api/line/send', async function(req, res) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
   var result = body.userId ? await pushLine(body.userId, body.message) : await sendLine(body.message);
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -2955,6 +3070,9 @@ app.post('/api/line/send', async function(req, res) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -2978,6 +3096,7 @@ app.post('/api/line/send', async function(req, res) {
 });
 
 // ============================================
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
@@ -3019,10 +3138,14 @@ app.post('/api/line/send', async function(req, res) {
 =======
 // 就寝モード（23時自動実行）
 >>>>>>> Stashed changes
+=======
+// 就寝モード（23時自動実行）
+>>>>>>> Stashed changes
 // ============================================
 
 async function runSleepMode() {
   console.log('[就寝モード] 開始 ' + new Date().toISOString());
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
@@ -3425,6 +3548,8 @@ app.post('/api/deploy', function(req, res) {
 // ============================================
 // ヘルスチェック・ダッシュボード
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -3879,6 +4004,9 @@ app.get('/api/competitors/changes', function(req, res) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -3903,6 +4031,7 @@ app.get('/api/competitors/changes', function(req, res) {
 app.get('/health', function(req, res) {
   var sessionCount = db.prepare('SELECT COUNT(*) as cnt FROM sessions').get();
   var caseCount = db.prepare('SELECT COUNT(*) as cnt FROM case_library').get();
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
@@ -3955,6 +4084,8 @@ app.get('/dashboard', function(req, res) {
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
   res.json({
     status: 'ok',
     time: new Date().toISOString(),
@@ -3973,6 +4104,9 @@ app.get('/dashboard', function(req, res) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -4008,6 +4142,7 @@ app.get('/dashboard', function(req, res) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 app.listen(PORT, '0.0.0.0', function() { console.log('前田AIシステム v2.0 起動 port:' + PORT); });
 
 process.on('unhandledRejection', function(reason) {
@@ -4021,6 +4156,9 @@ process.on('uncaughtException', function(err) {
     console.log('[Recovery] API制限エラー、続行');
   }
 });
+=======
+app.listen(PORT, '0.0.0.0', function() { console.log('前田AIシステム起動 port:' + PORT); });
+>>>>>>> Stashed changes
 =======
 app.listen(PORT, '0.0.0.0', function() { console.log('前田AIシステム起動 port:' + PORT); });
 >>>>>>> Stashed changes
