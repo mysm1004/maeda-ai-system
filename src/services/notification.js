@@ -36,9 +36,15 @@ class NotificationService {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
           'Content-Type': 'application/json; charset=UTF-8',
           'Authorization': `Bearer ${token}`,
           'Content-Length': Buffer.byteLength(data, 'utf8')
+=======
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+          'Content-Length': Buffer.byteLength(data)
+>>>>>>> Stashed changes
 =======
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`,
@@ -102,7 +108,11 @@ class NotificationService {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
       req.write(data, 'utf8');
+=======
+      req.write(data);
+>>>>>>> Stashed changes
 =======
       req.write(data);
 >>>>>>> Stashed changes
