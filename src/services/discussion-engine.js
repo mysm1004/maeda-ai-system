@@ -55,6 +55,7 @@ var OpenAI = require('openai');
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 // v2.0仕様: Phase1は8ステップ。Claude5回、GPT-5.4が3回
 var PHASE1_STEPS = [
   { num: 1, name: '市場・競合調査（Claude）', ai: 'claude', role: '市場調査の専門家' },
@@ -6617,6 +6618,8 @@ DiscussionEngine.prototype._getOfficeDocsSummary = function() {
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 var PHASE1_STEPS = [
   { num: 1, name: '市場・競合調査（Claude）', ai: 'claude', role: 'Web検索で競合LP・料金・強み・弱みを網羅収集' },
   { num: 2, name: '市場・競合調査（ChatGPT）', ai: 'chatgpt', role: 'Claudeの見落とし補完・別視点追加' },
@@ -6671,6 +6674,9 @@ DiscussionEngine.prototype.runStep = async function(sessionId, topic, stepNum, r
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -6813,6 +6819,9 @@ DiscussionEngine.prototype._step6 = async function(ctx, topic, history) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -7006,6 +7015,9 @@ DiscussionEngine.prototype._getOfficeDocsSummary = function() {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -7085,9 +7097,15 @@ DiscussionEngine.prototype._getSimilarCases = function(topic) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 DiscussionEngine.prototype._saveLog = function(sid, phase, round, theme, role, label, content, sm, projectId) {
   this.db.prepare('INSERT INTO discussion_logs (session_id, project_id, phase, round_number, round_theme, role, role_label, content, is_sleep_mode) VALUES (?,?,?,?,?,?,?,?,?)')
     .run(sid, projectId || null, phase, round, theme, role, label, content, sm);
+=======
+DiscussionEngine.prototype._saveLog = function(sid, phase, round, theme, role, label, content, sm) {
+  this.db.prepare('INSERT INTO discussion_logs (session_id, phase, round_number, round_theme, role, role_label, content, is_sleep_mode) VALUES (?,?,?,?,?,?,?,?)')
+    .run(sid, phase, round, theme, role, label, content, sm);
+>>>>>>> Stashed changes
 =======
 DiscussionEngine.prototype._saveLog = function(sid, phase, round, theme, role, label, content, sm) {
   this.db.prepare('INSERT INTO discussion_logs (session_id, phase, round_number, round_theme, role, role_label, content, is_sleep_mode) VALUES (?,?,?,?,?,?,?,?)')
