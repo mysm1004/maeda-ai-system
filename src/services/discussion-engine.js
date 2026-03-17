@@ -48,6 +48,7 @@ var OpenAI = require('openai');
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 // v2.0仕様: Phase1は8ステップ。Claude5回、GPT-5.4が3回
 var PHASE1_STEPS = [
   { num: 1, name: '市場・競合調査（Claude）', ai: 'claude', role: '市場調査の専門家' },
@@ -6597,6 +6598,56 @@ DiscussionEngine.prototype._getOfficeDocsSummary = function() {
 >>>>>>> Stashed changes
 =======
 =======
+=======
+var PHASE1_STEPS = [
+  { num: 1, name: '市場・競合調査（Claude）', ai: 'claude', role: 'Web検索で競合LP・料金・強み・弱みを網羅収集' },
+  { num: 2, name: '市場・競合調査（ChatGPT）', ai: 'chatgpt', role: 'Claudeの見落とし補完・別視点追加' },
+  { num: 3, name: '顧客ニーズ深掘り（Claude）', ai: 'claude', role: 'ターゲットの不安・欲求・言葉を徹底分析' },
+  { num: 4, name: '顧客ニーズ深掘り（ChatGPT）', ai: 'chatgpt', role: '異なる顧客像・ニーズを対抗提示' },
+  { num: 5, name: '構築・アイデア拡張（Claude）', ai: 'claude', role: 'ステップ1-4を統合してアイデアを最大限に膨らませる。異業種事例も投入' },
+  { num: 6, name: '批判・対抗（Claude）', ai: 'claude', role: '悪魔の代弁者。なぜ失敗するかを徹底的に突く' },
+  { num: 7, name: 'さらなる批判（ChatGPT）', ai: 'chatgpt', role: '競合代理人視点で競合ならこう潰すを提示' },
+  { num: 8, name: '最終案の統合（Claude）', ai: 'claude', role: '全批判を受けて穴を全て潰し最強のアイデアに昇華' }
+];
+
+function DiscussionEngine(db, lineQA, sendLineFn) {
+  this.db = db;
+  this.lineQA = lineQA || null;
+  this.sendLineFn = sendLineFn || null;
+  this.anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+  this.openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+}
+
+// セッション作成
+DiscussionEngine.prototype.createSession = function(title, topic) {
+  var r = this.db.prepare('INSERT INTO sessions (title, topic, total_rounds) VALUES (?, ?, 8)').run(title, topic);
+  return r.lastInsertRowid;
+};
+
+// 事前調査
+DiscussionEngine.prototype.runResearch = async function(topic) {
+  var officeDocs = this._getOfficeDocs();
+  var memory = this._getMemoryForContext();
+  var similarCases = this._getSimilarCases(topic);
+  var res = await this.anthropic.messages.create({
+    model: 'claude-sonnet-4-20250514', max_tokens: 3000,
+    system: '【最重要】調査対象テーマ：「' + topic + '」\nこのテーマのみを調査してください。過去案件や記憶DBに別テーマの情報があっても、それに引っ張られず「' + topic + '」だけを分析すること。\n\nあなたはマーケティングリサーチの専門家です。「' + topic + '」の事前調査レポートを作成してください。',
+    messages: [{ role: 'user', content: '★★★ 調査テーマ：「' + topic + '」★★★\n※他のテーマの情報は無視すること\n\nテーマ: ' + topic +
+      '\n\n【事務所資料】\n' + (officeDocs || 'なし') +
+      '\n\n【類似過去案件】\n' + (similarCases || 'なし') +
+      '\n\n【前田さんの好み】\n' + JSON.stringify(memory) +
+      '\n\n調査項目：\n1. 競合LP・広告の傾向\n2. 業界トレンド\n3. 成功・失敗パターン\n4. 検索キーワード・口コミ表現\n5. 差別化の機会' }]
+  });
+  return res.content[0].text;
+};
+
+// Phase1: 1ステップ実行
+DiscussionEngine.prototype.runStep = async function(sessionId, topic, stepNum, research, isSleep) {
+  var step = PHASE1_STEPS[stepNum - 1];
+  if (!step) throw new Error('Invalid step: ' + stepNum);
+  var history = this._getHistory(sessionId);
+  var memory = this._getMemoryForContext();
+>>>>>>> Stashed changes
   var officeDocs = this._getOfficeDocsSummary();
   var sm = isSleep ? 1 : 0;
 
@@ -6719,6 +6770,9 @@ DiscussionEngine.prototype._step6 = async function(ctx, topic, history) {
   return res.content[0].text;
 };
 
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 // Step7: さらなる批判（ChatGPT）
 DiscussionEngine.prototype._step7 = async function(ctx, topic, history) {
@@ -6891,6 +6945,9 @@ DiscussionEngine.prototype._getOfficeDocsSummary = function() {
   var d = this._getOfficeDocs();
   return d ? d.substring(0, 1500) : null;
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -6949,9 +7006,15 @@ DiscussionEngine.prototype._getSimilarCases = function(topic) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 DiscussionEngine.prototype._saveLog = function(sid, phase, round, theme, role, label, content, sm, projectId) {
   this.db.prepare('INSERT INTO discussion_logs (session_id, project_id, phase, round_number, round_theme, role, role_label, content, is_sleep_mode) VALUES (?,?,?,?,?,?,?,?,?)')
     .run(sid, projectId || null, phase, round, theme, role, label, content, sm);
+=======
+DiscussionEngine.prototype._saveLog = function(sid, phase, round, theme, role, label, content, sm) {
+  this.db.prepare('INSERT INTO discussion_logs (session_id, phase, round_number, round_theme, role, role_label, content, is_sleep_mode) VALUES (?,?,?,?,?,?,?,?)')
+    .run(sid, phase, round, theme, role, label, content, sm);
+>>>>>>> Stashed changes
 =======
 DiscussionEngine.prototype._saveLog = function(sid, phase, round, theme, role, label, content, sm) {
   this.db.prepare('INSERT INTO discussion_logs (session_id, phase, round_number, round_theme, role, role_label, content, is_sleep_mode) VALUES (?,?,?,?,?,?,?,?)')
