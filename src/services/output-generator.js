@@ -71,7 +71,10 @@ var OpenAI = require('openai');
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -295,6 +298,9 @@ async function _apiRetry(fn, label) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -441,6 +447,7 @@ var PATTERNS = {
   D: { name: '恐怖訴求型', desc: '失わないために行動させる' }
 };
 
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
@@ -8827,6 +8834,8 @@ OutputGenerator.prototype.scoreOutput = async function(sessionId, queueId) {
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 var PHASE2_STEPS = [
   { num: 1, name: '訴求パターン生成（Claude）', ai: 'claude', role: 'Phase1結論から4〜6個の訴求角度を生成' },
   { num: 2, name: '訴求批判（Claude）', ai: 'claude', role: '悪魔の代弁者で各訴求を容赦なく批判' },
@@ -8856,6 +8865,9 @@ var PHASE2_STEPS = [
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -9032,6 +9044,9 @@ OutputGenerator.prototype._phase2_step4 = async function(sessionId, outputType, 
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -9214,6 +9229,9 @@ OutputGenerator.prototype._phase3_step2 = async function(patterns, phase2Final, 
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -9402,6 +9420,9 @@ OutputGenerator.prototype._phase3_step6 = async function(patterns, outputType) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -9596,6 +9617,9 @@ OutputGenerator.prototype.generateFull = async function(sessionId, outputType, p
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -9800,6 +9824,9 @@ OutputGenerator.prototype.scoreOutput = async function(sessionId, queueId) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -9875,6 +9902,7 @@ OutputGenerator.prototype.scoreOutput = async function(sessionId, queueId) {
     }
   }
 
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
@@ -10089,6 +10117,8 @@ OutputGenerator.prototype.scoreOutput = async function(sessionId, queueId) {
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
   // LINE通知
   if (this.sendLineFn && scores.length > 0) {
     var gradeMap = function(t) { return t >= 36 ? 'S' : t >= 32 ? 'A' : t >= 28 ? 'B' : t >= 24 ? 'C' : 'D\n\n【法的根拠の引用ルール】法的根拠は国の機関（法務省・厚労省・国税庁・裁判所等）、裁判所判例DB、行政機関公式サイト、弁護士公式サイト、法律学術論文、日弁連公式見解のみ引用可。事業会社サイト・行政書士・司法書士サイト・まとめサイト・ブログ・Wikipedia使用禁止。ソース引用時は出典（URL・資料名・発行機関）を明記。裏取りできない情報は「未確認」と明示。'; };
@@ -10165,6 +10195,9 @@ OutputGenerator.prototype.scoreOutput = async function(sessionId, queueId) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -10382,10 +10415,13 @@ OutputGenerator.prototype.scoreOutput = async function(sessionId, queueId) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 // ヘルパー
 // ============================================
 
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -10597,6 +10633,9 @@ OutputGenerator.prototype.scoreOutput = async function(sessionId, queueId) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -10814,6 +10853,7 @@ OutputGenerator.prototype._getPhase1Conclusion = function(session) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
   var step8 = this.db.prepare("SELECT content FROM discussion_logs WHERE session_id = ? AND round_number = 8 ORDER BY created_at DESC LIMIT 1").get(session.id);
   if (step8) parts.push('\n【Phase1最終統合結果】\n' + step8.content);
   return parts.join('\n') || '（Phase1結論なし）';
@@ -10847,6 +10887,8 @@ OutputGenerator.prototype._getTypeInstructions = function(type) {
     'sns_post': 'X・Instagram・Facebook・LinkedIn用の投稿文を各1つ。ハッシュタグ付き。',
     'blog': 'SEO最適化記事。H1/H2/H3構成、メタディスクリプション、内部リンク候補。3000文字以上。',
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -11089,6 +11131,9 @@ OutputGenerator.prototype._getTypeInstructions = function(type) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -11232,6 +11277,7 @@ OutputGenerator.prototype._getTypeInstructions = function(type) {
     'press_release': 'プレスリリース。5W1H形式。配信先メディア候補も記載。',
     'newsletter': 'メルマガ。件名5案+本文。開封率を意識した構成。',
     'seo_design': 'SEOキーワード設計。検索意図分析・キーワードマップ・優先順位表。',
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
@@ -11450,6 +11496,8 @@ OutputGenerator.prototype._getTypeInstructions = function(type) {
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
     'seo_article': 'SEO記事。構成案→本文→メタ情報まで一括。schema.org構造化データ付き。',
     'aio_content': 'AI検索回答に選ばれるFAQ/構造化コンテンツ。',
     'proposal': '提案書。目次→概要→課題分析→提案内容→実績→スケジュール→費用。',
@@ -11527,6 +11575,9 @@ OutputGenerator.prototype._getTypeInstructions = function(type) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -11740,12 +11791,18 @@ OutputGenerator.prototype._getTypeInstructions = function(type) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 // v2.0: project_idでフィルタリング
 OutputGenerator.prototype._getMemory = function(outputType, sessionId, projectId) {
   var rows;
   if (projectId) {
     rows = this.db.prepare("SELECT category, key, value FROM memory_db WHERE (project_id = ? OR project_id IS NULL) AND (output_type = ? OR output_type IS NULL) ORDER BY confidence DESC LIMIT 30").all(projectId, outputType || '');
   } else if (outputType) {
+=======
+OutputGenerator.prototype._getMemory = function(outputType) {
+  var rows;
+  if (outputType) {
+>>>>>>> Stashed changes
 =======
 OutputGenerator.prototype._getMemory = function(outputType) {
   var rows;
@@ -12178,6 +12235,7 @@ OutputGenerator.prototype._getOfficeDocs = function() {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
   var dir = path.join(__dirname, 'data', 'office-docs');
   if (!fs.existsSync(dir)) return null;
   var result = [];
@@ -12186,6 +12244,8 @@ OutputGenerator.prototype._getOfficeDocs = function() {
   var combined = result.join('\n\n');
   return combined ? combined.substring(0, 3000) : null;
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -12398,6 +12458,9 @@ OutputGenerator.prototype._getOfficeDocs = function() {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -12625,7 +12688,10 @@ OutputGenerator.prototype._readDir = function(dir, result) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -12840,6 +12906,9 @@ OutputGenerator.prototype._getSimilarOutputs = function(type) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
