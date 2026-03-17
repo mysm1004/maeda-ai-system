@@ -14,6 +14,7 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 var Database = require('better-sqlite3');
 
 function initDatabase(dbPath) {
@@ -366,6 +367,8 @@ module.exports = { initDatabase: initDatabase };
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 var Database = require('better-sqlite3');
 
 function initDatabase(dbPath) {
@@ -655,6 +658,9 @@ module.exports = { initDatabase: initDatabase };
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
