@@ -540,13 +540,21 @@ async function processLineCommand(text, userId) {
     }).join('\n');
   }
   // Claude Code コマンド（コード修正・実装・デプロイ）
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
   var ccPrefixes = ['コード', '修正', '実装', '追加', 'バグ', 'デプロイ', 'claude'];
   var isCodeCmd = ccPrefixes.some(function(p) { return t.startsWith(p); });
   if (isCodeCmd) {
     try {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
       var ccData = JSON.stringify({ instruction: t, autoRestart: true });
+=======
+      var instruction = t;
+      var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
+>>>>>>> Stashed changes
 =======
       var instruction = t;
       var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
@@ -556,8 +564,13 @@ async function processLineCommand(text, userId) {
           hostname: '127.0.0.1', port: 3001, path: '/task', method: 'POST',
           headers: { 'Content-Type': 'application/json', 'x-api-key': process.env.API_SECRET, 'Content-Length': Buffer.byteLength(ccData) }
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         }, function(res2) {
           var b = ''; res2.on('data', function(c) { b += c; }); res2.on('end', function() { resolve(JSON.parse(b)); });
+=======
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+>>>>>>> Stashed changes
 =======
         }, function(res) {
           var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
@@ -566,6 +579,7 @@ async function processLineCommand(text, userId) {
         ccReq.on('error', function(e) { resolve({ error: e.message }); });
         ccReq.write(ccData); ccReq.end();
       });
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
       if (ccResult.error) return 'CC接続エラー: ' + ccResult.error;
       return 'タスク投入完了 ID:' + ccResult.taskId;
@@ -597,6 +611,8 @@ async function processLineCommand(text, userId) {
 
   return '使えるコマンド:\n・新規 [テーマ]\n・承認 / 却下\n・状態\n・PCモード / AWSモード';
 =======
+=======
+>>>>>>> Stashed changes
       if (ccResult.error) return '⚠️ Claude Code接続エラー: ' + ccResult.error;
       return '🔧 Claude Codeにタスク投入しました\nタスクID: ' + ccResult.taskId + '\n完了時にLINEで結果を通知します';
     } catch (e) {
