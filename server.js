@@ -533,13 +533,21 @@ async function processLineCommand(text, userId) {
     }).join('\n');
   }
   // Claude Code コマンド（コード修正・実装・デプロイ）
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
   var ccPrefixes = ['コード', '修正', '実装', '追加', 'バグ', 'デプロイ', 'claude'];
   var isCodeCmd = ccPrefixes.some(function(p) { return t.startsWith(p); });
   if (isCodeCmd) {
     try {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
       var ccData = JSON.stringify({ instruction: t, autoRestart: true });
+=======
+      var instruction = t;
+      var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
+>>>>>>> Stashed changes
 =======
       var instruction = t;
       var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
@@ -549,8 +557,13 @@ async function processLineCommand(text, userId) {
           hostname: '127.0.0.1', port: 3001, path: '/task', method: 'POST',
           headers: { 'Content-Type': 'application/json', 'x-api-key': process.env.API_SECRET, 'Content-Length': Buffer.byteLength(ccData) }
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         }, function(res2) {
           var b = ''; res2.on('data', function(c) { b += c; }); res2.on('end', function() { resolve(JSON.parse(b)); });
+=======
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+>>>>>>> Stashed changes
 =======
         }, function(res) {
           var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
@@ -560,6 +573,7 @@ async function processLineCommand(text, userId) {
         ccReq.write(ccData); ccReq.end();
       });
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
       if (ccResult.error) return 'CC接続エラー: ' + ccResult.error;
       return 'タスク投入完了 ID:' + ccResult.taskId;
     } catch (e) { return 'CC呼出エラー: ' + e.message; }
@@ -567,6 +581,8 @@ async function processLineCommand(text, userId) {
 
   // ========== CC状態 ==========
 =======
+=======
+>>>>>>> Stashed changes
       if (ccResult.error) return '⚠️ Claude Code接続エラー: ' + ccResult.error;
       return '🔧 Claude Codeにタスク投入しました\nタスクID: ' + ccResult.taskId + '\n完了時にLINEで結果を通知します';
     } catch (e) {
@@ -575,6 +591,9 @@ async function processLineCommand(text, userId) {
   }
 
   // Claude Code 状態確認
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
   if (t === 'CC状態' || t === 'Claude状態') {
     try {
@@ -583,8 +602,13 @@ async function processLineCommand(text, userId) {
           hostname: '127.0.0.1', port: 3001, path: '/status', method: 'GET',
           headers: { 'x-api-key': process.env.API_SECRET }
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         }, function(res2) {
           var b = ''; res2.on('data', function(c) { b += c; }); res2.on('end', function() { resolve(JSON.parse(b)); });
+=======
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+>>>>>>> Stashed changes
 =======
         }, function(res) {
           var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
@@ -593,6 +617,7 @@ async function processLineCommand(text, userId) {
         sReq.on('error', function(e) { resolve({ error: e.message }); });
         sReq.end();
       });
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
       if (statusResult.error) return 'CC: ' + statusResult.error;
       var ccMsg = 'Claude Code状態\n';
@@ -627,6 +652,8 @@ async function processLineCommand(text, userId) {
 
   return '使えるコマンド:\n・新規 [テーマ]\n・承認 / 却下\n・状態\n・PCモード / AWSモード';
 =======
+=======
+>>>>>>> Stashed changes
       if (statusResult.error) return '⚠️ Claude Code: ' + statusResult.error;
       var msg = '🤖 Claude Code状態\n';
       msg += statusResult.running ? '⏳ 実行中: ' + (statusResult.currentTask ? statusResult.currentTask.instruction : '') + '\n' : '✅ 待機中\n';
