@@ -43,7 +43,10 @@ var OpenAI = require('openai');
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -183,6 +186,9 @@ async function _apiRetry(fn, label) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -315,9 +321,12 @@ var PATTERNS = {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 // v2.0仕様: Claude = claude-sonnet-4-20250514（Opusは LINE SmartQAのみ）
 var CLAUDE_MODEL = 'claude-sonnet-4-20250514';
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -469,6 +478,7 @@ function OutputGenerator(db, lineQA, sendLineFn) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 
   // Claude APIクレジット切れ時、GPT-5.4にフォールバックするラッパー
   var originalCreate = this.anthropic.messages.create.bind(this.anthropic.messages);
@@ -492,6 +502,8 @@ function OutputGenerator(db, lineQA, sendLineFn) {
       throw e;
     }
   };
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -624,10 +636,13 @@ function OutputGenerator(db, lineQA, sendLineFn) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 OutputGenerator.prototype._phase2_step1 = async function(sessionId, outputType, params) {
   var session = this.db.prepare('SELECT * FROM sessions WHERE id = ?').get(sessionId);
   var memory = this._getMemory(outputType, sessionId, session ? session.project_id : null);
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -755,6 +770,9 @@ OutputGenerator.prototype._phase2_step1 = async function(sessionId, outputType, 
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -884,11 +902,16 @@ OutputGenerator.prototype._phase2_step1 = async function(sessionId, outputType, 
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     model: CLAUDE_MODEL, max_tokens: 4000,
     system: '【最重要】分析対象テーマ：「' + (session ? session.topic : '') + '」。' +
       (session && session.project_id ? 'project_id: ' + session.project_id + '。' : '') +
       'このテーマのみを分析すること。\n\n' +
       'あなたはトップコピーライティングディレクターです。Phase1で固まったアイデアを元に、最も効果的な訴求角度を複数生成してください。前田さんの好み: ' + JSON.stringify(memory),
+=======
+    model: 'claude-sonnet-4-20250514', max_tokens: 4000,
+    system: 'あなたはトップコピーライティングディレクターです。Phase1で固まったアイデアを元に、最も効果的な訴求角度を複数生成してください。前田さんの好み: ' + JSON.stringify(memory),
+>>>>>>> Stashed changes
 =======
     model: 'claude-sonnet-4-20250514', max_tokens: 4000,
     system: 'あなたはトップコピーライティングディレクターです。Phase1で固まったアイデアを元に、最も効果的な訴求角度を複数生成してください。前田さんの好み: ' + JSON.stringify(memory),
@@ -1117,10 +1140,13 @@ OutputGenerator.prototype._phase2_step1 = async function(sessionId, outputType, 
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 OutputGenerator.prototype._phase2_step2 = async function(sessionId, outputType, step1Result) {
   var res = await this.anthropic.messages.create({
     model: CLAUDE_MODEL, max_tokens: 4000,
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -1248,6 +1274,9 @@ OutputGenerator.prototype._phase2_step2 = async function(sessionId, outputType, 
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -1388,10 +1417,13 @@ OutputGenerator.prototype._phase2_step2 = async function(sessionId, outputType, 
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 OutputGenerator.prototype._phase2_step3 = async function(sessionId, outputType, step1Result, step2Result) {
   var res = await this.openai.chat.completions.create({
     model: 'gpt-5.4', max_completion_tokens: 16000,
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -1519,6 +1551,9 @@ OutputGenerator.prototype._phase2_step3 = async function(sessionId, outputType, 
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -1658,6 +1693,7 @@ OutputGenerator.prototype._phase2_step3 = async function(sessionId, outputType, 
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
   return res.choices[0].message.content || res.choices[0].message.refusal || '（GPT-5.4応答なし）';
 };
 
@@ -1749,6 +1785,8 @@ OutputGenerator.prototype._phase2_step4 = async function(sessionId, outputType, 
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
   return res.choices[0].message.content;
 };
 
@@ -1756,6 +1794,7 @@ OutputGenerator.prototype._phase2_step4 = async function(sessionId, outputType, 
 OutputGenerator.prototype._phase2_step4 = async function(sessionId, outputType, step1Result, step2Result, step3Result) {
   var memory = this._getMemory(outputType);
   var res = await this.anthropic.messages.create({
+<<<<<<< Updated upstream
     model: 'claude-sonnet-4-20250514', max_tokens: 4000,
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
@@ -8543,6 +8582,110 @@ OutputGenerator.prototype.scoreOutput = async function(sessionId, queueId) {
 =======
 =======
 =======
+=======
+    model: 'claude-sonnet-4-20250514', max_tokens: 4000,
+    system: 'あなたは訴求戦略の最終決定者です。全批判を踏まえ最強の訴求2案に絞ってください。前田さんの好み: ' + JSON.stringify(memory),
+    messages: [{ role: 'user', content: '【Step1: 訴求パターン】\n' + step1Result +
+      '\n\n【Step2: Claude批判】\n' + step2Result +
+      '\n\n【Step3: ChatGPT/消費者批判】\n' + step3Result +
+      '\n\n実行：\n' +
+      '1. 全批判の要約と重要度ランク\n' +
+      '2. 各訴求の生存判定（生き残り理由 or 脱落理由）\n' +
+      '3. 最強の訴求2案を選定\n' +
+      '4. 選定理由（批判にどう耐えたか）\n' +
+      '5. 2案それぞれの強化ポイント\n' +
+      '6. メイン訴求とサブ訴求の使い分け方針' }]
+  });
+  return res.content[0].text;
+};
+
+// Phase2 Step5: コピーライティング（Claude）
+OutputGenerator.prototype._phase2_step5 = async function(sessionId, outputType, step4Result, params) {
+  var session = this.db.prepare('SELECT * FROM sessions WHERE id = ?').get(sessionId);
+  var memory = this._getMemory(outputType);
+  var typeInst = this._getTypeInstructions(outputType);
+
+  var res = await this.anthropic.messages.create({
+    model: 'claude-sonnet-4-20250514', max_tokens: 5000,
+    system: 'あなたは日本トップクラスのコピーライターです。訴求をキャッチコピー・ボディコピー・CTAに落とし込んでください。前田さんの好み: ' + JSON.stringify(memory),
+    messages: [{ role: 'user', content: '【絞り込まれた訴求2案】\n' + step4Result +
+      '\n\n【アウトプット種別】' + outputType +
+      '\n【種別指示】' + typeInst +
+      '\n【セッション】' + (session ? session.topic : '') +
+      '\n\n各訴求に対して以下を生成：\n' +
+      '1. メインキャッチコピー（3案ずつ）\n' +
+      '2. サブキャッチ（各1案）\n' +
+      '3. リード文（30文字以内の一行要約）\n' +
+      '4. ボディコピー構成案\n' +
+      '5. CTA文言（3案ずつ）\n' +
+      '6. 見出し群（H2/H3構成）\n' +
+      '7. 最推奨の組み合わせ' }]
+  });
+  return res.content[0].text;
+};
+
+// Phase2 Step6: 最終訴求の統合（Claude）
+OutputGenerator.prototype._phase2_step6 = async function(sessionId, outputType, step4Result, step5Result) {
+  var res = await this.anthropic.messages.create({
+    model: 'claude-sonnet-4-20250514', max_tokens: 3000,
+    system: 'あなたは最終統合者です。Phase3のアウトプット生成に渡す最終訴求設計書を作成してください。',
+    messages: [{ role: 'user', content: '【絞り込み結果】\n' + step4Result +
+      '\n\n【コピーライティング結果】\n' + step5Result +
+      '\n\nPhase3用に以下をJSON形式で整理：\n' +
+      '{\n' +
+      '  "main_appeal": "メイン訴求の概要",\n' +
+      '  "sub_appeal": "サブ訴求の概要",\n' +
+      '  "main_catchcopy": "最終メインキャッチコピー",\n' +
+      '  "sub_catchcopy": "サブキャッチコピー",\n' +
+      '  "lead_text": "リード文",\n' +
+      '  "body_structure": ["セクション1", "セクション2", ...],\n' +
+      '  "cta_text": "CTA文言",\n' +
+      '  "tone": "トーン&マナーの指示",\n' +
+      '  "key_numbers": ["使うべき数字1", "数字2"],\n' +
+      '  "ng_words": ["使ってはいけない表現1", "表現2"],\n' +
+      '  "quality_checklist": ["チェック項目1", "チェック項目2"]\n' +
+      '}' }]
+  });
+  return res.content[0].text;
+};
+
+// ============================================
+// Phase 3: アウトプット生成・磨き込み（7ステップ）
+// ============================================
+
+// Phase3 Step1: 初稿生成（Claude）- 4パターン同時
+OutputGenerator.prototype._phase3_step1 = async function(sessionId, outputType, phase2Final, params) {
+  var session = this.db.prepare('SELECT * FROM sessions WHERE id = ?').get(sessionId);
+  var memory = this._getMemory(outputType);
+  var officeDocs = this._getOfficeDocs();
+  var typeInst = this._getTypeInstructions(outputType);
+  var qualityRules = this._getQualityRules();
+
+  var basePrompt = '【Phase2最終訴求設計書】\n' + phase2Final +
+    '\n【事務所資料】' + (officeDocs || 'なし') +
+    '\n【セッション情報】' + (session ? session.topic + ' / ' + (session.target_definition || '') : '') +
+    '\n【前田さんの好み】' + JSON.stringify(memory) +
+    '\n【追加指示】' + JSON.stringify(params) +
+    '\n【種別指示】' + typeInst;
+
+  // 4パターン並行生成
+  var results = await Promise.all(Object.keys(PATTERNS).map(async function(key) {
+    var p = PATTERNS[key];
+    var r = await this.anthropic.messages.create({
+      model: 'claude-sonnet-4-20250514', max_tokens: 16000,
+      system: 'あなたはトップコピーライターです。「' + p.name + '（' + p.desc + '）」のパターンで、Phase2の訴求設計書に基づいて最高品質のコンテンツを生成してください。HTML系アウトプット（LP、バナー等）の場合は、必ず<!DOCTYPE html>から</html>まで完結する単一HTMLファイルとして出力。CSS・JSは全てインライン（<style>・<script>タグ内）。外部ファイル参照禁止。' + qualityRules,
+      messages: [{ role: 'user', content: basePrompt + '\n\nパターン「' + p.name + '」で生成してください。設計書のキャッチコピー・構成を活かしつつ、このパターンの特性を最大限発揮すること。' }]
+    });
+    return { pattern: key, name: p.name, desc: p.desc, content: r.content[0].text };
+  }.bind(this)));
+
+  return results;
+};
+
+// Phase3 Step2: コンテンツチェック（Claude）
+OutputGenerator.prototype._phase3_step2 = async function(patterns, phase2Final, outputType) {
+  var memory = this._getMemory(outputType);
+>>>>>>> Stashed changes
   var patternsText = patterns.map(function(p) {
     return '【パターン' + p.pattern + ': ' + p.name + '】\n' + p.content;
   }).join('\n\n========\n\n');
@@ -8648,6 +8791,9 @@ OutputGenerator.prototype._phase3_step6 = async function(patterns, outputType) {
   }).join('\n\n========\n\n');
 
   var res = await this.anthropic.messages.create({
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
     model: 'claude-sonnet-4-20250514', max_tokens: 3000,
     system: 'あなたはUI/UXの専門家です。スマートフォンでの表示・可読性を徹底チェックしてください。',
@@ -8758,6 +8904,9 @@ OutputGenerator.prototype.generateFull = async function(sessionId, outputType, p
   // ----- Phase 3: アウトプット生成・磨き込み -----
   console.log('[Phase3] Step1: 初稿生成（4パターン）...');
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -8878,6 +9027,9 @@ OutputGenerator.prototype.scoreOutput = async function(sessionId, queueId) {
         messages: [{ role: 'user', content: '以下のアウトプット（パターン' + p.pattern + '）を採点してください。\n\n' + content.substring(0, 3000) + '\n\nJSON形式: {"appeal":N,"differentiation":N,"format":N,"impact":N,"improvement":"改善ポイント1文"}' }]
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -8897,6 +9049,7 @@ OutputGenerator.prototype.scoreOutput = async function(sessionId, queueId) {
     }
   }
 
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
@@ -9027,6 +9180,8 @@ OutputGenerator.prototype.scoreOutput = async function(sessionId, queueId) {
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
   // LINE通知
   if (this.sendLineFn && scores.length > 0) {
     var gradeMap = function(t) { return t >= 36 ? 'S' : t >= 32 ? 'A' : t >= 28 ? 'B' : t >= 24 ? 'C' : 'D\n\n【法的根拠の引用ルール】法的根拠は国の機関（法務省・厚労省・国税庁・裁判所等）、裁判所判例DB、行政機関公式サイト、弁護士公式サイト、法律学術論文、日弁連公式見解のみ引用可。事業会社サイト・行政書士・司法書士サイト・まとめサイト・ブログ・Wikipedia使用禁止。ソース引用時は出典（URL・資料名・発行機関）を明記。裏取りできない情報は「未確認」と明示。'; };
@@ -9075,6 +9230,9 @@ OutputGenerator.prototype.scoreOutput = async function(sessionId, queueId) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -9208,10 +9366,13 @@ OutputGenerator.prototype.scoreOutput = async function(sessionId, queueId) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 // ヘルパー
 // ============================================
 
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -9339,6 +9500,9 @@ OutputGenerator.prototype.scoreOutput = async function(sessionId, queueId) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -9472,6 +9636,7 @@ OutputGenerator.prototype._getPhase1Conclusion = function(session) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
   var step8 = this.db.prepare("SELECT content FROM discussion_logs WHERE session_id = ? AND round_number = 8 ORDER BY created_at DESC LIMIT 1").get(session.id);
   if (step8) parts.push('\n【Phase1最終統合結果】\n' + step8.content);
   return parts.join('\n') || '（Phase1結論なし）';
@@ -9505,6 +9670,8 @@ OutputGenerator.prototype._getTypeInstructions = function(type) {
     'sns_post': 'X・Instagram・Facebook・LinkedIn用の投稿文を各1つ。ハッシュタグ付き。',
     'blog': 'SEO最適化記事。H1/H2/H3構成、メタディスクリプション、内部リンク候補。3000文字以上。',
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -9663,6 +9830,9 @@ OutputGenerator.prototype._getTypeInstructions = function(type) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -9750,6 +9920,7 @@ OutputGenerator.prototype._getTypeInstructions = function(type) {
     'press_release': 'プレスリリース。5W1H形式。配信先メディア候補も記載。',
     'newsletter': 'メルマガ。件名5案+本文。開封率を意識した構成。',
     'seo_design': 'SEOキーワード設計。検索意図分析・キーワードマップ・優先順位表。',
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
@@ -9884,6 +10055,8 @@ OutputGenerator.prototype._getTypeInstructions = function(type) {
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
     'seo_article': 'SEO記事。構成案→本文→メタ情報まで一括。schema.org構造化データ付き。',
     'aio_content': 'AI検索回答に選ばれるFAQ/構造化コンテンツ。',
     'proposal': '提案書。目次→概要→課題分析→提案内容→実績→スケジュール→費用。',
@@ -9933,6 +10106,9 @@ OutputGenerator.prototype._getTypeInstructions = function(type) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -10062,12 +10238,18 @@ OutputGenerator.prototype._getTypeInstructions = function(type) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 // v2.0: project_idでフィルタリング
 OutputGenerator.prototype._getMemory = function(outputType, sessionId, projectId) {
   var rows;
   if (projectId) {
     rows = this.db.prepare("SELECT category, key, value FROM memory_db WHERE (project_id = ? OR project_id IS NULL) AND (output_type = ? OR output_type IS NULL) ORDER BY confidence DESC LIMIT 30").all(projectId, outputType || '');
   } else if (outputType) {
+=======
+OutputGenerator.prototype._getMemory = function(outputType) {
+  var rows;
+  if (outputType) {
+>>>>>>> Stashed changes
 =======
 OutputGenerator.prototype._getMemory = function(outputType) {
   var rows;
@@ -10332,6 +10514,7 @@ OutputGenerator.prototype._getOfficeDocs = function() {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
   var dir = path.join(__dirname, 'data', 'office-docs');
   if (!fs.existsSync(dir)) return null;
   var result = [];
@@ -10340,6 +10523,8 @@ OutputGenerator.prototype._getOfficeDocs = function() {
   var combined = result.join('\n\n');
   return combined ? combined.substring(0, 3000) : null;
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -10468,6 +10653,9 @@ OutputGenerator.prototype._getOfficeDocs = function() {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -10611,7 +10799,10 @@ OutputGenerator.prototype._readDir = function(dir, result) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -10742,6 +10933,9 @@ OutputGenerator.prototype._getSimilarOutputs = function(type) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
