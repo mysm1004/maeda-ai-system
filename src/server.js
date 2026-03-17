@@ -26,7 +26,10 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 var path = require("path");
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -88,6 +91,7 @@ var express = require('express');
 var helmet = require('helmet');
 var compression = require('compression');
 var cron = require('node-cron');
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
@@ -197,6 +201,8 @@ var AUTO_APPROVE_CONFIG = {
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 var https = require('https');
 var { initDatabase } = require('./db/schema');
 var DiscussionEngine = require('./services/discussion-engine');
@@ -238,6 +244,9 @@ var pathMod = require("path");
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -297,6 +306,7 @@ var pathMod = require("path");
 var app = express();
 var PORT = process.env.PORT || 3000;
 var db = initDatabase(process.env.DB_PATH || './data/kabeuchi.db');
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
@@ -407,6 +417,8 @@ app.get("/outputs/:filename", function(req, res) {
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 var lineQA = new LineQA(db);
 var engine = new DiscussionEngine(db, lineQA, sendLine);
 var prefLearner = new PreferenceLearner(db);
@@ -441,6 +453,9 @@ var mediaOptimizer = new MediaOptimizer(db, lineQA, sendLine);
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -528,8 +543,14 @@ app.use(express.json({ limit: '10mb' }));
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 
 // 認証（LINE Webhook・health・dashboardは除外）
+=======
+app.use('/outputs', express.static(pathMod.join(__dirname, 'public/outputs')));
+
+// 認証（LINE Webhookは除外）
+>>>>>>> Stashed changes
 =======
 app.use('/outputs', express.static(pathMod.join(__dirname, 'public/outputs')));
 
@@ -710,6 +731,10 @@ app.use('/api', function(req, res, next) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+// 新規壁打ち開始 or 続行
+>>>>>>> Stashed changes
 =======
 // 新規壁打ち開始 or 続行
 >>>>>>> Stashed changes
@@ -826,7 +851,10 @@ app.post('/api/discussion', async function(req, res) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     var projectId = body.projectId || null;
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -887,6 +915,7 @@ app.post('/api/discussion', async function(req, res) {
     // 新規セッション作成
     if (!sid) {
       if (!body.topic) return res.status(400).json({ error: 'topicは必須' });
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
@@ -980,6 +1009,8 @@ app.post('/api/discussion', async function(req, res) {
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
       sid = engine.createSession(body.title || body.topic, body.topic);
 
       // フェーズプラン設定
@@ -1018,6 +1049,9 @@ app.post('/api/discussion', async function(req, res) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -1106,6 +1140,7 @@ app.post('/api/discussion', async function(req, res) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
       var session0 = db.prepare('SELECT project_id FROM sessions WHERE id = ?').get(sid);
       db.prepare('INSERT INTO discussion_logs (session_id, project_id, phase, role, role_label, content, round_number, round_theme) VALUES (?,?,1,?,?,?,?,?)')
         .run(sid, session0 ? session0.project_id : null, 'user', '前田さん', body.userComment, lr ? lr.mr || 1 : 1, '');
@@ -1124,6 +1159,8 @@ app.post('/api/discussion', async function(req, res) {
     var session = db.prepare('SELECT * FROM sessions WHERE id = ?').get(sid);
     var result = await engine.runStep(sid, session.topic, round, session.research_data, false, session.project_id);
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -1233,6 +1270,9 @@ app.post('/api/discussion', async function(req, res) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -1365,6 +1405,10 @@ app.post('/api/discussion/finalize', async function(req, res) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+// アウトプット生成（設計書→4パターン→批評→推奨）
+>>>>>>> Stashed changes
 =======
 // アウトプット生成（設計書→4パターン→批評→推奨）
 >>>>>>> Stashed changes
@@ -1481,9 +1525,12 @@ app.post('/api/output/generate', async function(req, res) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     var result = await outputGen.generateFull(body.sessionId, body.outputType, body.params || {});
     res.json(result);
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -1581,6 +1628,9 @@ app.post('/api/output/generate', async function(req, res) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -1642,6 +1692,7 @@ app.post('/api/output/generate', async function(req, res) {
   }
 });
 
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
@@ -1763,10 +1814,14 @@ app.post('/api/output/design', async function(req, res) {
 =======
 // アウトプット承認
 >>>>>>> Stashed changes
+=======
+// アウトプット承認
+>>>>>>> Stashed changes
 app.post('/api/output/approve', function(req, res) {
   var body = req.body;
   if (!body.queueId) return res.status(400).json({ error: 'queueId必須' });
   var caseId = outputGen.approveOutput(body.queueId, body.pattern || 'A', body.filePath, body.deployUrl);
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
@@ -1854,6 +1909,8 @@ app.post('/api/output/approve', function(req, res) {
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
   var approvedItem = db.prepare('SELECT * FROM output_queue WHERE id = ?').get(body.queueId);
   if (body.pattern) prefLearner.learnFromPatternChoice(approvedItem ? approvedItem.session_id : null, body.pattern, approvedItem ? approvedItem.output_type : body.outputType);
   res.json({ success: true, caseId: caseId });
@@ -1887,6 +1944,9 @@ app.post('/api/output/approve', function(req, res) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -1976,6 +2036,7 @@ app.get('/api/output/queue', function(req, res) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 // プロジェクト管理（v2.0新規）
 // ============================================
 
@@ -1991,6 +2052,8 @@ app.post('/api/projects/:id/archive', function(req, res) {
   db.prepare("UPDATE active_projects SET status = 'archived' WHERE id = ?").run(req.params.id);
   db.prepare('INSERT INTO operation_logs (project_id, action, details) VALUES (?,?,?)').run(req.params.id, 'archive', 'プロジェクトをアーカイブ');
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -2130,6 +2193,9 @@ app.post('/api/list/sample-check', function(req, res) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -2217,7 +2283,10 @@ app.post('/api/list/sample-check', function(req, res) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -2364,6 +2433,9 @@ app.post('/api/session/phase-advance', async function(req, res) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -2492,7 +2564,10 @@ app.get('/api/voice', function(req, res) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -2786,6 +2861,9 @@ function generateOutputHTML(result, outputType, sessionId) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -2879,6 +2957,7 @@ app.post('/api/line/webhook', async function(req, res) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
       console.log('[LINE Webhook] イベント受信:', JSON.stringify(ev.type));
 
       if (ev.type === 'follow') {
@@ -2887,6 +2966,8 @@ app.post('/api/line/webhook', async function(req, res) {
         db.prepare('INSERT INTO line_messages (direction, user_id, message) VALUES (?,?,?)').run('incoming', followUserId, '[友だち追加]');
         if (ev.replyToken) await replyLine(ev.replyToken, '前田法律事務所AIシステムに接続しました。');
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -2978,6 +3059,9 @@ app.post('/api/line/webhook', async function(req, res) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -3040,6 +3124,7 @@ app.post('/api/line/webhook', async function(req, res) {
       var text = ev.message.text;
       var userId = ev.source.userId;
 
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
@@ -3137,6 +3222,8 @@ app.post('/api/line/webhook', async function(req, res) {
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
       console.log('==============================');
       console.log('[LINE] メッセージ受信 ユーザーID: ' + userId);
       console.log('[LINE] 内容: ' + text);
@@ -3176,6 +3263,9 @@ app.post('/api/line/webhook', async function(req, res) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -3265,6 +3355,7 @@ app.post('/api/line/webhook', async function(req, res) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 // v2.0: LINE コマンド処理（プロジェクトID特定ルール準拠）
 async function processLineCommand(text, userId) {
   var t = text.trim();
@@ -3279,6 +3370,8 @@ async function processLineCommand(text, userId) {
       }
       return '承認しました（' + latest.title + '）';
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -3656,6 +3749,9 @@ async function processLineCommand(text, userId) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -3693,6 +3789,7 @@ async function processLineCommand(text, userId) {
     return 'アクティブなセッションがありません';
   }
 
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
@@ -4082,28 +4179,7 @@ async function processLineCommand(text, userId) {
 =======
 =======
 >>>>>>> Stashed changes
-    }
-    return 'アクティブなセッションがありません';
-  }
-
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
 =======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
-    }
-    return 'アクティブなセッションがありません';
-  }
-
->>>>>>> Stashed changes
   // 却下
   if (t.startsWith('却下') || t.startsWith('NG')) {
     var comment = t.replace(/^(却下|NG)\s*/, '');
@@ -4145,6 +4221,198 @@ async function processLineCommand(text, userId) {
     var priVal = parseInt(priMatch[2]);
     db.prepare('UPDATE sessions SET priority = ? WHERE id = ?').run(priVal, priSid);
     return 'セッション' + priSid + 'の優先度を' + priVal + 'に設定しました';
+  }
+
+  // 最優先設定（Feature 3）: 「〇〇を最優先」
+  var topPriMatch = t.match(/(.+)(を最優先|を優先|最優先にして)/);
+  if (topPriMatch) {
+    var keyword = topPriMatch[1].trim();
+    var found = db.prepare("SELECT * FROM sessions WHERE title LIKE ? AND status = 'active' LIMIT 1").get('%' + keyword + '%');
+    if (found) {
+      db.prepare('UPDATE sessions SET priority = 1 WHERE id = ?').run(found.id);
+      return '「' + found.title + '」を最優先(1)に設定しました';
+    }
+    return '「' + keyword + '」に該当するセッションが見つかりません';
+  }
+
+  // 締め切り設定（Feature 3）: 「〇〇は来週」「〇〇は急がない」
+  var deadlineMatch = t.match(/(.+)(は来週|は今月中|は急がない)/);
+  if (deadlineMatch) {
+    var dKeyword = deadlineMatch[1].trim();
+    var dFound = db.prepare("SELECT * FROM sessions WHERE title LIKE ? AND status = 'active' LIMIT 1").get('%' + dKeyword + '%');
+    if (dFound) {
+      if (t.indexOf('来週') >= 0) {
+        var nextWeek = new Date(Date.now() + 7 * 86400000);
+        var dl = nextWeek.toISOString().split('T')[0];
+        db.prepare('UPDATE sessions SET deadline = ? WHERE id = ?').run(dl, dFound.id);
+        return '「' + dFound.title + '」の期限を' + dl + 'に設定しました';
+      } else if (t.indexOf('今月中') >= 0) {
+        var now = new Date();
+        var eom = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+        db.prepare('UPDATE sessions SET deadline = ? WHERE id = ?').run(eom, dFound.id);
+        return '「' + dFound.title + '」の期限を' + eom + 'に設定しました';
+      } else if (t.indexOf('急がない') >= 0) {
+        db.prepare('UPDATE sessions SET priority = 8 WHERE id = ?').run(dFound.id);
+        return '「' + dFound.title + '」の優先度を下げました(8)';
+      }
+    }
+  }
+
+  // フェーズ承認（Feature 2）: 「フェーズ1承認」
+  var phaseApproveMatch = t.match(/フェーズ(\d+)(承認|OK|進めて)/i);
+  if (phaseApproveMatch) {
+    var paSidMatch = t.match(/セッション(\d+)/);
+    var paSid = paSidMatch ? parseInt(paSidMatch[1]) : null;
+    var paPhase = parseInt(phaseApproveMatch[1]);
+    var paSession = paSid
+      ? db.prepare('SELECT * FROM sessions WHERE id = ?').get(paSid)
+      : db.prepare("SELECT * FROM sessions WHERE status = 'active' ORDER BY updated_at DESC LIMIT 1").get();
+    if (paSession) {
+      var nextPhase = paPhase + 1;
+      db.prepare('UPDATE sessions SET phase = ?, current_round = 0 WHERE id = ?').run(nextPhase, paSession.id);
+      db.prepare('INSERT INTO decisions (session_id, decision, comment) VALUES (?,?,?)').run(paSession.id, 'approved', 'Phase' + paPhase + '承認→Phase' + nextPhase + '開始');
+      return '「' + paSession.title + '」Phase' + paPhase + '承認。Phase' + nextPhase + 'に進みます。';
+    }
+    return 'セッションが見つかりません';
+  }
+
+  // ステップやり直し（Feature 2）: 「ステップ3やり直し」
+  var stepRedoMatch = t.match(/ステップ(\d+)(やり直し|再実行|リトライ)/);
+  if (stepRedoMatch) {
+    var srSidMatch = t.match(/セッション(\d+)/);
+    var srSid = srSidMatch ? parseInt(srSidMatch[1]) : null;
+    var srStep = parseInt(stepRedoMatch[1]);
+    var srSession = srSid
+      ? db.prepare('SELECT * FROM sessions WHERE id = ?').get(srSid)
+      : db.prepare("SELECT * FROM sessions WHERE status = 'active' ORDER BY updated_at DESC LIMIT 1").get();
+    if (srSession) {
+      engine.clearStep(srSession.id, srStep);
+      return '「' + srSession.title + '」のStep' + srStep + 'をクリアしました。再実行します。';
+    }
+    return 'セッションが見つかりません';
+  }
+
+  // パターン採用（Feature 2）: 「パターンA採用」
+  var patternMatch = t.match(/パターン([A-Da-d])(採用|承認|で決定|にして)/);
+  if (patternMatch) {
+    var pat = patternMatch[1].toUpperCase();
+    var latestQueue = db.prepare("SELECT * FROM output_queue WHERE status = 'awaiting_approval' ORDER BY created_at DESC LIMIT 1").get();
+    if (latestQueue) {
+      var caseId = outputGen.approveOutput(latestQueue.id, pat);
+      return 'パターン' + pat + 'を採用しました（case_library ID: ' + caseId + '）';
+    }
+    return '承認待ちのアウトプットがありません';
+  }
+
+  // 競合追加（Feature 7）: 「競合追加 URL」
+  var compMatch = t.match(/^競合追加\s+(.+)/);
+  if (compMatch) {
+    var compUrl = compMatch[1].trim();
+    var compName = compUrl.replace(/https?:\/\//, '').split('/')[0];
+    db.prepare('INSERT INTO competitors (name, url) VALUES (?,?)').run(compName, compUrl);
+    return '競合「' + compName + '」を登録しました。週次で自動チェックします。';
+  }
+
+  // 保留中の質問があれば回答として処理
+  var pending = lineQA.getPendingQuestion();
+  if (pending) {
+    lineQA.resolveAnswer(pending.id, t);
+    return '回答受付しました。処理を再開します。\n\nQ: ' + pending.question.substring(0, 80) + '\nA: ' + t;
+  }
+
+  // Phase 4/5/6 コマンド
+  if (t === 'フェーズ4' || t === 'リスト作成' || t === '営業リスト') {
+    var ls = db.prepare("SELECT * FROM sessions WHERE status IN ('active','sleep') ORDER BY updated_at DESC LIMIT 1").get();
+    if (ls) {
+      listGen.generateFull(ls.id, false).then(function() {
+        advanceToNextPhase(ls.id, false).catch(function(e) { console.error(e); });
+      }).catch(function(e) { console.error('[LINE Phase4]', e); sendLine('Phase4エラー: ' + e.message); });
+      return 'ID:' + ls.id + ' ' + ls.title + ' Phase4(営業リスト作成) 開始します。';
+>>>>>>> Stashed changes
+    }
+    return 'アクティブなセッションがありません';
+  }
+
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+=======
+  if (t === 'フェーズ5' || t === '広告設計') {
+    var as = db.prepare("SELECT * FROM sessions WHERE status IN ('active','sleep') ORDER BY updated_at DESC LIMIT 1").get();
+    if (as) {
+      adDesigner.generateFull(as.id, false).then(function() {
+        advanceToNextPhase(as.id, false).catch(function(e) { console.error(e); });
+      }).catch(function(e) { console.error('[LINE Phase5]', e); sendLine('Phase5エラー: ' + e.message); });
+      return 'ID:' + as.id + ' ' + as.title + ' Phase5(広告配信設計) 開始します。';
+>>>>>>> Stashed changes
+    }
+    return 'アクティブなセッションがありません';
+  }
+
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+  // 却下
+  if (t.startsWith('却下') || t.startsWith('NG')) {
+    var comment = t.replace(/^(却下|NG)\s*/, '');
+    var latest2 = db.prepare("SELECT * FROM sessions WHERE status = 'active' ORDER BY priority ASC, updated_at DESC LIMIT 1").get();
+    if (latest2) {
+      db.prepare('INSERT INTO decisions (session_id, decision, comment) VALUES (?,?,?)').run(latest2.id, 'rejected', comment || null);
+      return '却下しました' + (comment ? '（理由: ' + comment + '）' : '');
+=======
+  if (t === 'フェーズ6' || t === 'メディア最適化') {
+    var ms = db.prepare("SELECT * FROM sessions WHERE status IN ('active','sleep') ORDER BY updated_at DESC LIMIT 1").get();
+    if (ms) {
+      mediaOptimizer.generateFull(ms.id, false).then(function() {
+        advanceToNextPhase(ms.id, false).catch(function(e) { console.error(e); });
+      }).catch(function(e) { console.error('[LINE Phase6]', e); sendLine('Phase6エラー: ' + e.message); });
+      return 'ID:' + ms.id + ' ' + ms.title + ' Phase6(メディア最適化) 開始します。';
+>>>>>>> Stashed changes
+    }
+    return 'アクティブなセッションがありません';
+  }
+
+<<<<<<< Updated upstream
+  // プロジェクト一覧（Feature 1）
+  if (t === '一覧' || t === 'リスト' || t === 'プロジェクト') {
+    var all = db.prepare("SELECT * FROM sessions WHERE status IN ('active','sleep') ORDER BY priority ASC, updated_at DESC").all();
+    if (all.length === 0) return 'アクティブなプロジェクトなし';
+    return 'プロジェクト一覧\n\n' + all.map(function(s) {
+      var pri = s.priority || 5;
+      var star = pri <= 3 ? '[優先' + pri + '] ' : '';
+      var dl = s.deadline ? ' 〆' + s.deadline : '';
+      return star + s.title + ' → Phase' + s.phase + ' Step' + s.current_round + ' (' + s.status + ')' + dl;
+    }).join('\n');
+  }
+
+  // 状態確認（優先度付き）
+  if (t === '状態' || t === 'ステータス') {
+    var sessions = db.prepare("SELECT * FROM sessions WHERE status = 'active' ORDER BY priority ASC, updated_at DESC LIMIT 5").all();
+    if (sessions.length === 0) return 'アクティブなセッションなし';
+    return sessions.map(function(s) {
+      var pri = s.priority || 5;
+      var star = pri <= 3 ? '[優先' + pri + '] ' : '';
+      return star + '[' + s.id + '] ' + s.title + ' (Phase' + s.phase + ' Step' + s.current_round + ')';
+    }).join('\n');
+  }
+
+  // 優先度設定（Feature 3）: 「優先 セッションID 優先度」
+  var priMatch = t.match(/^優先\s+(\d+)\s+(\d+)$/);
+  if (priMatch) {
+    var priSid = parseInt(priMatch[1]);
+    var priVal = parseInt(priMatch[2]);
+    db.prepare('UPDATE sessions SET priority = ? WHERE id = ?').run(priVal, priSid);
+    return 'セッション' + priSid + 'の優先度を' + priVal + 'に設定しました';
 =======
   // 却下
   if (t.startsWith('却下') || t.startsWith('NG')) {
@@ -4153,10 +4421,22 @@ async function processLineCommand(text, userId) {
     if (latest2) {
       db.prepare('INSERT INTO decisions (session_id, decision, comment) VALUES (?,?,?)').run(latest2.id, 'rejected', comment || null);
       return '却下しました' + (comment ? '（理由: ' + comment + '）' : '');
+=======
+  // フェーズスキップ
+  var skipMatch = t.match(/フェーズ(\d+)スキップ/);
+  if (skipMatch) {
+    var skipPhase = parseInt(skipMatch[1]);
+    var ss = db.prepare("SELECT * FROM sessions WHERE status IN ('active','sleep') ORDER BY updated_at DESC LIMIT 1").get();
+    if (ss) {
+      var plan = (ss.phase_plan || '1,2,3,4,5,6').split(',').map(Number).filter(function(p) { return p !== skipPhase; });
+      db.prepare('UPDATE sessions SET phase_plan = ? WHERE id = ?').run(plan.join(','), ss.id);
+      return 'Phase' + skipPhase + 'をスキップしました。現在のプラン: ' + plan.join('→');
+>>>>>>> Stashed changes
     }
     return 'アクティブなセッションがありません';
   }
 
+<<<<<<< Updated upstream
   // プロジェクト一覧（Feature 1）
   if (t === '一覧' || t === 'リスト' || t === 'プロジェクト') {
     var all = db.prepare("SELECT * FROM sessions WHERE status IN ('active','sleep') ORDER BY priority ASC, updated_at DESC").all();
@@ -6328,6 +6608,212 @@ app.post('/api/deploy', function(req, res) {
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
+=======
+  // フェーズ追加（やっぱりリストも）
+  if (t.indexOf('やっぱりリスト') >= 0 || t.indexOf('やっぱり広告') >= 0 || t.indexOf('やっぱりメディア') >= 0) {
+    var addPhase = t.indexOf('リスト') >= 0 ? 4 : t.indexOf('広告') >= 0 ? 5 : 6;
+    var as2 = db.prepare("SELECT * FROM sessions WHERE status IN ('active','sleep') ORDER BY updated_at DESC LIMIT 1").get();
+    if (as2) {
+      var plan2 = (as2.phase_plan || '1,2,3,4,5,6').split(',').map(Number);
+      if (plan2.indexOf(addPhase) === -1) {
+        plan2.push(addPhase);
+        plan2.sort(function(a,b) { return a - b; });
+        db.prepare('UPDATE sessions SET phase_plan = ? WHERE id = ?').run(plan2.join(','), as2.id);
+        return 'Phase' + addPhase + 'を追加しました。プラン: ' + plan2.join('→');
+      }
+      return 'Phase' + addPhase + 'は既にプランに含まれています';
+    }
+    return 'アクティブなセッションがありません';
+  }
+
+  // リスト確認
+  var listCheckMatch = t.match(/リスト確認\s*(\d+)/);
+  if (listCheckMatch || t === 'リスト確認') {
+    var lcSid = listCheckMatch ? parseInt(listCheckMatch[1]) : null;
+    var lcSession = lcSid ? db.prepare('SELECT * FROM sessions WHERE id = ?').get(lcSid) : db.prepare("SELECT * FROM sessions WHERE status IN ('active','sleep') ORDER BY updated_at DESC LIMIT 1").get();
+    if (lcSession) {
+      var aCount = db.prepare("SELECT COUNT(*) as cnt FROM list_entries WHERE session_id = ? AND rank = 'A' AND status = 'active'").get(lcSession.id);
+      var bCount = db.prepare("SELECT COUNT(*) as cnt FROM list_entries WHERE session_id = ? AND rank = 'B' AND status = 'active'").get(lcSession.id);
+      var cCount = db.prepare("SELECT COUNT(*) as cnt FROM list_entries WHERE session_id = ? AND rank = 'C' AND status = 'active'").get(lcSession.id);
+      return 'リスト状況 (' + lcSession.title + ')\nAランク: ' + aCount.cnt + '件\nBランク: ' + bCount.cnt + '件\nCランク: ' + cCount.cnt + '件\n合計: ' + (aCount.cnt + bCount.cnt + cCount.cnt) + '件';
+    }
+    return 'セッションが見つかりません';
+  }
+
+  // 次のフェーズへ
+  if (t === '次のフェーズへ' || t === '次フェーズ' || t === '進む') {
+    var ns = db.prepare("SELECT * FROM sessions WHERE status IN ('active','sleep') ORDER BY updated_at DESC LIMIT 1").get();
+    if (ns) {
+      advanceToNextPhase(ns.id, false).catch(function(e) { console.error(e); });
+      return '次のフェーズへ進行します。';
+    }
+    return 'アクティブなセッションがありません';
+  }
+
+  // このフェーズで完了
+  if (t === 'このフェーズで完了' || t === '完了') {
+    var cs = db.prepare("SELECT * FROM sessions WHERE status IN ('active','sleep') ORDER BY updated_at DESC LIMIT 1").get();
+    if (cs) {
+      db.prepare("UPDATE sessions SET status = 'completed' WHERE id = ?").run(cs.id);
+      return 'セッション「' + cs.title + '」を完了しました。';
+    }
+    return 'アクティブなセッションがありません';
+  }
+
+  // リスト件数変更
+  var listCountMatch = t.match(/リスト\s*(\d+)件/);
+  if (listCountMatch) {
+    var newCount = parseInt(listCountMatch[1]);
+    var lcs = db.prepare("SELECT * FROM sessions WHERE status IN ('active','sleep') ORDER BY updated_at DESC LIMIT 1").get();
+    if (lcs) {
+      db.prepare('UPDATE sessions SET list_count = ? WHERE id = ?').run(newCount, lcs.id);
+      return 'リスト目標件数を' + newCount + '件に変更しました。';
+    }
+    return 'アクティブなセッションがありません';
+  }
+
+  // ゴール変更
+  var goalMatch = t.match(/ゴール変更\s*パターン([A-Fa-f])/);
+  if (goalMatch) {
+    var pattern = goalMatch[1].toUpperCase();
+    var planMap2 = { A:'1,2,3,4,5,6', B:'1,2,3,4,6', C:'1,2,3', D:'1,4', E:'4,6', F:'1,2,3,5' };
+    var gs = db.prepare("SELECT * FROM sessions WHERE status IN ('active','sleep') ORDER BY updated_at DESC LIMIT 1").get();
+    if (gs && planMap2[pattern]) {
+      db.prepare('UPDATE sessions SET phase_plan = ? WHERE id = ?').run(planMap2[pattern], gs.id);
+      return 'ゴールをパターン' + pattern + '(' + planMap2[pattern].split(',').join('→') + ')に変更しました。';
+    }
+    return 'セッションが見つからないか、パターンが不正です';
+  }
+
+  // アウトプット生成指示の自然言語検出
+  var outputDetected = detectOutputRequest(t);
+  if (outputDetected) return outputDetected;
+
+  // 壁打ち開始指示の検出
+  var topicMatch = t.match(/(.+?)(?:について壁打ち|で壁打ち|壁打ちして|について議論|を検討)/);
+  if (topicMatch) {
+    var topic = topicMatch[1].trim();
+    (async function() {
+      try {
+        var sid = engine.createSession(topic, topic);
+        var research = await engine.runResearch(topic);
+        db.prepare('UPDATE sessions SET research_data = ? WHERE id = ?').run(research, sid);
+        await sendLine('「' + topic + '」と解釈して壁打ち開始します（ID:' + sid + '）');
+        for (var r = 1; r <= 8; r++) {
+          await engine.runStep(sid, topic, r, research, false);
+          if (r < 8) await sendLine('[Phase1] Step' + r + '/8 完了');
+        }
+        var summary = await engine.generateFinalSummary(sid);
+        try {
+          var report = await engine.generatePhase1Report(sid);
+          var reportUrl = generatePhase1ReportHTML(report, sid);
+          var reportText = formatPhase1ReportText(report);
+          await sendLine(reportText + '\n\n詳細レポート:\n' + reportUrl);
+        } catch(e) { console.error(e); }
+        advanceToNextPhase(sid, false).catch(function(e) { console.error(e); });
+      } catch(err) {
+        console.error('[壁打ち自動開始]', err.message);
+        await sendLine('壁打ちエラー: ' + err.message);
+      }
+    })();
+    return '「' + topic + '」について壁打ち開始します（新規プロジェクト）。';
+  }
+
+  // スマートQ&A（Claudeがプロジェクト参照して回答）
+  try {
+    console.log('[Smart QA] 質問処理開始: ' + t.substring(0, 50));
+    var answer = await lineQA.handleSmartQA(t, userId);
+    return answer;
+  } catch (err) {
+    console.error('[Smart QA Error]', err.message);
+    db.prepare('INSERT INTO voice_memos (text) VALUES (?)').run(t);
+    return 'メモ保存しました: 「' + t.substring(0, 30) + '...」';
+  }
+}
+
+// LINE返信
+function replyLine(replyToken, message) {
+  var token = process.env.LINE_CHANNEL_ACCESS_TOKEN;
+  if (!token) return Promise.resolve(false);
+  return new Promise(function(resolve) {
+    var data = JSON.stringify({ replyToken: replyToken, messages: [{ type: 'text', text: message.substring(0, 5000) }] });
+    var req = https.request({
+      hostname: 'api.line.me', path: '/v2/bot/message/reply', method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token, 'Content-Length': Buffer.byteLength(data) }
+    }, function(res) { var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(res.statusCode === 200); }); });
+    req.on('error', function() { resolve(false); });
+    req.write(data); req.end();
+  });
+}
+
+// LINE プッシュ送信（特定ユーザー宛）
+function pushLine(userId, message) {
+  var token = process.env.LINE_CHANNEL_ACCESS_TOKEN;
+  if (!token) { console.log('[LINE] トークン未設定'); return Promise.resolve(false); }
+  return new Promise(function(resolve) {
+    var data = JSON.stringify({ to: userId, messages: [{ type: 'text', text: message.substring(0, 5000) }] });
+    var options = {
+      hostname: 'api.line.me', path: '/v2/bot/message/push', method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token, 'Content-Length': Buffer.byteLength(data) }
+    };
+    var r = https.request(options, function(res) {
+      var b = ''; res.on('data', function(c) { b += c; });
+      res.on('end', function() { console.log('[LINE push] status:', res.statusCode, b); resolve(res.statusCode === 200); });
+    });
+    r.on('error', function(e) { console.error('[LINE push error]', e); resolve(false); });
+    r.write(data); r.end();
+  });
+}
+
+// LINE ブロードキャスト送信（全ユーザー宛）
+function sendLine(message) {
+  var token = process.env.LINE_CHANNEL_ACCESS_TOKEN;
+  if (!token) { console.log('[LINE] トークン未設定'); return Promise.resolve(false); }
+  // DBからユーザーIDがあればプッシュ、なければブロードキャスト
+  var user = db.prepare("SELECT DISTINCT user_id FROM line_messages WHERE user_id IS NOT NULL ORDER BY id DESC LIMIT 1").get();
+  if (user && user.user_id) {
+    return pushLine(user.user_id, message);
+  }
+  return new Promise(function(resolve) {
+    var data = JSON.stringify({ messages: [{ type: 'text', text: message.substring(0, 5000) }] });
+    var r = https.request({
+      hostname: 'api.line.me', path: '/v2/bot/message/broadcast', method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token, 'Content-Length': Buffer.byteLength(data) }
+    }, function(res) { var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { console.log('[LINE broadcast] status:', res.statusCode, b); resolve(res.statusCode === 200); }); });
+    r.on('error', function(e) { console.error('[LINE broadcast error]', e); resolve(false); });
+    r.write(data); r.end();
+  });
+}
+
+// LINE受信メッセージ・ユーザーID確認
+app.get('/api/line/users', function(req, res) {
+  if (req.headers['x-api-key'] !== process.env.API_SECRET) return res.status(401).json({ error: '認証エラー' });
+  var users = db.prepare("SELECT DISTINCT user_id, MIN(created_at) as first_seen, MAX(created_at) as last_seen, COUNT(*) as msg_count FROM line_messages WHERE user_id IS NOT NULL GROUP BY user_id ORDER BY last_seen DESC").all();
+  var messages = db.prepare("SELECT * FROM line_messages ORDER BY created_at DESC LIMIT 20").all();
+  res.json({ users: users, recentMessages: messages });
+});
+
+// LINEテスト送信（特定ユーザーまたはブロードキャスト）
+app.post('/api/line/send', async function(req, res) {
+  if (req.headers['x-api-key'] !== process.env.API_SECRET) return res.status(401).json({ error: '認証エラー' });
+  var body = req.body;
+  if (!body.message) return res.status(400).json({ error: 'message必須' });
+  var result;
+  if (body.userId) {
+    result = await pushLine(body.userId, body.message);
+  } else {
+    result = await sendLine(body.message);
+  }
+  res.json({ success: result });
+});
+
+// ============================================
+// 就寝モード（23時自動実行）
+// ============================================
+
+async function runSleepMode() {
+  console.log('[就寝モード] 開始 ' + new Date().toISOString());
+>>>>>>> Stashed changes
   var anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
   // 全アクティブセッションを優先度順に取得（上限5件）
@@ -6782,6 +7268,9 @@ app.get('/api/competitors/changes', function(req, res) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -6842,6 +7331,7 @@ app.get('/api/competitors/changes', function(req, res) {
 app.get('/health', function(req, res) {
   var sessionCount = db.prepare('SELECT COUNT(*) as cnt FROM sessions').get();
   var caseCount = db.prepare('SELECT COUNT(*) as cnt FROM case_library').get();
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
@@ -6948,6 +7438,8 @@ app.get('/dashboard', function(req, res) {
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
   res.json({
     status: 'ok',
     time: new Date().toISOString(),
@@ -6984,6 +7476,9 @@ app.get('/dashboard', function(req, res) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -7073,6 +7568,7 @@ app.get('/dashboard', function(req, res) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 app.listen(PORT, '0.0.0.0', function() { console.log('前田AIシステム v2.0 起動 port:' + PORT); });
 
 process.on('unhandledRejection', function(reason) {
@@ -7086,6 +7582,9 @@ process.on('uncaughtException', function(err) {
     console.log('[Recovery] API制限エラー、続行');
   }
 });
+=======
+app.listen(PORT, '0.0.0.0', function() { console.log('前田AIシステム起動 port:' + PORT); });
+>>>>>>> Stashed changes
 =======
 app.listen(PORT, '0.0.0.0', function() { console.log('前田AIシステム起動 port:' + PORT); });
 >>>>>>> Stashed changes
