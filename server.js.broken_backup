@@ -338,11 +338,10 @@ async function processLineCommand(text, userId) {
     }
     return 'アクティブなセッションがありません';
   }
-<<<<<<< Updated upstream
 
   // ========== 新規プロジェクト ==========
-  if (t.startsWith('新規 ') || t.startsWith('新規　')) {
-    var themeName = t.replace(/^新規[\s　]+/, '').trim();
+  if (t.startsWith('新規 ') || t.startsWith('新規\u3000')) {
+    var themeName = t.replace(/^新規[\s\u3000]+/, '').trim();
     if (!themeName) return 'テーマ名を指定してください（例：新規 交通事故LP）';
     var keyword = themeName.split(/[（(]/)[0].trim();
     var proj = db.prepare('INSERT INTO active_projects (name, keyword, current_phase, status) VALUES (?,?,1,?)').run(themeName, keyword, 'active');
@@ -354,7 +353,6 @@ async function processLineCommand(text, userId) {
   // ========== ID指定コマンド ==========
   var idMatch = t.match(/^ID\s*[:：]?\s*(\d+)\s+(.+)/i);
   if (!idMatch) {
-    // キーワードでプロジェクト特定を試みる
     var projects = db.prepare("SELECT * FROM active_projects WHERE status = 'active'").all();
     for (var pi = 0; pi < projects.length; pi++) {
       if (projects[pi].keyword && t.indexOf(projects[pi].keyword) !== -1) {
@@ -370,13 +368,11 @@ async function processLineCommand(text, userId) {
     var proj2 = db.prepare('SELECT * FROM active_projects WHERE id = ?').get(targetId);
     if (!proj2) return 'プロジェクトID:' + targetId + ' が見つかりません';
 
-    // フェーズ開始
     if (/フェーズ\s*(\d+)\s*(開始|スタート)/i.test(cmd)) {
       var phaseNum = parseInt(cmd.match(/(\d+)/)[1]);
       db.prepare('UPDATE active_projects SET current_phase = ?, last_operated_at = CURRENT_TIMESTAMP WHERE id = ?').run(phaseNum, targetId);
       db.prepare('INSERT INTO operation_logs (project_id, action, details) VALUES (?,?,?)').run(targetId, 'phase' + phaseNum + '_start', proj2.name);
 
-      // v2.1: Phase4-6は自動実行開始
       if (phaseNum === 4 && proj2.current_session_id) {
         listGen.generateFull(proj2.current_session_id, false).then(function() {
           sendLine('[Phase4完了] ' + proj2.name + ' リスト生成完了');
@@ -399,7 +395,6 @@ async function processLineCommand(text, userId) {
       return proj2.name + ' Phase' + phaseNum + ' 開始準備完了';
     }
 
-    // 状況確認
     if (/状況|進捗|ステータス/.test(cmd)) {
       var sess = proj2.current_session_id ? db.prepare('SELECT * FROM sessions WHERE id = ?').get(proj2.current_session_id) : null;
       var msg = proj2.name + '\nPhase' + (proj2.current_phase || '?');
@@ -407,22 +402,19 @@ async function processLineCommand(text, userId) {
       return msg;
     }
 
-    // FB（フィードバック）
-    if (cmd.startsWith('FB ') || cmd.startsWith('FB　')) {
-      var fb = cmd.replace(/^FB[\s　]+/, '').trim();
+    if (cmd.startsWith('FB ') || cmd.startsWith('FB\u3000')) {
+      var fb = cmd.replace(/^FB[\s\u3000]+/, '').trim();
       prefLearner.addPreference('feedback', 'project_' + targetId, fb, null, 'line');
       db.prepare('INSERT INTO operation_logs (project_id, action, details, source) VALUES (?,?,?,?)').run(targetId, 'feedback', fb, 'line');
       return 'FB保存しました（' + proj2.name + '）';
     }
 
-    // 履歴
     if (/履歴/.test(cmd)) {
       var logs = db.prepare('SELECT * FROM operation_logs WHERE project_id = ? ORDER BY created_at DESC LIMIT 10').all(targetId);
       if (logs.length === 0) return proj2.name + 'の操作履歴なし';
       return proj2.name + ' 直近履歴\n' + logs.map(function(l) { return l.action + ': ' + (l.details || '').substring(0, 30); }).join('\n');
     }
 
-    // アーカイブ
     if (/アーカイブ/.test(cmd)) {
       return proj2.name + ' をアーカイブしますか？「はい」で確定';
     }
@@ -448,7 +440,7 @@ async function processLineCommand(text, userId) {
     return chunks[0];
   }
 
-  // ========== 全部まとめ（詳細版） ==========
+  // ========== 全部まとめ ==========
   if (/^全部まとめ/.test(t)) {
     var allP = db.prepare("SELECT * FROM active_projects WHERE status IN ('active','sleeping') ORDER BY id").all();
     if (allP.length === 0) return '進行中プロジェクトなし';
@@ -489,8 +481,8 @@ async function processLineCommand(text, userId) {
     return apiStatus;
   }
 
-  // ========== 状態確認（全プロジェクト） ==========
-  if (/^(状態|ステータス|いまの状況|全部まとめ|状況教えて)/.test(t) || /教えて|は[？?]$|どう(いう|なって)|進捗|動いてる|何してる|どうなった|報告/.test(t)) {
+  // ========== 状態確認 ==========
+  if (/^(状態|ステータス|いまの状況|状況教えて)/.test(t) || /教えて|は[？?]$|進捗|動いてる|何してる|どうなった|報告/.test(t)) {
     var allProjects = db.prepare("SELECT * FROM active_projects WHERE status IN ('active','sleeping') ORDER BY last_operated_at DESC").all();
     var pendingOQ = db.prepare("SELECT * FROM output_queue WHERE status = 'awaiting_approval'").all();
     if (allProjects.length === 0 && pendingOQ.length === 0) {
@@ -525,404 +517,499 @@ async function processLineCommand(text, userId) {
     } catch (e) { return 'AWSモード切替エラー: ' + e.message; }
   }
 
-  if (t === 'モード確認' || t === 'モード' || t === 'mode' || t === 'CC状態' || t === 'Claude状態') {
+  if (t === 'モード確認' || t === 'モード' || t === 'mode') {
     return operationMode === 'aws' ? 'AWSモード稼働中' : 'PCモード';
   }
 
   // ========== Claude Code コマンド ==========
-=======
-  // 状態確認
-  if (t === '状態' || t === 'ステータス') {
-    var sessions = db.prepare("SELECT * FROM sessions WHERE status = 'active' ORDER BY updated_at DESC LIMIT 3").all();
-    if (sessions.length === 0) return 'アクティブなセッションなし';
-    return sessions.map(function(s) {
-      return '[' + s.id + '] ' + s.title + ' (R' + s.current_round + '/' + s.total_rounds + ')';
-    }).join('\n');
-  }
-  // Claude Code コマンド（コード修正・実装・デプロイ）
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
   var ccPrefixes = ['コード', '修正', '実装', '追加', 'バグ', 'デプロイ', 'claude'];
   var isCodeCmd = ccPrefixes.some(function(p) { return t.startsWith(p); });
   if (isCodeCmd) {
     try {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
       var ccData = JSON.stringify({ instruction: t, autoRestart: true });
-=======
       var instruction = t;
       var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
->>>>>>> Stashed changes
-=======
       var instruction = t;
       var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
->>>>>>> Stashed changes
-=======
       var instruction = t;
       var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
->>>>>>> Stashed changes
-=======
       var instruction = t;
       var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
->>>>>>> Stashed changes
-=======
       var instruction = t;
       var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
->>>>>>> Stashed changes
-=======
       var instruction = t;
       var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
->>>>>>> Stashed changes
-=======
       var instruction = t;
       var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
->>>>>>> Stashed changes
-=======
       var instruction = t;
       var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
->>>>>>> Stashed changes
-=======
       var instruction = t;
       var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
->>>>>>> Stashed changes
-=======
       var instruction = t;
       var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
->>>>>>> Stashed changes
-=======
       var instruction = t;
       var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
->>>>>>> Stashed changes
-=======
       var instruction = t;
       var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
->>>>>>> Stashed changes
-=======
       var instruction = t;
       var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
->>>>>>> Stashed changes
-=======
       var instruction = t;
       var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
->>>>>>> Stashed changes
-=======
       var instruction = t;
       var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
->>>>>>> Stashed changes
-=======
       var instruction = t;
       var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
->>>>>>> Stashed changes
-=======
       var instruction = t;
       var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
->>>>>>> Stashed changes
-=======
       var instruction = t;
       var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
->>>>>>> Stashed changes
-=======
       var instruction = t;
       var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
->>>>>>> Stashed changes
-=======
       var instruction = t;
       var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
->>>>>>> Stashed changes
-=======
       var instruction = t;
       var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
->>>>>>> Stashed changes
-=======
       var instruction = t;
       var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
->>>>>>> Stashed changes
-=======
       var instruction = t;
       var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
->>>>>>> Stashed changes
-=======
       var instruction = t;
       var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
->>>>>>> Stashed changes
-=======
       var instruction = t;
       var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
->>>>>>> Stashed changes
-=======
       var instruction = t;
       var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
->>>>>>> Stashed changes
+      var instruction = t;
+      var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
+      var instruction = t;
+      var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
+      var instruction = t;
+      var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
+      var instruction = t;
+      var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
+      var instruction = t;
+      var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
+      var instruction = t;
+      var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
+      var instruction = t;
+      var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
+      var instruction = t;
+      var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
+      var instruction = t;
+      var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
+      var instruction = t;
+      var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
+      var instruction = t;
+      var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
+      var instruction = t;
+      var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
+      var instruction = t;
+      var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
+      var instruction = t;
+      var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
+      var instruction = t;
+      var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
+      var instruction = t;
+      var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
+      var instruction = t;
+      var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
+      var instruction = t;
+      var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
+      var instruction = t;
+      var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
+      var instruction = t;
+      var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
+      var instruction = t;
+      var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
+      var instruction = t;
+      var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
+      var instruction = t;
+      var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
+      var instruction = t;
+      var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
+      var instruction = t;
+      var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
+      var instruction = t;
+      var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
+      var instruction = t;
+      var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
+      var instruction = t;
+      var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
+      var instruction = t;
+      var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
+      var instruction = t;
+      var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
+      var instruction = t;
+      var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
+      var instruction = t;
+      var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
+      var instruction = t;
+      var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
+      var instruction = t;
+      var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
+      var instruction = t;
+      var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
+      var instruction = t;
+      var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
+      var instruction = t;
+      var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
+      var instruction = t;
+      var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
+      var instruction = t;
+      var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
+      var instruction = t;
+      var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
+      var instruction = t;
+      var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
+      var instruction = t;
+      var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
+      var instruction = t;
+      var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
+      var instruction = t;
+      var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
+      var instruction = t;
+      var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
+      var instruction = t;
+      var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
+      var instruction = t;
+      var ccData = JSON.stringify({ instruction: instruction, autoRestart: true });
       var ccResult = await new Promise(function(resolve) {
         var ccReq = http.request({
           hostname: '127.0.0.1', port: 3001, path: '/task', method: 'POST',
           headers: { 'Content-Type': 'application/json', 'x-api-key': process.env.API_SECRET, 'Content-Length': Buffer.byteLength(ccData) }
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
         }, function(res2) {
           var b = ''; res2.on('data', function(c) { b += c; }); res2.on('end', function() { resolve(JSON.parse(b)); });
-=======
         }, function(res) {
           var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
->>>>>>> Stashed changes
-=======
         }, function(res) {
           var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
->>>>>>> Stashed changes
-=======
         }, function(res) {
           var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
->>>>>>> Stashed changes
-=======
         }, function(res) {
           var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
->>>>>>> Stashed changes
-=======
         }, function(res) {
           var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
->>>>>>> Stashed changes
-=======
         }, function(res) {
           var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
->>>>>>> Stashed changes
-=======
         }, function(res) {
           var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
->>>>>>> Stashed changes
-=======
         }, function(res) {
           var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
->>>>>>> Stashed changes
-=======
         }, function(res) {
           var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
->>>>>>> Stashed changes
-=======
         }, function(res) {
           var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
->>>>>>> Stashed changes
-=======
         }, function(res) {
           var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
->>>>>>> Stashed changes
-=======
         }, function(res) {
           var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
->>>>>>> Stashed changes
-=======
         }, function(res) {
           var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
->>>>>>> Stashed changes
-=======
         }, function(res) {
           var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
->>>>>>> Stashed changes
-=======
         }, function(res) {
           var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
->>>>>>> Stashed changes
-=======
         }, function(res) {
           var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
->>>>>>> Stashed changes
-=======
         }, function(res) {
           var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
->>>>>>> Stashed changes
-=======
         }, function(res) {
           var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
->>>>>>> Stashed changes
-=======
         }, function(res) {
           var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
->>>>>>> Stashed changes
-=======
         }, function(res) {
           var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
->>>>>>> Stashed changes
-=======
         }, function(res) {
           var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
->>>>>>> Stashed changes
-=======
         }, function(res) {
           var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
->>>>>>> Stashed changes
-=======
         }, function(res) {
           var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
->>>>>>> Stashed changes
-=======
         }, function(res) {
           var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
->>>>>>> Stashed changes
-=======
         }, function(res) {
           var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
->>>>>>> Stashed changes
-=======
         }, function(res) {
           var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
->>>>>>> Stashed changes
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
         });
         ccReq.on('error', function(e) { resolve({ error: e.message }); });
         ccReq.write(ccData); ccReq.end();
       });
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
       if (ccResult.error) return 'CC接続エラー: ' + ccResult.error;
       return 'タスク投入完了 ID:' + ccResult.taskId;
     } catch (e) { return 'CC呼出エラー: ' + e.message; }
   }
 
-  // ========== 明示的メモ保存 ==========
+  // ========== CC状態 ==========
+      if (ccResult.error) return '⚠️ Claude Code接続エラー: ' + ccResult.error;
+      return '🔧 Claude Codeにタスク投入しました\nタスクID: ' + ccResult.taskId + '\n完了時にLINEで結果を通知します';
+    } catch (e) {
+      return '⚠️ Claude Code呼び出しエラー: ' + e.message;
+    }
+  }
+
+  // Claude Code 状態確認
+  if (t === 'CC状態' || t === 'Claude状態') {
+    try {
+      var statusResult = await new Promise(function(resolve) {
+        var sReq = http.request({
+          hostname: '127.0.0.1', port: 3001, path: '/status', method: 'GET',
+          headers: { 'x-api-key': process.env.API_SECRET }
+        }, function(res2) {
+          var b = ''; res2.on('data', function(c) { b += c; }); res2.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        }, function(res) {
+          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
+        });
+        sReq.on('error', function(e) { resolve({ error: e.message }); });
+        sReq.end();
+      });
+      if (statusResult.error) return 'CC: ' + statusResult.error;
+      var ccMsg = 'Claude Code状態\n';
+      ccMsg += statusResult.running ? '実行中: ' + (statusResult.currentTask ? statusResult.currentTask.instruction : '') + '\n' : '待機中\n';
+      ccMsg += 'キュー: ' + statusResult.queueLength + '件';
+      return ccMsg;
+    } catch (e) { return 'CC状態取得エラー'; }
+  }
+
+  // ========== メモ保存 ==========
   var memoPatterns = [/メモ(して|しといて|保存)/, /覚えて/, /覚えておいて/, /記録して/];
   var isMemoRequest = memoPatterns.some(function(p) { return p.test(t); });
   if (isMemoRequest) {
@@ -946,77 +1033,6 @@ async function processLineCommand(text, userId) {
   }
 
   return '使えるコマンド:\n・新規 [テーマ]\n・承認 / 却下\n・状態\n・PCモード / AWSモード';
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-      if (ccResult.error) return '⚠️ Claude Code接続エラー: ' + ccResult.error;
-      return '🔧 Claude Codeにタスク投入しました\nタスクID: ' + ccResult.taskId + '\n完了時にLINEで結果を通知します';
-    } catch (e) {
-      return '⚠️ Claude Code呼び出しエラー: ' + e.message;
-    }
-  }
-
-  // Claude Code 状態確認
-  if (t === 'CC状態' || t === 'Claude状態') {
-    try {
-      var statusResult = await new Promise(function(resolve) {
-        var sReq = http.request({
-          hostname: '127.0.0.1', port: 3001, path: '/status', method: 'GET',
-          headers: { 'x-api-key': process.env.API_SECRET }
-        }, function(res) {
-          var b = ''; res.on('data', function(c) { b += c; }); res.on('end', function() { resolve(JSON.parse(b)); });
-        });
-        sReq.on('error', function(e) { resolve({ error: e.message }); });
-        sReq.end();
-      });
       if (statusResult.error) return '⚠️ Claude Code: ' + statusResult.error;
       var msg = '🤖 Claude Code状態\n';
       msg += statusResult.running ? '⏳ 実行中: ' + (statusResult.currentTask ? statusResult.currentTask.instruction : '') + '\n' : '✅ 待機中\n';
@@ -1036,7 +1052,6 @@ async function processLineCommand(text, userId) {
   // 音声メモとして保存
   db.prepare('INSERT INTO voice_memos (text) VALUES (?)').run(t);
   return 'メモ保存しました: 「' + t.substring(0, 30) + '...」';
->>>>>>> Stashed changes
 }
 
 // ============================================
