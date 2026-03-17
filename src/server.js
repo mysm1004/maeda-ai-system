@@ -12,6 +12,9 @@ var DiscussionEngine = require('./discussion-engine');
 var PreferenceLearner = require('./preference-learner');
 var OutputGenerator = require('./output-generator');
 var StateManager = require('./state-manager');
+var ListGenerator = require('./src/services/list-generator');
+var AdDesigner = require('./src/services/ad-designer');
+var MediaOptimizer = require('./src/services/media-optimizer');
 var Anthropic = require('@anthropic-ai/sdk');
 var OpenAI = require('openai');
 
@@ -38,6 +41,9 @@ var engine = new DiscussionEngine(db, lineQA, sendLine);
 var prefLearner = new PreferenceLearner(db);
 var outputGen = new OutputGenerator(db, lineQA, sendLine);
 var stateManager = new StateManager(db);
+var listGen = new ListGenerator(db, lineQA, sendLine);
+var adDesigner = new AdDesigner(db, lineQA, sendLine);
+var mediaOpt = new MediaOptimizer(db, lineQA, sendLine);
 
 // 運用モード管理
 var operationMode = 'aws';
@@ -368,6 +374,27 @@ async function processLineCommand(text, userId) {
       var phaseNum = parseInt(cmd.match(/(\d+)/)[1]);
       db.prepare('UPDATE active_projects SET current_phase = ?, last_operated_at = CURRENT_TIMESTAMP WHERE id = ?').run(phaseNum, targetId);
       db.prepare('INSERT INTO operation_logs (project_id, action, details) VALUES (?,?,?)').run(targetId, 'phase' + phaseNum + '_start', proj2.name);
+
+      // v2.1: Phase4-6は自動実行開始
+      if (phaseNum === 4 && proj2.current_session_id) {
+        listGen.generateFull(proj2.current_session_id, false).then(function() {
+          sendLine('[Phase4完了] ' + proj2.name + ' リスト生成完了');
+        }).catch(function(e) { sendLine('[Phase4エラー] ' + e.message); });
+        return proj2.name + ' Phase4 リスト生成開始（バックグラウンド実行中）';
+      }
+      if (phaseNum === 5 && proj2.current_session_id) {
+        adDesigner.generateFull(proj2.current_session_id, false).then(function() {
+          sendLine('[Phase5完了] ' + proj2.name + ' 広告デザイン完了');
+        }).catch(function(e) { sendLine('[Phase5エラー] ' + e.message); });
+        return proj2.name + ' Phase5 広告デザイン開始（バックグラウンド実行中）';
+      }
+      if (phaseNum === 6 && proj2.current_session_id) {
+        mediaOpt.generateFull(proj2.current_session_id, 'all', false).then(function() {
+          sendLine('[Phase6完了] ' + proj2.name + ' メディア最適化完了');
+        }).catch(function(e) { sendLine('[Phase6エラー] ' + e.message); });
+        return proj2.name + ' Phase6 メディア最適化開始（バックグラウンド実行中）';
+      }
+
       return proj2.name + ' Phase' + phaseNum + ' 開始準備完了';
     }
 
@@ -637,29 +664,26 @@ async function runSleepMode() {
   console.log('[就寝モード] 開始 ' + new Date().toISOString());
   var activeSessions = db.prepare("SELECT s.*, ap.id as proj_id FROM sessions s LEFT JOIN active_projects ap ON s.project_id = ap.id WHERE s.status = 'active' ORDER BY s.priority ASC, s.updated_at DESC LIMIT 5").all();
   if (activeSessions.length === 0) {
-    console.log("[就寝モード] アクティブなセッションなし → 新規事業アイデア調査モード");
+    console.log('[就寝モード] アクティブなセッションなし → 新規事業アイデア調査モード');
     try {
-      var ideaPrompt = "あなたは弁護士事務所の経営戦略アドバイザーです。前田法律事務所（東京新橋、即独5年で年商5億、交通事故・相続・企業法務が主力）が新たに取り組むべき事業アイデアを3つ提案してください。
-
-各アイデアについて以下を簡潔に：
-1. 事業名
-2. 市場規模・成長性（具体的な数字）
-3. 前田事務所の強みとの親和性
-4. 初期投資・リスク
-5. 想定月間売上
-
-※法律事務所として適法な範囲内で。弁護士法・弁護士職務基本規程を遵守。";
+      var ideaPrompt = 'あなたは弁護士事務所の経営戦略アドバイザーです。前田法律事務所（東京新橋、即独5年で年商5億、交通事故・相続・企業法務が主力）が新たに取り組むべき事業アイデアを3つ提案してください。' +
+        '\n\n各アイデアについて以下を簡潔に：' +
+        '\n1. 事業名' +
+        '\n2. 市場規模・成長性（具体的な数字）' +
+        '\n3. 前田事務所の強みとの親和性' +
+        '\n4. 初期投資・リスク' +
+        '\n5. 想定月間売上' +
+        '\n\n※法律事務所として適法な範囲内で。弁護士法・弁護士職務基本規程を遵守。';
       var ideaResult = await aiSummarize(
-        "弁護士事務所の新規事業アイデアを提案する専門家。最新の市場データに基づき実現可能な提案をする。",
+        '弁護士事務所の新規事業アイデアを提案する専門家。最新の市場データに基づき実現可能な提案をする。',
         ideaPrompt, 2000
       );
-      db.prepare("INSERT INTO sleep_logs (session_id, action, result) VALUES (0, ?, ?)").run("new_business_idea", ideaResult);
-      console.log("[就寝モード] 新規事業アイデア生成完了");
+      db.prepare('INSERT INTO sleep_logs (session_id, action, result) VALUES (0, ?, ?)').run('new_business_idea', ideaResult);
+      console.log('[就寝モード] 新規事業アイデア生成完了');
     } catch(e) {
-      console.error("[就寝モード] アイデア生成エラー:", e.message);
+      console.error('[就寝モード] アイデア生成エラー:', e.message);
     }
     return;
-  }
   }
 
   // v2.0: 3件並列で実行
@@ -708,6 +732,83 @@ async function runSleepMode() {
   }
   console.log('[就寝モード] 完了');
 }
+
+
+// ============================================
+// Phase4: 営業リスト生成
+// ============================================
+app.post('/api/phase4/generate', async function(req, res) {
+  if (req.headers['x-api-key'] !== process.env.API_SECRET) return res.status(401).json({ error: '認証エラー' });
+  var body = req.body;
+  if (!body.sessionId) return res.status(400).json({ error: 'sessionId必須' });
+  try {
+    var result = await listGen.generateFull(body.sessionId, body.isSleep || false);
+    res.json({ success: true, result: result });
+  } catch(e) {
+    console.error('[Phase4] エラー:', e.message);
+    res.status(500).json({ error: e.message });
+  }
+});
+
+app.post('/api/phase4/step', async function(req, res) {
+  if (req.headers['x-api-key'] !== process.env.API_SECRET) return res.status(401).json({ error: '認証エラー' });
+  var body = req.body;
+  if (!body.sessionId || !body.step) return res.status(400).json({ error: 'sessionId, step必須' });
+  try {
+    var result = await listGen.runStep(body.sessionId, body.step, body.isSleep || false);
+    res.json({ success: true, step: body.step, result: result });
+  } catch(e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// ============================================
+// Phase5: 広告デザイン
+// ============================================
+app.post('/api/phase5/generate', async function(req, res) {
+  if (req.headers['x-api-key'] !== process.env.API_SECRET) return res.status(401).json({ error: '認証エラー' });
+  var body = req.body;
+  if (!body.sessionId) return res.status(400).json({ error: 'sessionId必須' });
+  try {
+    var result = await adDesigner.generateFull(body.sessionId, body.isSleep || false);
+    res.json({ success: true, result: result });
+  } catch(e) {
+    console.error('[Phase5] エラー:', e.message);
+    res.status(500).json({ error: e.message });
+  }
+});
+
+app.post('/api/phase5/step', async function(req, res) {
+  if (req.headers['x-api-key'] !== process.env.API_SECRET) return res.status(401).json({ error: '認証エラー' });
+  var body = req.body;
+  if (!body.sessionId || !body.step) return res.status(400).json({ error: 'sessionId, step必須' });
+  try {
+    var result = await adDesigner.runStep(body.sessionId, body.step, body.isSleep || false);
+    res.json({ success: true, step: body.step, result: result });
+  } catch(e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// ============================================
+// Phase6: メディア最適化
+// ============================================
+app.post('/api/phase6/generate', async function(req, res) {
+  if (req.headers['x-api-key'] !== process.env.API_SECRET) return res.status(401).json({ error: '認証エラー' });
+  var body = req.body;
+  if (!body.sessionId || !body.mediaType) return res.status(400).json({ error: 'sessionId, mediaType必須' });
+  try {
+    var result = await mediaOpt.generateFull(body.sessionId, body.mediaType, body.isSleep || false);
+    res.json({ success: true, result: result });
+  } catch(e) {
+    console.error('[Phase6] エラー:', e.message);
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// ============================================
+// LINE Phase4-6コマンド処理用の拡張
+// ============================================
 
 // ============================================
 // 朝サマリー（7時LINE送信）
