@@ -512,7 +512,7 @@ async function processLineCommand(text, userId) {
   }
 
   // ========== Claude Code コマンド ==========
-  var ccPrefixes = ['コード', '修正', '実装', '追加', 'バグ', 'デプロイ', 'claude'];
+  var ccPrefixes = ['タスク', 'コード', '修正', '実装', '追加', 'バグ', 'デプロイ', 'claude'];
   var isCodeCmd = ccPrefixes.some(function(p) { return t.startsWith(p); });
   if (isCodeCmd) {
     try {
