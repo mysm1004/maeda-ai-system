@@ -1,6 +1,6 @@
 {
   "mode": "aws",
-  "last_updated": "2026-03-17T03:00:00.792Z",
+  "last_updated": "2026-03-17T03:30:00.728Z",
   "last_updated_by": "aws",
   "system_version": "2.0",
   "active_projects": [
@@ -179,6 +179,36 @@
     }
   ],
   "feedback_db": [
+    {
+      "category": "style",
+      "key": "恐怖訴求NG",
+      "value": "恐怖訴求は控えめに。過度な不安煽りNG。事実ベースの穏やかな表現を優先",
+      "confidence": 0.95
+    },
+    {
+      "category": "workflow",
+      "key": "フェーズ自走禁止",
+      "value": "フェーズは自動で先に進めない。必ず各フェーズ完了時に前田さんの承認を得てから次フェーズへ",
+      "confidence": 0.95
+    },
+    {
+      "category": "workflow",
+      "key": "確認質問最小化",
+      "value": "確認質問は最小限に。明らかな場合は自動判断して進行。迷った時だけ簡潔に確認",
+      "confidence": 0.9
+    },
+    {
+      "category": "content",
+      "key": "法的ソース制限",
+      "value": "法的根拠の引用は政府機関・弁護士サイトのみ。Wikipedia・個人ブログ・行政書士サイトは参照禁止",
+      "confidence": 0.95
+    },
+    {
+      "category": "communication",
+      "key": "完了報告簡潔",
+      "value": "完了報告は簡潔に。結果と次のアクションだけ。経緯の詳細説明は不要",
+      "confidence": 0.9
+    },
     {
       "category": "style",
       "key": "data_driven",
