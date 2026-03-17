@@ -27,9 +27,15 @@ class NotificationService {
         path: '/v2/bot/message/broadcast',
         method: 'POST',
         headers: {
+<<<<<<< Updated upstream
           'Content-Type': 'application/json; charset=UTF-8',
           'Authorization': `Bearer ${token}`,
           'Content-Length': Buffer.byteLength(data, 'utf8')
+=======
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+          'Content-Length': Buffer.byteLength(data)
+>>>>>>> Stashed changes
         }
       };
 
@@ -39,7 +45,11 @@ class NotificationService {
         res.on('end', () => resolve(res.statusCode === 200));
       });
       req.on('error', reject);
+<<<<<<< Updated upstream
       req.write(data, 'utf8');
+=======
+      req.write(data);
+>>>>>>> Stashed changes
       req.end();
     });
   }
