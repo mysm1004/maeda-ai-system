@@ -1,6 +1,6 @@
 {
   "mode": "aws",
-  "last_updated": "2026-03-18T13:30:00.440Z",
+  "last_updated": "2026-03-18T14:00:00.797Z",
   "last_updated_by": "aws",
   "system_version": "2.0",
   "active_projects": [
@@ -11,7 +11,7 @@
       "phase": 1,
       "current_round": 1,
       "total_rounds": 8,
-      "status": "進行中",
+      "status": "sleep",
       "next_action": "ラウンド2/8の議論を継続",
       "last_log_summary": "# 残業代請求サービス市場：競合分析レポート\n\n## 1. 主要競合サービス一覧\n\n### 【大手法律事務所】\n\n**弁護士法人ALG & Associates**\n- URL: alg-pr.jp\n- 特徴: 残業代請求分野のGoogle広告独占、全国20拠点展開\n- 料金: 着手金0円、成功報酬制（回収額の25-30%）\n- LP訴求: 「2年分まとめて請求可能」「24時間365日受付」\n\n*",
       "pending_output": null,
@@ -24,7 +24,7 @@
       "phase": 1,
       "current_round": 3,
       "total_rounds": 8,
-      "status": "進行中",
+      "status": "sleep",
       "next_action": "ラウンド4/8の議論を継続",
       "last_log_summary": "# 🧠 「shakyou」ターゲット深層心理分析\n\n**【重要】このテーマ「shakyou（社会福祉協議会）」のみを分析。他テーマとは完全分離して実行**\n\n---\n\n## 👥 **詳細ペルソナ3人**\n\n### **ペルソナ1：佐藤さん（相談支援係長・52歳男性）**\n```\n【基本情報】\n・市社協勤続18年、相談支援業務一筋\n・部下3名を管理、年間相談件数800件担当\n・Excel管理に限",
       "pending_output": null,
