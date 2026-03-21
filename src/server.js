@@ -57,6 +57,7 @@ var stateManager = new StateManager(db);
 
 // v3.1: フェーズランナー初期化
 var phaseRunner = V3_ENABLED ? new PhaseRunner(db, lineQA, sendLine) : null;
+if (phaseRunner && prefLearner) { phaseRunner.setPrefLearner(prefLearner); }
 var listGen = new ListGenerator(db, lineQA, sendLine);
 var adDesigner = new AdDesigner(db, lineQA, sendLine);
 var mediaOpt = new MediaOptimizer(db, lineQA, sendLine);
@@ -760,7 +761,12 @@ async function runSleepMode() {
 
           for (var r = startRound; r < maxRounds; r++) {
             try {
-              await engine.runStep(s.id, s.topic, r, s.research_data, true, s.project_id);
+              // v3.1: フェーズランナーで就寝モード実行
+              if (V3_ENABLED && phaseRunner) {
+                try { await phaseRunner.runSleepStep(s); break; } catch(v3err) { console.error("[就寝v3.1]", v3err.message); }
+              } else {
+                await engine.runStep(s.id, s.topic, r, s.research_data, true, s.project_id);
+              }
               console.log('[就寝モード] session:' + s.id + ' Step' + r + ' 完了');
             } catch (err) {
               console.error('[就寝モード] session:' + s.id + ' Step' + r + 'エラー:', err.message);
