@@ -11,10 +11,8 @@ module.exports = {
   claude_standard: 'claude-opus-4-5-20251101',
 
   // OpenAI
-  openai: 'gpt-4o',  // ※OpenAI側は現行のまま維持。別途確認の上で更新すること
-
-  // Gemini（補助用）
-  gemini: 'gemini-1.5-pro',
+  openai: 'gpt-5.4',           // gpt-4o → gpt-5.4 に更新
+  openai_fast: 'gpt-5.4-mini', // 軽量タスク用（将来対応）
 
   // フォールバック用
   fallback: 'gpt-5.4'
