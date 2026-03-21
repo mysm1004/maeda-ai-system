@@ -299,6 +299,39 @@ function initDatabase(dbPath) {
   // total_roundsが6のレコードを8に修正
   try { db.exec("UPDATE sessions SET total_rounds = 8 WHERE total_rounds = 6"); } catch(e) {}
 
+  
+  // ============ v3.1 マイグレーション ============
+
+  // sessions: system_version, agent_log追加
+  try { db.exec("ALTER TABLE sessions ADD COLUMN system_version TEXT DEFAULT 'v2.0'"); } catch(e) {}
+  try { db.exec("ALTER TABLE sessions ADD COLUMN agent_log TEXT"); } catch(e) {}
+
+  // discussion_logs: agent_name, team追加
+  try { db.exec("ALTER TABLE discussion_logs ADD COLUMN agent_name TEXT"); } catch(e) {}
+  try { db.exec("ALTER TABLE discussion_logs ADD COLUMN team TEXT"); } catch(e) {}
+
+  // エージェント実行ログテーブル（v3.1新規）
+  db.exec("CREATE TABLE IF NOT EXISTS agent_logs (\
+    id INTEGER PRIMARY KEY AUTOINCREMENT,\
+    session_id INTEGER,\
+    phase INTEGER,\
+    agent_name TEXT NOT NULL,\
+    model TEXT,\
+    input_tokens INTEGER,\
+    output_tokens INTEGER,\
+    duration_ms INTEGER,\
+    status TEXT DEFAULT 'success',\
+    error_message TEXT,\
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP\
+  )");
+
+  // v3.1 インデックス
+  try { db.exec("CREATE INDEX IF NOT EXISTS idx_agent_logs_session ON agent_logs(session_id)"); } catch(e) {}
+  try { db.exec("CREATE INDEX IF NOT EXISTS idx_agent_logs_agent ON agent_logs(agent_name)"); } catch(e) {}
+  try { db.exec("CREATE INDEX IF NOT EXISTS idx_logs_agent ON discussion_logs(agent_name)"); } catch(e) {}
+  try { db.exec("CREATE INDEX IF NOT EXISTS idx_logs_team ON discussion_logs(team)"); } catch(e) {}
+
+
   // ============ インデックス ============
   db.exec("CREATE INDEX IF NOT EXISTS idx_logs_session ON discussion_logs(session_id)");
   db.exec("CREATE INDEX IF NOT EXISTS idx_logs_phase ON discussion_logs(session_id, phase, round_number)");

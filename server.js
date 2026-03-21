@@ -18,6 +18,19 @@ var MediaOptimizer = require('./src/services/media-optimizer');
 var Anthropic = require('@anthropic-ai/sdk');
 var OpenAI = require('openai');
 
+// v3.1: フェーズランナー（フィーチャーフラグで切替）
+var V3_ENABLED = process.env.V3_ENABLED === 'true';
+var PhaseRunner = null;
+if (V3_ENABLED) {
+  try {
+    PhaseRunner = require('./phases/phase-runner');
+    console.log('[v3.1] マルチLLM並列モード有効');
+  } catch(e) {
+    console.error('[v3.1] PhaseRunner読込エラー、v2.0にフォールバック:', e.message);
+    V3_ENABLED = false;
+  }
+}
+
 // v2.1: 承認最小化設定
 var AUTO_APPROVE_CONFIG = {
   gradeA_threshold: 32,  // 32点以上: 自動承認（通知なし）
@@ -41,6 +54,9 @@ var engine = new DiscussionEngine(db, lineQA, sendLine);
 var prefLearner = new PreferenceLearner(db);
 var outputGen = new OutputGenerator(db, lineQA, sendLine);
 var stateManager = new StateManager(db);
+
+// v3.1: フェーズランナー初期化
+var phaseRunner = V3_ENABLED ? new PhaseRunner(db, lineQA, sendLine) : null;
 var listGen = new ListGenerator(db, lineQA, sendLine);
 var adDesigner = new AdDesigner(db, lineQA, sendLine);
 var mediaOpt = new MediaOptimizer(db, lineQA, sendLine);
@@ -83,6 +99,27 @@ app.post('/api/discussion', async function(req, res) {
   try {
     var body = req.body;
     var sid = body.sessionId;
+
+    // v3.1モード: フェーズランナーに委譲
+    if (V3_ENABLED && phaseRunner && !sid) {
+      if (!body.topic) return res.status(400).json({ error: 'topicは必須' });
+      var projectId = body.projectId || null;
+      var source = body.source || 'api';
+      sid = phaseRunner.createSession(body.title || body.topic, body.topic, projectId);
+      var research = await phaseRunner.runResearch(body.topic, projectId);
+      db.prepare('UPDATE sessions SET research_data = ? WHERE id = ?').run(research, sid);
+      if (projectId) {
+        db.prepare('INSERT INTO operation_logs (project_id, action, details, source) VALUES (?,?,?,?)').run(projectId, 'phase1_start_v3', 'テーマ: ' + body.topic, source);
+      }
+      var session = db.prepare('SELECT * FROM sessions WHERE id = ?').get(sid);
+      var v3result = await phaseRunner.run(body.phase || 1, {
+        sessionId: sid, topic: session.topic, projectId: session.project_id,
+        source: source, research: session.research_data, outputType: body.outputType || 'general'
+      });
+      return res.json(v3result);
+    }
+
+    // v2.0 フォールバック
     var projectId = body.projectId || null;
 
     // 新規セッション作成
@@ -171,6 +208,25 @@ app.post('/api/discussion/finalize', async function(req, res) {
 
 app.post('/api/output/generate', async function(req, res) {
   try {
+    // v3.1モード
+    if (V3_ENABLED && phaseRunner) {
+      var body = req.body;
+      if (!body.sessionId || !body.outputType) return res.status(400).json({ error: 'sessionId, outputType必須' });
+      var session = db.prepare('SELECT * FROM sessions WHERE id = ?').get(body.sessionId);
+      if (!session) return res.status(404).json({ error: 'セッション未発見' });
+      var phase2Result = await phaseRunner.run(2, {
+        sessionId: body.sessionId, topic: session.topic, projectId: session.project_id,
+        source: body.source || 'api', research: session.research_data,
+        previousOutput: session.appeal_points || session.target_definition || '',
+        outputType: body.outputType
+      });
+      var phase3Result = await phaseRunner.run(3, {
+        sessionId: body.sessionId, topic: session.topic, projectId: session.project_id,
+        source: body.source || 'api', research: session.research_data,
+        previousOutput: phase2Result.content || '', outputType: body.outputType
+      });
+      return res.json(phase3Result);
+    }
     var body = req.body;
     if (!body.sessionId || !body.outputType) return res.status(400).json({ error: 'sessionId, outputType必須' });
     var result = await outputGen.generateFull(body.sessionId, body.outputType, body.params || {});
@@ -1060,7 +1116,7 @@ app.post('/api/deploy', function(req, res) {
 app.get('/health', function(req, res) {
   var sessionCount = db.prepare('SELECT COUNT(*) as cnt FROM sessions').get();
   var caseCount = db.prepare('SELECT COUNT(*) as cnt FROM case_library').get();
-  res.json({ status: 'ok', time: new Date().toISOString(), mode: operationMode, sessions: sessionCount.cnt, cases: caseCount.cnt });
+  res.json({ status: 'ok', version: V3_ENABLED ? 'v3.1' : 'v2.0', time: new Date().toISOString(), mode: operationMode, sessions: sessionCount.cnt, cases: caseCount.cnt });
 });
 
 app.get('/dashboard', function(req, res) {
@@ -1088,6 +1144,49 @@ app.get('/dashboard', function(req, res) {
 // ============================================
 // 起動
 // ============================================
+
+
+// ============================================
+// v3.1: 明示的フェーズ実行API
+// ============================================
+
+app.post('/api/v3/phase/:num', async function(req, res) {
+  if (!V3_ENABLED || !phaseRunner) return res.status(400).json({ error: 'v3.1モード無効' });
+  try {
+    var body = req.body;
+    var phaseNum = parseInt(req.params.num);
+    if (phaseNum < 1 || phaseNum > 6) return res.status(400).json({ error: 'フェーズは1-6' });
+    if (!body.sessionId) return res.status(400).json({ error: 'sessionId必須' });
+    var session = db.prepare('SELECT * FROM sessions WHERE id = ?').get(body.sessionId);
+    if (!session) return res.status(404).json({ error: 'セッション未発見' });
+    var result = await phaseRunner.run(phaseNum, {
+      sessionId: body.sessionId, topic: session.topic, projectId: session.project_id,
+      source: body.source || 'api', research: session.research_data,
+      previousOutput: body.previousOutput || session.appeal_points || session.target_definition || '',
+      outputType: body.outputType || 'general'
+    });
+    res.json(result);
+  } catch (err) { console.error('[v3/phase]', err); res.status(500).json({ error: err.message }); }
+});
+
+app.post('/api/v3/approve', function(req, res) {
+  if (!V3_ENABLED || !phaseRunner) return res.status(400).json({ error: 'v3.1モード無効' });
+  var body = req.body;
+  if (!body.sessionId || !body.phase) return res.status(400).json({ error: 'sessionId, phase必須' });
+  res.json(phaseRunner.approvePhase(body.sessionId, parseInt(body.phase)));
+});
+
+app.get('/api/v3/agent-logs/:sessionId', function(req, res) {
+  try { res.json(db.prepare('SELECT * FROM agent_logs WHERE session_id = ? ORDER BY created_at ASC').all(req.params.sessionId)); }
+  catch(e) { res.json([]); }
+});
+
+app.get('/api/v3/info', function(req, res) {
+  var models = V3_ENABLED ? require('./config/models') : {};
+  res.json({ version: V3_ENABLED ? 'v3.1' : 'v2.0', v3Enabled: V3_ENABLED, models: models,
+    agents: V3_ENABLED ? ['persona','diverge_claude','critique_claude','synthesize_claude','diverge_openai','critique_openai','synthesize_openai','redteam','factcheck','final_synthesizer'] : [],
+    phases: V3_ENABLED ? 6 : 3 });
+});
 
 app.listen(PORT, '0.0.0.0', function() { console.log('前田AIシステム v2.0 起動 port:' + PORT); });
 
