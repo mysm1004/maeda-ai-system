@@ -4,7 +4,7 @@
 module.exports = {
   // メインモデル
   CLAUDE_MODEL: 'claude-opus-4-5-20250918',
-  OPENAI_MODEL: 'gpt-4o',
+  OPENAI_MODEL: 'gpt-5.4',
   GEMINI_MODEL: 'gemini-1.5-pro',
 
   // サマリー・レポート用（既存cronジョブ互換）
