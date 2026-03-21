@@ -2,11 +2,10 @@
 // v2.0の出力種別別プロンプト（17種別）・品質ルール・HTMLルールを完全移植
 
 var BaseAgent = require('./base-agent');
-var { CLAUDE_MODEL } = require('../config/models');
 var { SYNTHESIZER_TIMEOUT } = require('../config/timeouts');
 
 function FinalSynthesizer(db) {
-  BaseAgent.call(this, db, { name: 'final_synthesizer', model: 'claude', maxTokens: 8000 });
+  BaseAgent.call(this, db, { name: 'final_synthesizer', model: 'claude', modelTier: 'best', maxTokens: 8000 });
 }
 FinalSynthesizer.prototype = Object.create(BaseAgent.prototype);
 FinalSynthesizer.prototype.constructor = FinalSynthesizer;

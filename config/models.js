@@ -1,15 +1,21 @@
 // v3.1: モデル設定の一元管理
 // アップデート時はここを変更するだけで全エージェントに反映
+// 各ファイルにモデル名を直書きしないこと
 
 module.exports = {
-  // メインモデル
-  CLAUDE_MODEL: 'claude-opus-4-5-20250918',
-  OPENAI_MODEL: 'gpt-5.4',
-  GEMINI_MODEL: 'gemini-1.5-pro',
+  // 最高性能モデル（市場調査・最終統合・ファクトチェック専用）
+  // 複雑な推論・長文処理・品質最優先タスクに使用
+  claude_best: 'claude-opus-4-6-20260219',
 
-  // サマリー・レポート用（既存cronジョブ互換）
-  CLAUDE_SUMMARY_MODEL: 'claude-opus-4-6',
+  // 標準Claudeモデル（コアパイプライン全般）
+  claude_standard: 'claude-opus-4-5-20251101',
+
+  // OpenAI
+  openai: 'gpt-4o',  // ※OpenAI側は現行のまま維持。別途確認の上で更新すること
+
+  // Gemini（補助用）
+  gemini: 'gemini-1.5-pro',
 
   // フォールバック用
-  FALLBACK_MODEL: 'gpt-5.4'
+  fallback: 'gpt-5.4'
 };

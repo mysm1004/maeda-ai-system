@@ -3,15 +3,46 @@
 
 var Anthropic = require('@anthropic-ai/sdk');
 var OpenAI = require('openai');
-var { CLAUDE_MODEL, OPENAI_MODEL, FALLBACK_MODEL } = require('../config/models');
+var models = require('../config/models');
 var { AGENT_TIMEOUT } = require('../config/timeouts');
+
+// 起動時モデル存在確認（1回だけ実行）
+var _modelCheckDone = false;
+async function checkModelsExist() {
+  if (_modelCheckDone) return;
+  _modelCheckDone = true;
+  try {
+    var anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+    var modelList = [models.claude_best, models.claude_standard];
+    for (var i = 0; i < modelList.length; i++) {
+      try {
+        await anthropic.messages.create({ model: modelList[i], max_tokens: 1, messages: [{ role: 'user', content: 'ping' }] });
+        console.log('[ModelCheck] ✓ ' + modelList[i] + ' 利用可能');
+      } catch(e) {
+        if (e.status === 404 || (e.message && e.message.indexOf('not found') !== -1)) {
+          console.warn('[ModelCheck] ⚠ WARNING: モデル ' + modelList[i] + ' が見つかりません。APIで確認してください。');
+        } else {
+          // 認証エラー等はモデル自体は存在する可能性あり
+          console.log('[ModelCheck] ✓ ' + modelList[i] + ' (応答確認済み、エラー: ' + (e.status || e.message || '').toString().substring(0, 50) + ')');
+        }
+      }
+    }
+  } catch(e) {
+    console.warn('[ModelCheck] モデル確認スキップ:', e.message);
+  }
+}
+// 非同期で起動時に実行（サーバー起動をブロックしない）
+setTimeout(function() { checkModelsExist(); }, 3000);
 
 function BaseAgent(db, opts) {
   opts = opts || {};
   this.db = db;
   this.name = opts.name || 'base';
   this.model = opts.model || 'claude';  // 'claude' or 'openai'
+  this.modelTier = opts.modelTier || 'standard';  // 'best' or 'standard'
   this.maxTokens = opts.maxTokens || 4000;
+  // modelTierに応じたデフォルトClaudeモデルを設定
+  this.defaultClaudeModel = this.modelTier === 'best' ? models.claude_best : models.claude_standard;
 
   this.anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
   this.openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
@@ -29,7 +60,7 @@ function BaseAgent(db, opts) {
         if (params.system) msgs.push({ role: 'system', content: params.system });
         msgs = msgs.concat(params.messages);
         var gptRes = await openai.chat.completions.create({
-          model: FALLBACK_MODEL, max_completion_tokens: params.max_tokens || 4000, messages: msgs
+          model: models.fallback, max_completion_tokens: params.max_tokens || 4000, messages: msgs
         });
         var fallbackText = (gptRes.choices[0].message.content || gptRes.choices[0].message.refusal || '（フォールバック応答なし）') +
           '\n\n※Claude APIクレジット不足のためGPTで代替生成';
@@ -49,7 +80,7 @@ BaseAgent.prototype.callClaude = async function(systemPrompt, userContent, opts)
   var self = this;
 
   var apiCall = this.anthropic.messages.create({
-    model: opts.model || CLAUDE_MODEL,
+    model: opts.model || this.defaultClaudeModel,
     max_tokens: maxTokens,
     system: systemPrompt,
     messages: [{ role: 'user', content: userContent }]
@@ -77,7 +108,7 @@ BaseAgent.prototype.callOpenAI = async function(systemPrompt, userContent, opts)
   var self = this;
 
   var apiCall = this.openai.chat.completions.create({
-    model: opts.model || OPENAI_MODEL,
+    model: opts.model || models.openai,
     max_completion_tokens: maxTokens,
     messages: [
       { role: 'system', content: systemPrompt },

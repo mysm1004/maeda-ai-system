@@ -4,7 +4,7 @@
 var BaseAgent = require('./base-agent');
 
 function ResearchClaude(db) {
-  BaseAgent.call(this, db, { name: 'research_claude', model: 'claude', maxTokens: 8000 });
+  BaseAgent.call(this, db, { name: 'research_claude', model: 'claude', modelTier: 'best', maxTokens: 8000 });
 }
 ResearchClaude.prototype = Object.create(BaseAgent.prototype);
 ResearchClaude.prototype.constructor = ResearchClaude;

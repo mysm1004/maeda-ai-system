@@ -77,6 +77,7 @@ Orchestrator.prototype.runPhase = async function(phaseNum, ctx) {
   this._saveLog(sessionId, projectId, phaseNum, 'persona', 'claude', 'ペルソナエージェント', personaResult);
 
   // v2.0移植: Phase1のペルソナ後にLINE SmartQA確認（非就寝モード時）
+  // 修正3: タイムアウト後の動作を明確化
   if (phaseNum === 1 && this.lineQA && this.sendLineFn && !isSleep) {
     try {
       var dirCheck = await this._checkNeedsConfirmation(personaResult, topic);
@@ -87,7 +88,30 @@ Orchestrator.prototype.runPhase = async function(phaseNum, ctx) {
           engineType: 'discussion', engineStep: 'v3_persona',
           pushLineFn: this.sendLineFn
         });
-        if (userDir) personaResult += '\n\n【前田さんの方向性指示】\n' + userDir;
+        if (userDir) {
+          personaResult += '\n\n【前田さんの方向性指示】\n' + userDir;
+        } else {
+          // タイムアウト（30分）: 自動続行
+          console.log('[Orchestrator] SmartQAタイムアウト → 自動続行');
+          if (this.sendLineFn) try { await this.sendLineFn('30分経過のため、自動で処理を続行します'); } catch(e2) {}
+
+          // 信頼度:高 の項目を優先採用して処理継続
+          var autoProceedReason = '信頼度:高の調査結果を優先採用して自動続行';
+          if (research && research.indexOf('信頼度:高') !== -1) {
+            autoProceedReason = '信頼度:高の項目を採用。';
+          } else if (research && research.indexOf('信頼度:中') !== -1) {
+            autoProceedReason = '信頼度:高が不十分なため信頼度:中も採用。';
+          } else {
+            autoProceedReason = '全調査結果を採用して自動続行。';
+          }
+          personaResult += '\n\n【自動続行】' + autoProceedReason;
+
+          // セッションDBに記録
+          try {
+            this.db.prepare("UPDATE sessions SET output_plan = COALESCE(output_plan,'') || ? WHERE id = ?")
+              .run('\n[auto_proceed] ' + autoProceedReason, sessionId);
+          } catch(e3) {}
+        }
       }
     } catch (e) { console.log('[Orchestrator] ペルソナ確認スキップ:', e.message); }
   }
@@ -324,31 +348,44 @@ Orchestrator.prototype._scoreAndAutoApprove = async function(sessionId, outputTy
     var p = patterns[i];
     try {
       var scoreText = await agent.callClaude(
-        'アウトプットの品質を4軸で採点。各軸1-10点。\n軸:\n- appeal: 訴求力\n- differentiation: 差別化\n- format: 体裁\n- impact: インパクト（ファーストビュー重視・AI感排除）',
+        'アウトプットの品質を5軸で採点。各軸1-10点。\n軸:\n- appeal: 訴求力\n- differentiation: 差別化\n- format: 体裁\n- impact: インパクト（ファーストビュー重視・AI感排除）\n- legal: 法的チェック（弁護士法・景表法・弁護士広告規程準拠、断定表現なし、架空数字なし）',
         'パターン' + p.id + '「' + (p.name || '') + '」を採点:\n\n' + (p.concept || p.catchcopy || JSON.stringify(p)).substring(0, 2000) +
-          '\n\nJSON: {"appeal":N,"differentiation":N,"format":N,"impact":N,"improvement":"改善1文"}',
+          '\n\nJSON: {"appeal":N,"differentiation":N,"format":N,"impact":N,"legal":N,"improvement":"改善1文"}',
         { sessionId: sessionId, phase: 3 }
       );
       var m = scoreText.match(/\{[\s\S]*\}/);
       if (m) {
         var s = JSON.parse(m[0]);
         var total = (s.appeal || 0) + (s.differentiation || 0) + (s.format || 0) + (s.impact || 0);
+        var legalScore = s.legal || 0;
         try {
-          this.db.prepare('INSERT INTO quality_scores (output_queue_id, session_id, pattern, score_appeal, score_differentiation, score_format, score_impact, total_score, improvement_points) VALUES (?,?,?,?,?,?,?,?,?)')
-            .run(0, sessionId, p.id, s.appeal || 0, s.differentiation || 0, s.format || 0, s.impact || 0, total, s.improvement || '');
-        } catch(e) {}
-        scores.push({ pattern: p.id, total: total, grade: total >= 36 ? 'S' : total >= 32 ? 'A' : total >= 28 ? 'B' : total >= 24 ? 'C' : 'D' });
+          this.db.prepare('INSERT INTO quality_scores (output_queue_id, session_id, pattern, score_appeal, score_differentiation, score_format, score_impact, total_score, legal_score, improvement_points) VALUES (?,?,?,?,?,?,?,?,?,?)')
+            .run(0, sessionId, p.id, s.appeal || 0, s.differentiation || 0, s.format || 0, s.impact || 0, total, legalScore, s.improvement || '');
+        } catch(e) {
+          // legal_scoreカラムがない場合のフォールバック
+          try {
+            this.db.prepare('INSERT INTO quality_scores (output_queue_id, session_id, pattern, score_appeal, score_differentiation, score_format, score_impact, total_score, improvement_points) VALUES (?,?,?,?,?,?,?,?,?)')
+              .run(0, sessionId, p.id, s.appeal || 0, s.differentiation || 0, s.format || 0, s.impact || 0, total, s.improvement || '');
+          } catch(e2) {}
+        }
+        scores.push({ pattern: p.id, total: total, legal: legalScore, grade: total >= 36 ? 'S' : total >= 32 ? 'A' : total >= 28 ? 'B' : total >= 24 ? 'C' : 'D' });
       }
     } catch(e) { console.error('[品質スコア] エラー:', e.message); }
   }
 
-  // 自動承認判定（v2.0ロジック完全移植）
+  // 自動承認判定（修正4: 法的チェック軸ガード追加）
   var avgScore = scores.length > 0 ? scores.reduce(function(sum, s) { return sum + s.total; }, 0) / scores.length : 0;
+  var minLegalScore = scores.length > 0 ? Math.min.apply(null, scores.map(function(s) { return s.legal || 0; })) : 0;
   var autoApproved = false;
 
-  if (avgScore >= AUTO_APPROVE_CONFIG.gradeA_threshold) {
+  // 法的チェックが基準未満（8点未満）なら必ずLINE確認（自動承認しない）
+  if (minLegalScore < 8) {
+    autoApproved = false;
+    console.log('[AutoApprove] 法的チェックスコア不足 (' + minLegalScore + '/10) -> LINE確認必須');
+    if (this.sendLineFn) try { await this.sendLineFn('[要確認] ' + outputType + ' 法的チェックスコア不足（' + minLegalScore + '/10）。前田さんの確認が必要です。\n総合: ' + avgScore.toFixed(1) + '/40'); } catch(e) {}
+  } else if (avgScore >= AUTO_APPROVE_CONFIG.gradeA_threshold) {
     autoApproved = true;
-    console.log('[AutoApprove] Grade A (' + avgScore.toFixed(1) + ') -> auto approved');
+    console.log('[AutoApprove] Grade A (' + avgScore.toFixed(1) + ', legal:' + minLegalScore + ') -> auto approved');
     if (this.sendLineFn) try { await this.sendLineFn('[Phase3完了] ' + outputType + ' Grade A (' + avgScore.toFixed(1) + '/40) 自動承認済'); } catch(e) {}
   } else if (avgScore >= AUTO_APPROVE_CONFIG.gradeB_threshold) {
     autoApproved = true;

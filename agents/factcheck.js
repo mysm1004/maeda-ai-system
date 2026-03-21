@@ -4,7 +4,7 @@
 var BaseAgent = require('./base-agent');
 
 function FactcheckAgent(db) {
-  BaseAgent.call(this, db, { name: 'factcheck', model: 'claude', maxTokens: 4000 });
+  BaseAgent.call(this, db, { name: 'factcheck', model: 'claude', modelTier: 'best', maxTokens: 4000 });
 }
 FactcheckAgent.prototype = Object.create(BaseAgent.prototype);
 FactcheckAgent.prototype.constructor = FactcheckAgent;

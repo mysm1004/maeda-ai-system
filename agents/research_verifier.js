@@ -4,7 +4,7 @@
 var BaseAgent = require('./base-agent');
 
 function ResearchVerifier(db) {
-  BaseAgent.call(this, db, { name: 'research_verifier', model: 'claude', maxTokens: 8000 });
+  BaseAgent.call(this, db, { name: 'research_verifier', model: 'claude', modelTier: 'best', maxTokens: 8000 });
 }
 ResearchVerifier.prototype = Object.create(BaseAgent.prototype);
 ResearchVerifier.prototype.constructor = ResearchVerifier;

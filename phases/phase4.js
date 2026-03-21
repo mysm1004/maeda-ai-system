@@ -1,6 +1,14 @@
 // v3.1: Phase4 営業リスト作成
 // ターゲット企業・機関の優先順位付きリスト作成
 
+/**
+ * [COMPUTER USE - 未実装]
+ * Phase4 工程0のリサーチで競合サイトを実際にブラウザで開いて情報収集する処理。
+ * 現在はWeb検索ツール（phase_researcher）で代替。
+ * Computer Use実装時はここに組み込む。
+ * 参考: https://docs.anthropic.com/en/docs/build-with-claude/computer-use
+ */
+
 module.exports = {
   getPrompt: function(ctx) {
     return '【Phase4: 営業リスト作成】\n' +

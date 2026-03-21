@@ -4,7 +4,7 @@
 var BaseAgent = require('./base-agent');
 
 function PhaseResearcher(db) {
-  BaseAgent.call(this, db, { name: 'phase_researcher', model: 'claude', maxTokens: 6000 });
+  BaseAgent.call(this, db, { name: 'phase_researcher', model: 'claude', modelTier: 'best', maxTokens: 6000 });
 }
 PhaseResearcher.prototype = Object.create(BaseAgent.prototype);
 PhaseResearcher.prototype.constructor = PhaseResearcher;
@@ -38,7 +38,7 @@ PhaseResearcher.prototype.run = async function(ctx) {
 
   return await this.callClaude(systemPrompt, userContent, {
     sessionId: ctx.sessionId, phase: phaseNum, maxTokens: 6000, timeout: 90000,
-    model: 'claude-opus-4-6'  // Opus 4.6指定
+    // modelTier: 'best'がコンストラクタで設定済み → defaultClaudeModel = claude_best
   });
 };
 
