@@ -96,21 +96,30 @@ Orchestrator.prototype.runPhase = async function(phaseNum, ctx) {
           if (this.sendLineFn) try { await this.sendLineFn('30分経過のため、自動で処理を続行します'); } catch(e2) {}
 
           // 信頼度:高 の項目を優先採用して処理継続
-          var autoProceedReason = '信頼度:高の調査結果を優先採用して自動続行';
-          if (research && research.indexOf('信頼度:高') !== -1) {
-            autoProceedReason = '信頼度:高の項目を採用。';
-          } else if (research && research.indexOf('信頼度:中') !== -1) {
-            autoProceedReason = '信頼度:高が不十分なため信頼度:中も採用。';
+          var highCount = (research || '').split('信頼度:高').length - 1;
+          var midCount = (research || '').split('信頼度:中').length - 1;
+          var autoProceedReason;
+          if (highCount > 0) {
+            autoProceedReason = '30分タイムアウトにより自動続行。信頼度:高の調査項目' + highCount + '件を採用。';
+            if (midCount > 0) autoProceedReason += '信頼度:中の調査項目' + midCount + '件を補完採用。';
+          } else if (midCount > 0) {
+            autoProceedReason = '30分タイムアウトにより自動続行。信頼度:高が不十分なため信頼度:中の調査項目' + midCount + '件を採用。';
           } else {
-            autoProceedReason = '全調査結果を採用して自動続行。';
+            autoProceedReason = '30分タイムアウトにより自動続行。全調査結果を採用。';
           }
           personaResult += '\n\n【自動続行】' + autoProceedReason;
 
-          // セッションDBに記録
+          // auto_proceed_reasonカラムに記録（修正④）
           try {
-            this.db.prepare("UPDATE sessions SET output_plan = COALESCE(output_plan,'') || ? WHERE id = ?")
-              .run('\n[auto_proceed] ' + autoProceedReason, sessionId);
-          } catch(e3) {}
+            this.db.prepare("UPDATE sessions SET auto_proceed_reason = ? WHERE id = ?")
+              .run(autoProceedReason, sessionId);
+          } catch(e3) {
+            // カラムがない場合はoutput_planにフォールバック
+            try {
+              this.db.prepare("UPDATE sessions SET output_plan = COALESCE(output_plan,'') || ? WHERE id = ?")
+                .run('\n[auto_proceed] ' + autoProceedReason, sessionId);
+            } catch(e4) {}
+          }
         }
       }
     } catch (e) { console.log('[Orchestrator] ペルソナ確認スキップ:', e.message); }
@@ -373,33 +382,42 @@ Orchestrator.prototype._scoreAndAutoApprove = async function(sessionId, outputTy
     } catch(e) { console.error('[品質スコア] エラー:', e.message); }
   }
 
-  // 自動承認判定（修正4: 法的チェック軸ガード追加）
+  // 自動承認判定（修正⑤: legal軸はガード専用、合計点に含めない。4軸40点満点で判定）
   var avgScore = scores.length > 0 ? scores.reduce(function(sum, s) { return sum + s.total; }, 0) / scores.length : 0;
   var minLegalScore = scores.length > 0 ? Math.min.apply(null, scores.map(function(s) { return s.legal || 0; })) : 0;
   var autoApproved = false;
+  var gradeLabel = '';
 
-  // 法的チェックが基準未満（8点未満）なら必ずLINE確認（自動承認しない）
+  // ① 法的ガードチェック（最優先。legal < 8 → Gradeに関わらずLINE確認必須）
   if (minLegalScore < 8) {
     autoApproved = false;
-    console.log('[AutoApprove] 法的チェックスコア不足 (' + minLegalScore + '/10) -> LINE確認必須');
-    if (this.sendLineFn) try { await this.sendLineFn('[要確認] ' + outputType + ' 法的チェックスコア不足（' + minLegalScore + '/10）。前田さんの確認が必要です。\n総合: ' + avgScore.toFixed(1) + '/40'); } catch(e) {}
+    gradeLabel = 'LEGAL_FAIL';
+    console.log('[AutoApprove] LEGAL_FAIL (legal:' + minLegalScore + '/10) -> LINE確認必須');
+    if (this.sendLineFn) try { await this.sendLineFn('[要確認] ' + outputType + ' 法的チェックスコア不足（' + minLegalScore + '/10）。前田さんの確認が必要です。\n総合: ' + avgScore.toFixed(1) + '/40 legal:' + minLegalScore + '/10'); } catch(e) {}
+  }
+  // ② Gradeによる自動承認判定（legal >= 8のときのみ）
+  else if (avgScore >= 36) {
+    autoApproved = true; gradeLabel = 'S';
+    console.log('[AutoApprove] Grade S (' + avgScore.toFixed(1) + ', legal:' + minLegalScore + ') -> auto approved');
+    if (this.sendLineFn) try { await this.sendLineFn('[Phase3完了] ' + outputType + ' Grade S (' + avgScore.toFixed(1) + '/40, legal:' + minLegalScore + ') 自動承認済'); } catch(e) {}
   } else if (avgScore >= AUTO_APPROVE_CONFIG.gradeA_threshold) {
-    autoApproved = true;
+    autoApproved = true; gradeLabel = 'A';
     console.log('[AutoApprove] Grade A (' + avgScore.toFixed(1) + ', legal:' + minLegalScore + ') -> auto approved');
-    if (this.sendLineFn) try { await this.sendLineFn('[Phase3完了] ' + outputType + ' Grade A (' + avgScore.toFixed(1) + '/40) 自動承認済'); } catch(e) {}
+    if (this.sendLineFn) try { await this.sendLineFn('[Phase3完了] ' + outputType + ' Grade A (' + avgScore.toFixed(1) + '/40, legal:' + minLegalScore + ') 自動承認済'); } catch(e) {}
   } else if (avgScore >= AUTO_APPROVE_CONFIG.gradeB_threshold) {
-    autoApproved = true;
-    console.log('[AutoApprove] Grade B (' + avgScore.toFixed(1) + ') -> auto approved with notification');
-    if (this.sendLineFn) try { await this.sendLineFn('[Phase3完了] ' + outputType + ' Grade B (' + avgScore.toFixed(1) + '/40) 自動承認済\n推奨: パターン' + (parsed ? parsed.recommended : '?')); } catch(e) {}
+    autoApproved = true; gradeLabel = 'B';
+    console.log('[AutoApprove] Grade B (' + avgScore.toFixed(1) + ', legal:' + minLegalScore + ') -> auto approved with notification');
+    if (this.sendLineFn) try { await this.sendLineFn('[Phase3完了] ' + outputType + ' Grade B (' + avgScore.toFixed(1) + '/40, legal:' + minLegalScore + ') 自動承認済\n推奨: パターン' + (parsed ? parsed.recommended : '?')); } catch(e) {}
   } else {
-    console.log('[AutoApprove] Grade C (' + avgScore.toFixed(1) + ') -> needs manual approval');
-    if (this.sendLineFn) try { await this.sendLineFn('[要確認] ' + outputType + ' Grade C (' + avgScore.toFixed(1) + '/40)\n品質基準未達のため承認をお願いします'); } catch(e) {}
+    gradeLabel = avgScore >= 24 ? 'C' : 'D';
+    console.log('[AutoApprove] Grade ' + gradeLabel + ' (' + avgScore.toFixed(1) + ') -> needs manual approval');
+    if (this.sendLineFn) try { await this.sendLineFn('[要確認] ' + outputType + ' Grade ' + gradeLabel + ' (' + avgScore.toFixed(1) + '/40, legal:' + minLegalScore + ')\n品質基準未達のため承認をお願いします'); } catch(e) {}
   }
 
-  // LINE通知: スコア一覧
+  // LINE通知: スコア一覧（legal軸も表示）
   if (this.sendLineFn && scores.length > 0) {
-    var scoreMsg = '品質スコア:\n';
-    scores.forEach(function(sc) { scoreMsg += sc.pattern + ': ' + sc.total + '/40(' + sc.grade + ')\n'; });
+    var scoreMsg = '品質スコア（4軸合計/40 + legal/10）:\n';
+    scores.forEach(function(sc) { scoreMsg += sc.pattern + ': ' + sc.total + '/40(' + sc.grade + ') legal:' + (sc.legal || 0) + '/10\n'; });
     try { await this.sendLineFn(scoreMsg); } catch(e) {}
   }
 
