@@ -465,24 +465,73 @@ Orchestrator.prototype.createSession = function(title, topic, projectId) {
   return r.lastInsertRowid;
 };
 
-// 事前調査（v2互換）
-Orchestrator.prototype.runResearch = async function(topic, projectId) {
-  var BaseAgent = require('./base-agent');
-  var agent = new BaseAgent(this.db, { name: 'research', model: 'claude', maxTokens: 3000 });
-  var officeDocs = agent.getOfficeDocs();
-  var memory = agent.getMemory(projectId);
-  var similarCases = agent.getSimilarCases(topic);
+// 事前調査（v3.1: Claude + GPT並列調査 → 検証・統合エージェント）
+Orchestrator.prototype.runResearch = async function(topic, projectId, sessionId) {
+  var ResearchClaude = require('./research_claude');
+  var ResearchOpenAI = require('./research_openai');
+  var ResearchVerifier = require('./research_verifier');
 
-  return await agent.callClaude(
-    agent.topicGuard(topic, projectId) + 'あなたはマーケティングリサーチの専門家です。「' + topic + '」の事前調査レポートを作成してください。',
-    '★★★ 調査テーマ：「' + topic + '」★★★\n※他のテーマの情報は無視すること\n\nテーマ: ' + topic +
-      '\n\n【事務所資料】\n' + (officeDocs || 'なし') +
-      '\n\n【事務所HP】https://tslaw.or.jp/ の情報も参考にしてください' +
-      '\n\n【類似過去案件】\n' + (similarCases || 'なし') +
-      '\n\n【前田さんの好み】\n' + JSON.stringify(memory) +
-      '\n\n調査項目：\n1. 競合LP・広告の傾向\n2. 業界トレンド\n3. 成功・失敗パターン\n4. 検索キーワード・口コミ表現\n5. 差別化の機会\n6. 市場規模・成長率\n7. 参入障壁',
-    { sessionId: null, phase: 0 }
-  );
+  var researchClaude = new ResearchClaude(this.db);
+  var researchOpenAI = new ResearchOpenAI(this.db);
+  var verifier = new ResearchVerifier(this.db);
+
+  var ctx = { topic: topic, projectId: projectId, sessionId: sessionId };
+
+  console.log('[Research] Claude調査 & GPT調査 並列開始...');
+
+  // Claude + GPT を完全並列で独立調査
+  var [claudeResult, openaiResult] = await Promise.allSettled([
+    researchClaude.run(ctx),
+    researchOpenAI.run(ctx)
+  ]);
+
+  var claudeResearch = claudeResult.status === 'fulfilled' ? claudeResult.value : null;
+  var openaiResearch = openaiResult.status === 'fulfilled' ? openaiResult.value : null;
+
+  if (claudeResult.status === 'rejected') {
+    console.error('[Research] Claude調査エラー:', claudeResult.reason.message);
+  }
+  if (openaiResult.status === 'rejected') {
+    console.error('[Research] GPT調査エラー:', openaiResult.reason.message);
+  }
+
+  // 両方失敗した場合
+  if (!claudeResearch && !openaiResearch) {
+    console.error('[Research] 両チーム調査失敗');
+    return '事前調査実行失敗（両チームエラー）';
+  }
+
+  // 片方のみ成功した場合はそのまま返す
+  if (!claudeResearch) {
+    console.log('[Research] Claude調査失敗→GPT調査結果のみ使用');
+    return openaiResearch + '\n\n※Claude調査チーム失敗のため、GPT調査結果のみ';
+  }
+  if (!openaiResearch) {
+    console.log('[Research] GPT調査失敗→Claude調査結果のみ使用');
+    return claudeResearch + '\n\n※GPT調査チーム失敗のため、Claude調査結果のみ';
+  }
+
+  // 両方成功 → 検証・統合エージェントで照合
+  console.log('[Research] 両チーム調査完了 → 検証・統合エージェント実行中...');
+  try {
+    var verified = await verifier.run({
+      topic: topic, projectId: projectId, sessionId: sessionId,
+      claudeResearch: claudeResearch,
+      openaiResearch: openaiResearch
+    });
+
+    // 調査ログをDBに保存
+    this._saveLog(sessionId, projectId, 0, 'research_claude', 'claude', 'Claude事前調査', claudeResearch);
+    this._saveLog(sessionId, projectId, 0, 'research_openai', 'openai', 'GPT事前調査', openaiResearch);
+    this._saveLog(sessionId, projectId, 0, 'research_verifier', 'claude', '調査検証・統合', verified);
+
+    console.log('[Research] 検証・統合完了');
+    return verified;
+  } catch(e) {
+    console.error('[Research] 検証エージェントエラー:', e.message);
+    // 検証失敗時は両方の結果を結合して返す
+    return '【Claude調査チーム】\n' + claudeResearch + '\n\n═══\n\n【GPT調査チーム】\n' + openaiResearch + '\n\n※検証エージェント失敗のため未統合';
+  }
 };
 
 module.exports = Orchestrator;
