@@ -37,6 +37,51 @@ PhaseRunner.prototype.run = async function(phaseNum, ctx) {
     ctx.phasePrompt = phaseModule.getPrompt(ctx);
   }
 
+  // ========== 工程0: フェーズ専用リサーチ（Phase2-6） ==========
+  // Phase1は独立した3エージェント並列調査（orchestrator.runResearch）が担うので除外
+  if (phaseNum >= 2) {
+    try {
+      var PhaseResearcher = require('../agents/phase_researcher');
+      var researcher = new PhaseResearcher(this.db);
+
+      console.log('[PhaseRunner] Phase' + phaseNum + ' 工程0: 専用リサーチ (Opus 4.6) 実行中...');
+      var researchResult = await researcher.run({
+        topic: ctx.topic,
+        projectId: ctx.projectId,
+        sessionId: ctx.sessionId,
+        phase: phaseNum,
+        previousOutput: ctx.previousOutput || '',
+        outputType: ctx.outputType || 'general'
+      });
+
+      // リサーチ結果をコンテキストに追加（全エージェントが参照できるようにする）
+      ctx.phaseResearch = researchResult;
+      ctx.phasePrompt = (ctx.phasePrompt || '') +
+        '\n\n【Phase' + phaseNum + '専用リサーチ結果（工程0）】\n' + researchResult;
+
+      // DBに保存
+      try {
+        this.db.prepare(
+          'INSERT INTO discussion_logs (session_id, project_id, phase, round_number, round_theme, role, role_label, content, agent_name, team) VALUES (?,?,?,0,?,?,?,?,?,?)'
+        ).run(ctx.sessionId, ctx.projectId || null, phaseNum,
+          'Phase' + phaseNum + '専用リサーチ', 'claude', 'Phase' + phaseNum + '専用リサーチ (Opus4.6)',
+          researchResult, 'phase_researcher', 'research');
+      } catch(e) {
+        try {
+          this.db.prepare(
+            'INSERT INTO discussion_logs (session_id, project_id, phase, round_number, round_theme, role, role_label, content) VALUES (?,?,?,0,?,?,?,?)'
+          ).run(ctx.sessionId, ctx.projectId || null, phaseNum,
+            'Phase' + phaseNum + '専用リサーチ', 'claude', 'Phase' + phaseNum + '専用リサーチ (Opus4.6)', researchResult);
+        } catch(e2) {}
+      }
+
+      console.log('[PhaseRunner] Phase' + phaseNum + ' 工程0: 専用リサーチ完了');
+    } catch(e) {
+      console.error('[PhaseRunner] Phase' + phaseNum + ' 専用リサーチエラー:', e.message);
+      // リサーチ失敗してもパイプラインは続行
+    }
+  }
+
   // Phase4-6: 専用サービスが存在する場合はそちらを優先で連携
   if (phaseNum === 4 && this.listGenerator) {
     return await this._runPhase4WithService(ctx);
