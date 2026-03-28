@@ -1059,18 +1059,18 @@ app.post('/api/phase6/generate', async function(req, res) {
 
 
 // AI summarize helper: Claude -> GPT-5.4 fallback
-// v2.1: リトライヘルパー（429→30s, 500/529→10s, timeout 120s）
+// v2.1: リトライヘルパー（429→30s, 500/529→10s, timeout 60s）
 async function withRetry(fn, label, maxRetries) {
   maxRetries = maxRetries || 3;
   for (var attempt = 1; attempt <= maxRetries; attempt++) {
     try {
       return await Promise.race([
         fn(),
-        new Promise(function(_, reject) { setTimeout(function() { reject(new Error('timeout 120s')); }, 120000); })
+        new Promise(function(_, reject) { setTimeout(function() { reject(new Error('timeout 60s')); }, 60000); })
       ]);
     } catch(err) {
       var status = err.status || (err.response && err.response.status) || 0;
-      var isRetryable = status === 429 || status === 500 || status === 529 || err.message === 'timeout 120s';
+      var isRetryable = status === 429 || status === 500 || status === 529 || err.message === 'timeout 60s';
       if (!isRetryable || attempt === maxRetries) throw err;
       var delay = status === 429 ? 30000 : 10000;
       console.log('[Retry] ' + label + ' attempt ' + attempt + '/' + maxRetries + ' status:' + status + ' wait:' + (delay/1000) + 's');
