@@ -718,6 +718,78 @@ async function processLineCommand(text, userId) {
     return 'フェーズ構成:\nPhase1: アイデア磨き込み（9エージェント並列）\nPhase2: 訴求磨き込み（9エージェント並列）\nPhase3: コンテンツ生成（9エージェント+品質評価+自動承認）\nPhase4: リスト生成\nPhase5: 広告デザイン\nPhase6: メディア最適化\n\n例: ID1 フェーズ1開始\n例: 新規フェーズ1 交通事故LP';
   }
 
+
+  // ================================================================
+  // タスクコマンド（自由記述タスク実行）
+  // ================================================================
+  if (/^タスク[\s\u3000]/.test(t)) {
+    var taskText = t.replace(/^タスク[\s\u3000]+/, '').trim();
+    if (!taskText) return 'タスク内容を指定してください（例：タスク API連携の動作確認をして）';
+
+    // API疎通確認系のキーワード検出
+    if (/API|api|連携|疎通|動作確認|点検|てんけん|ヘルスチェック/.test(taskText)) {
+      var taskResult = '\ud83d\udd0d API疎通確認結果\n\n';
+      // Claude API
+      try {
+        var cStart = Date.now();
+        var anth2 = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+        await anth2.messages.create({ model: 'claude-sonnet-4-20250514', max_tokens: 10, messages: [{ role: 'user', content: 'ping' }] });
+        taskResult += '\u2705 Claude: 正常 (' + (Date.now() - cStart) + 'ms)\n';
+      } catch(ce) { taskResult += '\u274c Claude: エラー - ' + ce.message.substring(0, 60) + '\n'; }
+      // OpenAI API
+      try {
+        var oStart = Date.now();
+        var oai2 = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+        await oai2.chat.completions.create({ model: 'gpt-4o-mini', max_tokens: 10, messages: [{ role: 'user', content: 'ping' }] });
+        taskResult += '\u2705 OpenAI: 正常 (' + (Date.now() - oStart) + 'ms)\n';
+      } catch(oe2) { taskResult += '\u274c OpenAI: エラー - ' + oe2.message.substring(0, 60) + '\n'; }
+      // Gemini API
+      if (process.env.GEMINI_API_KEY) {
+        try {
+          var gStart = Date.now();
+          var gRes = await new Promise(function(resolve, reject) {
+            var gData = JSON.stringify({ contents: [{ parts: [{ text: 'ping' }] }] });
+            var gReq = https.request({
+              hostname: 'generativelanguage.googleapis.com',
+              path: '/v1beta/models/gemini-2.0-flash:generateContent?key=' + process.env.GEMINI_API_KEY,
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(gData) }
+            }, function(res2) {
+              var b = ''; res2.on('data', function(c) { b += c; }); res2.on('end', function() { resolve({ status: res2.statusCode, body: b }); });
+            });
+            gReq.on('error', function(e) { reject(e); });
+            gReq.write(gData); gReq.end();
+          });
+          if (gRes.status === 200) {
+            taskResult += '\u2705 Gemini: 正常 (' + (Date.now() - gStart) + 'ms)\n';
+          } else {
+            taskResult += '\u274c Gemini: HTTP ' + gRes.status + '\n';
+          }
+        } catch(ge) { taskResult += '\u274c Gemini: エラー - ' + ge.message.substring(0, 60) + '\n'; }
+      } else {
+        taskResult += '\u26a0\ufe0f Gemini: APIキー未設定\n';
+      }
+      // LINE API
+      taskResult += '\n\ud83d\udce1 LINE: ' + (process.env.LINE_CHANNEL_ACCESS_TOKEN ? 'トークン設定済' : '未設定');
+      return taskResult;
+    }
+
+    // その他の自由記述タスク → Claude APIに渡して実行
+    try {
+      var taskAnth = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+      var taskResp = await taskAnth.messages.create({
+        model: 'claude-sonnet-4-20250514', max_tokens: 2000,
+        system: 'あなたは前田法律事務所のAIアシスタントです。指示されたタスクを簡潔に実行してください。',
+        messages: [{ role: 'user', content: taskText }]
+      });
+      var taskOut = taskResp.content[0].text;
+      if (taskOut.length > 4500) taskOut = taskOut.substring(0, 4500) + '...';
+      return '\ud83d\udccb タスク結果\n\n' + taskOut;
+    } catch(te) {
+      return 'タスク実行エラー: ' + te.message.substring(0, 100);
+    }
+  }
+
   // ================================================================
   // API状態
   // ================================================================
@@ -1059,18 +1131,18 @@ app.post('/api/phase6/generate', async function(req, res) {
 
 
 // AI summarize helper: Claude -> GPT-5.4 fallback
-// v2.1: リトライヘルパー（429→30s, 500/529→10s, timeout 60s）
+// v2.1: リトライヘルパー（429→30s, 500/529→10s, timeout 120s）
 async function withRetry(fn, label, maxRetries) {
   maxRetries = maxRetries || 3;
   for (var attempt = 1; attempt <= maxRetries; attempt++) {
     try {
       return await Promise.race([
         fn(),
-        new Promise(function(_, reject) { setTimeout(function() { reject(new Error('timeout 60s')); }, 60000); })
+        new Promise(function(_, reject) { setTimeout(function() { reject(new Error('timeout 120s')); }, 120000); })
       ]);
     } catch(err) {
       var status = err.status || (err.response && err.response.status) || 0;
-      var isRetryable = status === 429 || status === 500 || status === 529 || err.message === 'timeout 60s';
+      var isRetryable = status === 429 || status === 500 || status === 529 || err.message === 'timeout 120s';
       if (!isRetryable || attempt === maxRetries) throw err;
       var delay = status === 429 ? 30000 : 10000;
       console.log('[Retry] ' + label + ' attempt ' + attempt + '/' + maxRetries + ' status:' + status + ' wait:' + (delay/1000) + 's');
