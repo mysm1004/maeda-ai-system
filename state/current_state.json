@@ -1,6 +1,6 @@
 {
   "mode": "aws",
-  "last_updated": "2026-03-30T04:00:00.289Z",
+  "last_updated": "2026-03-30T04:30:00.928Z",
   "last_updated_by": "aws",
   "system_version": "2.0",
   "active_projects": [
@@ -10,9 +10,9 @@
       "topic": "刑事事件用の事務所ホームページの子ページ作成　まずはフェーズ1",
       "phase": 1,
       "current_round": 0,
-      "total_rounds": 6,
+      "total_rounds": 8,
       "status": "進行中",
-      "next_action": "ラウンド1/6の議論を継続",
+      "next_action": "ラウンド1/8の議論を継続",
       "last_log_summary": null,
       "pending_output": null,
       "recent_decisions": []
