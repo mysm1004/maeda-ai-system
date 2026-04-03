@@ -86,6 +86,61 @@ body {
   margin-bottom: 2rem;
 }
 
+.hero-gold-rule {
+  width: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  animation: drawGoldLine 2s var(--ease-luxe) 0.5s forwards;
+  margin-bottom: 3rem;
+}
+
+@keyframes drawGoldLine {
+  to { width: min(80%, 600px); }
+}
+
+.hero-tagline {
+  font-weight: 200;
+  font-size: 0.75rem;
+  letter-spacing: 0.4em;
+  color: var(--gold);
+  opacity: 0;
+  animation: fadeInUp 1.2s var(--ease-out) 1.2s forwards;
+  margin-bottom: 2.5rem;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.hero-cta-link {
+  display: inline-block;
+  font-size: 0.8125rem;
+  font-weight: 300;
+  color: var(--gold);
+  text-decoration: none;
+  letter-spacing: 0.15em;
+  opacity: 0;
+  animation: fadeInUp 1s var(--ease-out) 1.8s forwards;
+  transition: opacity 0.4s var(--ease-out);
+  padding: 0.5rem 0;
+}
+
+.hero-cta-link:hover {
+  opacity: 0.7;
+}
+
+.hero-bg-line {
+  position: absolute;
+  top: 50%;
+  left: 10%;
+  right: 10%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(184,134,11,0.06) 30%, rgba(184,134,11,0.06) 70%, transparent 100%);
+  z-index: -1;
+  transform: translateY(-50%);
+}
+
 .hero-line {
   width: 0;
   height: 1px;
@@ -112,7 +167,7 @@ body {
 .scroll-indicator span {
   font-size: 0.625rem;
   letter-spacing: 0.3em;
-  color: var(--gray-mid);
+  color: var(--gold);
   text-transform: uppercase;
 }
 
@@ -857,6 +912,15 @@ body {
     padding: 2rem 1.5rem;
   }
 
+  .hero-tagline {
+    font-size: 0.6875rem;
+    letter-spacing: 0.25em;
+  }
+
+  .hero-gold-rule {
+    margin-bottom: 2rem;
+  }
+
   .philosophy {
     padding: 4rem 1.5rem;
   }
@@ -930,10 +994,14 @@ body {
 
 <!-- ===== HERO ===== -->
 <section class="hero">
+  <div class="hero-bg-line"></div>
+  <div class="hero-gold-rule"></div>
   <h1 class="hero-headline reveal">法務におけるAI活用、<br>進んでいますか？</h1>
   <p class="hero-sub reveal reveal-delay-1" style="font-size:1.1rem;color:#888;margin-top:24px;font-weight:300;letter-spacing:0.05em;">少しでも「安全」に効率化したい事業者様へ</p>
+  <p class="hero-tagline">弁護士 &times; AI実装 &times; ROI管理</p>
   <p class="hero-sub reveal reveal-delay-1">弁護士法人 東京新橋法律事務所</p>
   <div class="hero-line reveal-delay-2"></div>
+  <a href="#contact" class="hero-cta-link">無料診断を申し込む &rarr;</a>
   <div class="scroll-indicator">
     <span>Scroll</span>
     <div class="scroll-line"></div>
@@ -944,21 +1012,21 @@ body {
 <section class="numbers">
   <div class="number-block">
     <div class="reveal">
-      <span class="number-value">52.9</span><span class="number-unit">%</span>
+      <span class="number-value count-up" data-target="52.9" data-suffix="">52.9</span><span class="number-unit">%</span>
       <p class="number-caption">AI導入企業の過半数が<br>「効果はまだ不明」と回答</p>
       <p class="number-source">出典: 総務省「情報通信白書」(2024)</p>
     </div>
   </div>
   <div class="number-block">
     <div class="reveal">
-      <span class="number-value">~80</span><span class="number-unit">%</span>
+      <span class="number-value count-up" data-target="80" data-prefix="~" data-suffix="">80</span><span class="number-unit">%</span>
       <p class="number-caption">AI導入企業のうち<br>収益面での成果がないと回答した割合</p>
       <p class="number-source">出典: BCG「Where's the Value in AI?」(2024)</p>
     </div>
   </div>
   <div class="number-block">
     <div class="reveal">
-      <span class="number-value">~70</span><span class="number-unit">%</span>
+      <span class="number-value count-up" data-target="70" data-prefix="~" data-suffix="">70</span><span class="number-unit">%</span>
       <p class="number-caption">法務担当者が契約書レビューにおいて<br>見落としを経験した割合</p>
       <p class="number-source">出典: 経済産業省「法務機能の在り方研究会」報告より</p>
     </div>
@@ -1038,7 +1106,7 @@ body {
       </div>
       <div class="service-duration">単発</div>
       <div class="service-price">
-        50万円
+        <span class="count-up" data-target="50" data-suffix="万円">50万円</span>
         <span class="service-price-note">税別</span>
       </div>
     </div>
@@ -1050,7 +1118,7 @@ body {
       </div>
       <div class="service-duration">3ヶ月</div>
       <div class="service-price">
-        150万円
+        <span class="count-up" data-target="150" data-suffix="万円">150万円</span>
         <span class="service-price-note">税別</span>
       </div>
     </div>
@@ -1085,7 +1153,7 @@ body {
 <!-- ===== POSITION ===== -->
 <section class="position">
   <p class="section-label reveal">The Only Position</p>
-  <h2 class="position-headline reveal">弁護士資格を持つAI実装者<br>という立ち位置</h2>
+  <h2 class="position-headline reveal">弁護士としてAIを実装する<br>という立ち位置</h2>
   <p class="position-text reveal">法律の専門知識とAI実装の技術を<br>同一人物が兼ね備えるからこそ、<br>法務AIの品質設計が可能になります。</p>
   <div class="position-table-wrap reveal">
     <table class="position-table">
@@ -1280,6 +1348,53 @@ body {
 
   window.addEventListener('scroll', updateMobileCta, { passive: true });
   updateMobileCta();
+
+  // Count-up animation
+  function easeOutExpo(t) {
+    return t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
+  }
+
+  function animateCountUp(el) {
+    var target = parseFloat(el.getAttribute('data-target'));
+    var suffix = el.getAttribute('data-suffix') || '';
+    var prefix = el.getAttribute('data-prefix') || '';
+    var isDecimal = String(target).indexOf('.') !== -1;
+    var decimals = isDecimal ? String(target).split('.')[1].length : 0;
+    var duration = 2000;
+    var startTime = null;
+
+    function step(timestamp) {
+      if (!startTime) startTime = timestamp;
+      var progress = Math.min((timestamp - startTime) / duration, 1);
+      var easedProgress = easeOutExpo(progress);
+      var current = easedProgress * target;
+      if (isDecimal) {
+        el.textContent = prefix + current.toFixed(decimals) + suffix;
+      } else {
+        el.textContent = prefix + Math.round(current) + suffix;
+      }
+      if (progress < 1) {
+        requestAnimationFrame(step);
+      }
+    }
+
+    requestAnimationFrame(step);
+  }
+
+  var countUps = document.querySelectorAll('.count-up');
+  var countObserver = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        animateCountUp(entry.target);
+        countObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.3 });
+
+  countUps.forEach(function(el) {
+    el.textContent = (el.getAttribute('data-prefix') || '') + '0' + (el.getAttribute('data-suffix') || '');
+    countObserver.observe(el);
+  });
 
   // Form submission handler (placeholder)
   window.handleSubmit = function(e) {
