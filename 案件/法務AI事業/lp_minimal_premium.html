@@ -333,6 +333,73 @@ body {
   color: var(--gray-mid);
   letter-spacing: 0.12em;
   line-height: 2.0;
+  margin-bottom: 3rem;
+}
+
+.profile-career {
+  display: flex;
+  justify-content: center;
+  gap: 3rem;
+  margin-bottom: 3.5rem;
+  flex-wrap: wrap;
+}
+
+.career-item {
+  text-align: center;
+}
+
+.career-label {
+  font-family: var(--font-en);
+  font-size: 0.6875rem;
+  font-weight: 400;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 0.25rem;
+}
+
+.career-value {
+  font-size: 0.875rem;
+  font-weight: 300;
+  color: var(--text);
+  letter-spacing: 0.05em;
+}
+
+.profile-message {
+  max-width: 640px;
+  margin: 0 auto 2.5rem;
+  text-align: left;
+}
+
+.profile-message p {
+  font-size: 0.9375rem;
+  font-weight: 300;
+  line-height: 2.4;
+  color: var(--text);
+  margin-bottom: 1.5rem;
+}
+
+.profile-message p:last-child {
+  margin-bottom: 0;
+}
+
+.profile-quote {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 2rem 0;
+  border-top: 1px solid var(--gold);
+  border-bottom: 1px solid var(--gold);
+  text-align: center;
+}
+
+.profile-quote p {
+  font-family: var(--font-serif);
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  font-weight: 400;
+  font-style: italic;
+  line-height: 2.2;
+  color: var(--text);
+  letter-spacing: 0.03em;
 }
 
 /* ===== PILLARS ===== */
@@ -1046,7 +1113,33 @@ body {
       <img src="maeda_web.jpg" alt="代表弁護士 前田祥夢" class="profile-photo" width="560" height="400" loading="lazy">
     </div>
     <p class="profile-name">前田 祥夢</p>
-    <p class="profile-title">代表弁護士 / 弁護士として日夜クライアント企業様の法務、法的紛争解決に伴走</p>
+    <p class="profile-title">弁護士法人 東京新橋法律事務所 代表弁護士</p>
+
+    <div class="profile-career">
+      <div class="career-item">
+        <p class="career-label">Career 1</p>
+        <p class="career-value">リクルート 法人営業</p>
+      </div>
+      <div class="career-item">
+        <p class="career-label">Career 2</p>
+        <p class="career-value">弁護士として独立</p>
+      </div>
+      <div class="career-item">
+        <p class="career-label">Career 3</p>
+        <p class="career-value">AI実装を自ら実践</p>
+      </div>
+    </div>
+
+    <div class="profile-message">
+      <p>リクルートで叩き込まれたのは、「数字で語る」という徹底した思考法でした。提案書の一行一行に根拠を持たせ、KPIで成果を証明する。その原体験が、今の法務AI支援の土台になっています。</p>
+      <p>弁護士として独立してからは、日々クライアント企業の法務課題と向き合ってきました。契約書のレビュー、法令調査、紛争解決——法務の現場が何に時間を使い、どこで判断に迷うのか。その解像度は、外部のコンサルタントには持ち得ないものだと自負しています。</p>
+      <p>そしてAI。私は自分の事務所の法務業務にAIを全面導入し、自ら設計・実装・運用を行う実践者です。理論やレポートではなく、実際に法務の現場でAIを使い倒してきた経験がある。だからこそ、ハルシネーションの怖さも、正しく使えた時の生産性向上も、肌感覚でわかっています。</p>
+      <p>法務部が「安心して、効果を測って、自社の資産として」AIを活用できる状態を作る——それが、私がこの事業で実現したいことです。</p>
+    </div>
+
+    <div class="profile-quote">
+      <p>法律の正確さと、テクノロジーの効率を、<br>同じ目線で設計できる人間でありたい。</p>
+    </div>
   </div>
 </section>
 
