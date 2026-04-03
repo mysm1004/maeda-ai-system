@@ -966,13 +966,79 @@ body {
     gap: 4rem;
   }
 
+  /* スマホ: テーブルをカード表示に変換 */
   .position-table-wrap {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
+    overflow-x: visible;
   }
 
   .position-table {
-    min-width: 480px;
+    min-width: 0;
+  }
+
+  .position-table,
+  .position-table thead,
+  .position-table tbody,
+  .position-table tr,
+  .position-table th,
+  .position-table td {
+    display: block;
+    width: 100%;
+  }
+
+  .position-table thead {
+    display: none;
+  }
+
+  .position-table tr {
+    border-bottom: 1px solid var(--gray-border);
+    padding: 1.25rem 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0;
+  }
+
+  .position-table td:first-child {
+    grid-column: 1 / -1;
+    text-align: center;
+    font-weight: 500;
+    font-size: 0.875rem;
+    letter-spacing: 0.08em;
+    padding: 0 0 0.75rem 0;
+    border-bottom: none;
+  }
+
+  .position-table td:not(:first-child) {
+    text-align: center;
+    padding: 0.5rem 0;
+    border-bottom: none;
+    font-size: 0.8125rem;
+  }
+
+  .position-table td:not(:first-child)::before {
+    display: block;
+    font-size: 0.625rem;
+    letter-spacing: 0.1em;
+    color: var(--gray-mid);
+    margin-bottom: 0.25rem;
+  }
+
+  .position-table td:nth-child(2)::before { content: '法律知識'; }
+  .position-table td:nth-child(3)::before { content: 'AI実装力'; }
+  .position-table td:nth-child(4)::before { content: '品質設計'; }
+
+  .position-table tr:last-child {
+    background: rgba(184, 134, 11, 0.04);
+    border-radius: 8px;
+    padding: 1.25rem 0.75rem;
+    border: 1px solid rgba(184, 134, 11, 0.2);
+  }
+
+  .position-table .check {
+    font-size: 1.125rem;
+  }
+
+  .position-table .dash {
+    font-size: 1rem;
   }
 
   .number-value {
@@ -1464,8 +1530,8 @@ body {
   updateMobileCta();
 
   // Count-up animation
-  function easeOutCubic(t) {
-    return 1 - Math.pow(1 - t, 3);
+  function easeOutQuart(t) {
+    return 1 - Math.pow(1 - t, 4);
   }
 
   function animateCountUp(el) {
@@ -1474,13 +1540,13 @@ body {
     var prefix = el.getAttribute('data-prefix') || '';
     var isDecimal = String(target).indexOf('.') !== -1;
     var decimals = isDecimal ? String(target).split('.')[1].length : 0;
-    var duration = 3500;
+    var duration = 5000;
     var startTime = null;
 
     function step(timestamp) {
       if (!startTime) startTime = timestamp;
       var progress = Math.min((timestamp - startTime) / duration, 1);
-      var easedProgress = easeOutCubic(progress);
+      var easedProgress = easeOutQuart(progress);
       var current = easedProgress * target;
       if (isDecimal) {
         el.textContent = prefix + current.toFixed(decimals) + suffix;
