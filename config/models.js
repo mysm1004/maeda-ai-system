@@ -5,7 +5,7 @@
 module.exports = {
   // 最高性能モデル（市場調査・最終統合・ファクトチェック専用）
   // 複雑な推論・長文処理・品質最優先タスクに使用
-  claude_best: 'claude-opus-4-6-20260219',
+  claude_best: 'claude-opus-4-6',
 
   // 標準Claudeモデル（コアパイプライン全般）
   claude_standard: 'claude-opus-4-5-20251101',
