@@ -1,0 +1,2347 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>法務AI活用支援事業 | 弁護士法人 東京新橋法律事務所</title>
+<meta name="description" content="弁護士資格を持つAI実装者が、法務部のAI活用を安全に・効果的に・資産として定着させる。ハルシネーション統制から定量ROI管理まで、法務AI活用支援の全領域をカバー。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Noto+Sans+JP:wght@300;400;500;600;700&family=Caveat:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ========================================
+   CSS Custom Properties
+   ======================================== */
+:root {
+  --cream: #FFF8F0;
+  --cream-dark: #F5EDE0;
+  --terracotta: #C85A3A;
+  --terracotta-light: #D4714F;
+  --terracotta-dark: #A8462C;
+  --forest: #2D5A3D;
+  --forest-light: #3A7350;
+  --forest-dark: #1E3D2A;
+  --brown: #5C3D2E;
+  --brown-light: #7A5544;
+  --gold: #D4A84B;
+  --gold-light: #E0BD6A;
+  --text-primary: #2C2218;
+  --text-secondary: #5A4A3A;
+  --text-muted: #8A7A6A;
+  --border-warm: #E0D5C8;
+  --shadow-warm: rgba(92, 61, 46, 0.08);
+  --shadow-warm-md: rgba(92, 61, 46, 0.12);
+  --font-heading: 'Playfair Display', 'Noto Serif JP', serif;
+  --font-body: 'Noto Sans JP', 'Hiragino Kaku Gothic ProN', sans-serif;
+  --font-accent: 'Caveat', cursive;
+  --max-width: 1100px;
+  --max-width-narrow: 800px;
+  --section-padding: 120px;
+  --transition: 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* ========================================
+   Reset & Base
+   ======================================== */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--text-primary);
+  background: var(--cream);
+  line-height: 1.9;
+  font-weight: 400;
+  overflow-x: hidden;
+}
+
+img { max-width: 100%; display: block; }
+a { color: var(--terracotta); text-decoration: none; transition: color var(--transition); }
+a:hover { color: var(--terracotta-dark); }
+
+/* ========================================
+   Typography
+   ======================================== */
+h1, h2, h3, h4 {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: 0.02em;
+}
+
+.chapter-number {
+  display: block;
+  font-family: var(--font-heading);
+  font-size: 0.85rem;
+  font-weight: 400;
+  font-style: italic;
+  color: var(--terracotta);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.section-title {
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  color: var(--brown);
+  margin-bottom: 24px;
+}
+
+.section-subtitle {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  font-weight: 300;
+  line-height: 2;
+  max-width: 680px;
+}
+
+.accent-text {
+  font-family: var(--font-accent);
+  color: var(--terracotta);
+}
+
+/* ========================================
+   Layout Utilities
+   ======================================== */
+.container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 32px;
+}
+
+.container--narrow {
+  max-width: var(--max-width-narrow);
+  margin: 0 auto;
+  padding: 0 32px;
+}
+
+.section {
+  padding: var(--section-padding) 0;
+}
+
+/* ========================================
+   Decorative Elements
+   ======================================== */
+.ornament {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin: 48px 0;
+  color: var(--border-warm);
+}
+
+.ornament::before,
+.ornament::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border-warm);
+  max-width: 120px;
+}
+
+.ornament-symbol {
+  font-size: 1.2rem;
+  color: var(--gold);
+}
+
+.pull-quote {
+  position: relative;
+  margin: 48px 0;
+  padding: 32px 40px;
+  border-left: 3px solid var(--terracotta);
+  background: rgba(200, 90, 58, 0.03);
+  font-size: 1.15rem;
+  font-style: italic;
+  color: var(--brown);
+  line-height: 2;
+}
+
+.pull-quote::before {
+  content: '\201C';
+  position: absolute;
+  top: -8px;
+  left: 16px;
+  font-family: var(--font-heading);
+  font-size: 3.5rem;
+  color: var(--terracotta);
+  opacity: 0.25;
+  line-height: 1;
+}
+
+.margin-note {
+  display: block;
+  margin: 24px 0;
+  padding: 16px 20px;
+  background: var(--cream-dark);
+  border-radius: 4px;
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  line-height: 1.8;
+  border-left: 2px solid var(--gold);
+}
+
+.stat-inline {
+  font-family: var(--font-heading);
+  font-size: 1.3em;
+  font-weight: 700;
+  color: var(--terracotta);
+}
+
+/* ========================================
+   Scroll Animations
+   ======================================== */
+.fade-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.fade-in-left {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.fade-in-right {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* ========================================
+   Header / Navigation
+   ======================================== */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: rgba(255, 248, 240, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid transparent;
+  transition: all 0.4s ease;
+}
+
+.header.scrolled {
+  border-bottom-color: var(--border-warm);
+  box-shadow: 0 2px 20px var(--shadow-warm);
+}
+
+.header-inner {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 16px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.logo-main {
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--brown);
+  letter-spacing: 0.08em;
+}
+
+.logo-sub {
+  font-family: var(--font-body);
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+}
+
+.header-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 24px;
+  background: var(--terracotta);
+  color: #fff;
+  font-size: 0.82rem;
+  font-weight: 500;
+  border-radius: 4px;
+  transition: all var(--transition);
+  letter-spacing: 0.04em;
+}
+
+.header-cta:hover {
+  background: var(--terracotta-dark);
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+/* ========================================
+   Chapter 0 - Hero
+   ======================================== */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 120px 32px 80px;
+  position: relative;
+  background: var(--cream);
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 45%;
+  height: 100%;
+  background: linear-gradient(135deg, transparent 0%, rgba(212, 168, 75, 0.04) 50%, rgba(200, 90, 58, 0.06) 100%);
+  pointer-events: none;
+}
+
+.hero::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border-warm), transparent);
+}
+
+.hero-content {
+  max-width: 860px;
+  text-align: center;
+}
+
+.hero-chapter {
+  font-family: var(--font-accent);
+  font-size: 1.4rem;
+  color: var(--gold);
+  margin-bottom: 24px;
+  opacity: 0;
+  animation: fadeUp 1s ease 0.3s forwards;
+}
+
+.hero-label {
+  display: inline-block;
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  color: var(--terracotta);
+  text-transform: uppercase;
+  margin-bottom: 32px;
+  padding: 6px 16px;
+  border: 1px solid var(--terracotta);
+  border-radius: 2px;
+  opacity: 0;
+  animation: fadeUp 1s ease 0.5s forwards;
+}
+
+.hero-title {
+  font-family: var(--font-heading);
+  font-size: clamp(2.2rem, 5.5vw, 3.4rem);
+  font-weight: 700;
+  color: var(--brown);
+  line-height: 1.5;
+  margin-bottom: 36px;
+  opacity: 0;
+  animation: fadeUp 1s ease 0.7s forwards;
+}
+
+.hero-title em {
+  font-style: normal;
+  color: var(--terracotta);
+  position: relative;
+}
+
+.hero-title em::after {
+  content: '';
+  position: absolute;
+  bottom: 2px;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--terracotta);
+  opacity: 0.25;
+  border-radius: 2px;
+}
+
+.hero-lead {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  line-height: 2.2;
+  max-width: 640px;
+  margin: 0 auto 48px;
+  font-weight: 300;
+  opacity: 0;
+  animation: fadeUp 1s ease 0.9s forwards;
+}
+
+.hero-cta-group {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+  opacity: 0;
+  animation: fadeUp 1s ease 1.1s forwards;
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 36px;
+  background: var(--terracotta);
+  color: #fff;
+  font-size: 0.95rem;
+  font-weight: 500;
+  border-radius: 4px;
+  transition: all var(--transition);
+  letter-spacing: 0.04em;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-primary:hover {
+  background: var(--terracotta-dark);
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(200, 90, 58, 0.25);
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 36px;
+  background: transparent;
+  color: var(--brown);
+  font-size: 0.95rem;
+  font-weight: 500;
+  border: 1px solid var(--border-warm);
+  border-radius: 4px;
+  transition: all var(--transition);
+  letter-spacing: 0.04em;
+  cursor: pointer;
+}
+
+.btn-secondary:hover {
+  border-color: var(--brown);
+  background: rgba(92, 61, 46, 0.04);
+}
+
+.hero-scroll-hint {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-muted);
+  font-size: 0.72rem;
+  letter-spacing: 0.15em;
+  animation: bounce 2s ease infinite;
+}
+
+.scroll-line {
+  width: 1px;
+  height: 40px;
+  background: linear-gradient(to bottom, var(--text-muted), transparent);
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(8px); }
+}
+
+/* ========================================
+   Chapter 1 - 現実
+   ======================================== */
+.reality {
+  background: #fff;
+  position: relative;
+}
+
+.reality::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border-warm), transparent);
+}
+
+.narrative-text {
+  font-size: 1.05rem;
+  color: var(--text-secondary);
+  line-height: 2.2;
+  margin-bottom: 28px;
+  font-weight: 300;
+}
+
+.stat-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 24px;
+  margin: 48px 0;
+}
+
+.stat-card {
+  padding: 32px 28px;
+  background: var(--cream);
+  border-radius: 6px;
+  border: 1px solid var(--border-warm);
+  text-align: center;
+  transition: all var(--transition);
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px var(--shadow-warm);
+}
+
+.stat-card-number {
+  font-family: var(--font-heading);
+  font-size: 2.8rem;
+  font-weight: 700;
+  color: var(--terracotta);
+  line-height: 1.2;
+  margin-bottom: 8px;
+}
+
+.stat-card-unit {
+  font-size: 1rem;
+  color: var(--terracotta);
+}
+
+.stat-card-label {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin-top: 8px;
+}
+
+.stat-card-source {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  margin-top: 12px;
+  opacity: 0.7;
+}
+
+/* ========================================
+   Chapter 2 - 構造的な空白
+   ======================================== */
+.gap-section {
+  background: var(--cream);
+  position: relative;
+}
+
+.landscape-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  margin: 48px 0;
+}
+
+.landscape-card {
+  padding: 36px 32px;
+  background: #fff;
+  border: 1px solid var(--border-warm);
+  border-radius: 6px;
+  transition: all var(--transition);
+}
+
+.landscape-card:hover {
+  box-shadow: 0 8px 24px var(--shadow-warm);
+}
+
+.landscape-card-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  margin-bottom: 20px;
+}
+
+.landscape-card-title {
+  font-family: var(--font-heading);
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--brown);
+  margin-bottom: 12px;
+}
+
+.landscape-card-text {
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+  line-height: 1.9;
+}
+
+.landscape-card--dim {
+  opacity: 0.65;
+  border-style: dashed;
+}
+
+.landscape-card--highlight {
+  border-color: var(--terracotta);
+  background: rgba(200, 90, 58, 0.02);
+}
+
+.landscape-card--highlight .landscape-card-icon {
+  background: var(--terracotta);
+  color: #fff;
+}
+
+.gap-conclusion {
+  margin-top: 48px;
+  padding: 40px;
+  background: var(--forest-dark);
+  color: #fff;
+  border-radius: 6px;
+  text-align: center;
+}
+
+.gap-conclusion-text {
+  font-family: var(--font-heading);
+  font-size: 1.3rem;
+  font-weight: 600;
+  line-height: 1.8;
+  color: #fff;
+}
+
+.gap-conclusion-sub {
+  font-size: 0.92rem;
+  color: rgba(255,255,255,0.7);
+  margin-top: 12px;
+  font-weight: 300;
+}
+
+/* ========================================
+   Chapter 3 - 3つの処方箋
+   ======================================== */
+.pillars {
+  background: #fff;
+  position: relative;
+}
+
+.pillar {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  gap: 40px;
+  margin-bottom: 72px;
+  padding-bottom: 72px;
+  border-bottom: 1px solid var(--border-warm);
+}
+
+.pillar:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.pillar-number {
+  font-family: var(--font-heading);
+  font-size: 3.5rem;
+  font-weight: 700;
+  color: var(--terracotta);
+  opacity: 0.2;
+  line-height: 1;
+  padding-top: 4px;
+}
+
+.pillar-content {}
+
+.pillar-tag {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  color: var(--forest);
+  background: rgba(45, 90, 61, 0.08);
+  padding: 4px 12px;
+  border-radius: 2px;
+  margin-bottom: 16px;
+}
+
+.pillar-title {
+  font-family: var(--font-heading);
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: var(--brown);
+  margin-bottom: 16px;
+  line-height: 1.5;
+}
+
+.pillar-text {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  line-height: 2.1;
+  margin-bottom: 24px;
+  font-weight: 300;
+}
+
+.pillar-scenario {
+  background: var(--cream);
+  padding: 28px 32px;
+  border-radius: 6px;
+  border-left: 3px solid var(--gold);
+}
+
+.pillar-scenario-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--gold);
+  letter-spacing: 0.08em;
+  margin-bottom: 10px;
+}
+
+.pillar-scenario-text {
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+  line-height: 1.9;
+  font-style: italic;
+}
+
+/* Traffic light */
+.traffic-light {
+  display: flex;
+  gap: 16px;
+  margin: 20px 0;
+  flex-wrap: wrap;
+}
+
+.traffic-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: #fff;
+  border-radius: 4px;
+  font-size: 0.88rem;
+  border: 1px solid var(--border-warm);
+}
+
+.traffic-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.traffic-dot--green { background: #4CAF50; }
+.traffic-dot--yellow { background: #FFC107; }
+.traffic-dot--red { background: #F44336; }
+
+/* ========================================
+   Chapter 4 - サービス
+   ======================================== */
+.services {
+  background: var(--cream);
+}
+
+.service-journey {
+  position: relative;
+  padding-left: 40px;
+}
+
+.service-journey::before {
+  content: '';
+  position: absolute;
+  left: 15px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(to bottom, var(--terracotta), var(--gold), var(--forest));
+  border-radius: 1px;
+}
+
+.service-item {
+  position: relative;
+  margin-bottom: 56px;
+  padding: 36px;
+  background: #fff;
+  border: 1px solid var(--border-warm);
+  border-radius: 8px;
+  transition: all var(--transition);
+}
+
+.service-item:hover {
+  box-shadow: 0 12px 36px var(--shadow-warm-md);
+  transform: translateX(4px);
+}
+
+.service-item:last-child {
+  margin-bottom: 0;
+}
+
+.service-item::before {
+  content: '';
+  position: absolute;
+  left: -33px;
+  top: 42px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--cream);
+  border: 3px solid var(--terracotta);
+}
+
+.service-item:nth-child(2)::before { border-color: var(--gold); }
+.service-item:nth-child(3)::before { border-color: var(--forest); }
+.service-item:nth-child(4)::before { border-color: var(--brown); }
+
+.service-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.service-label {
+  font-family: var(--font-heading);
+  font-size: 0.82rem;
+  font-weight: 600;
+  font-style: italic;
+  color: var(--terracotta);
+  letter-spacing: 0.1em;
+}
+
+.service-title {
+  font-family: var(--font-heading);
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: var(--brown);
+  margin-top: 4px;
+}
+
+.service-price {
+  text-align: right;
+}
+
+.service-price-value {
+  font-family: var(--font-heading);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--terracotta);
+}
+
+.service-price-unit {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+.service-desc {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  line-height: 2;
+  margin-bottom: 20px;
+  font-weight: 300;
+}
+
+.service-features {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.service-feature {
+  padding: 5px 14px;
+  font-size: 0.78rem;
+  color: var(--forest);
+  background: rgba(45, 90, 61, 0.06);
+  border-radius: 3px;
+  font-weight: 500;
+}
+
+.service-period {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px dashed var(--border-warm);
+}
+
+.service-arrow {
+  text-align: center;
+  margin: -24px 0 -24px 40px;
+  position: relative;
+  z-index: 2;
+}
+
+.service-arrow-text {
+  font-family: var(--font-accent);
+  font-size: 1.1rem;
+  color: var(--gold);
+}
+
+/* ========================================
+   Chapter 5 - 前田祥夢
+   ======================================== */
+.founder {
+  background: #fff;
+}
+
+.founder-layout {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 56px;
+  align-items: start;
+}
+
+.founder-visual {
+  position: relative;
+}
+
+.founder-portrait {
+  width: 280px;
+  height: 340px;
+  background: linear-gradient(135deg, var(--cream-dark) 0%, var(--cream) 100%);
+  border: 1px solid var(--border-warm);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.founder-portrait-inner {
+  text-align: center;
+  padding: 24px;
+}
+
+.founder-portrait-icon {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: var(--forest);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-heading);
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin: 0 auto 16px;
+}
+
+.founder-portrait-name {
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--brown);
+  margin-bottom: 4px;
+}
+
+.founder-portrait-role {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.founder-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 20px;
+  justify-content: center;
+}
+
+.founder-badge {
+  padding: 4px 12px;
+  font-size: 0.72rem;
+  font-weight: 500;
+  border-radius: 3px;
+  border: 1px solid;
+}
+
+.founder-badge--law {
+  color: var(--forest);
+  border-color: var(--forest);
+  background: rgba(45, 90, 61, 0.05);
+}
+
+.founder-badge--tech {
+  color: var(--terracotta);
+  border-color: var(--terracotta);
+  background: rgba(200, 90, 58, 0.05);
+}
+
+.founder-badge--biz {
+  color: var(--gold);
+  border-color: var(--gold);
+  background: rgba(212, 168, 75, 0.08);
+}
+
+.founder-story {}
+
+.founder-story h3 {
+  font-size: 1.5rem;
+  color: var(--brown);
+  margin-bottom: 24px;
+}
+
+.founder-narrative {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  line-height: 2.2;
+  margin-bottom: 20px;
+  font-weight: 300;
+}
+
+.founder-timeline {
+  margin: 36px 0;
+  padding: 0;
+  list-style: none;
+}
+
+.founder-timeline li {
+  position: relative;
+  padding-left: 28px;
+  margin-bottom: 16px;
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  line-height: 1.8;
+}
+
+.founder-timeline li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 10px;
+  width: 8px;
+  height: 8px;
+  background: var(--terracotta);
+  border-radius: 50%;
+  opacity: 0.5;
+}
+
+.founder-timeline li strong {
+  color: var(--brown);
+  font-weight: 600;
+}
+
+/* ========================================
+   Mid-page CTA
+   ======================================== */
+.mid-cta {
+  background: linear-gradient(135deg, var(--forest-dark) 0%, var(--forest) 60%, var(--forest-light) 100%);
+  padding: 96px 32px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.mid-cta::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -20%;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(212, 168, 75, 0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.mid-cta-accent {
+  font-family: var(--font-accent);
+  font-size: 1.6rem;
+  color: var(--gold-light);
+  margin-bottom: 16px;
+}
+
+.mid-cta-title {
+  font-family: var(--font-heading);
+  font-size: clamp(1.6rem, 3.5vw, 2.2rem);
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 16px;
+  line-height: 1.6;
+}
+
+.mid-cta-sub {
+  font-size: 1rem;
+  color: rgba(255,255,255,0.7);
+  margin-bottom: 40px;
+  font-weight: 300;
+  line-height: 1.9;
+}
+
+.btn-white {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 18px 42px;
+  background: #fff;
+  color: var(--forest-dark);
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 4px;
+  transition: all var(--transition);
+  letter-spacing: 0.04em;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-white:hover {
+  background: var(--cream);
+  color: var(--forest-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+}
+
+/* ========================================
+   Chapter 6 - 導入の流れ
+   ======================================== */
+.process {
+  background: var(--cream);
+}
+
+.process-steps {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+  margin: 48px 0;
+  position: relative;
+}
+
+.process-step {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  gap: 32px;
+  padding: 36px 0;
+  border-bottom: 1px solid var(--border-warm);
+  align-items: start;
+}
+
+.process-step:last-child {
+  border-bottom: none;
+}
+
+.process-step-num {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-heading);
+  font-size: 1.4rem;
+  font-weight: 700;
+  background: var(--cream-dark);
+  color: var(--terracotta);
+  border: 2px solid var(--border-warm);
+  flex-shrink: 0;
+}
+
+.process-step-title {
+  font-family: var(--font-heading);
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--brown);
+  margin-bottom: 8px;
+}
+
+.process-step-text {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  line-height: 2;
+  font-weight: 300;
+}
+
+.process-step-duration {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 3px 12px;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  background: #fff;
+  border: 1px solid var(--border-warm);
+  border-radius: 3px;
+}
+
+/* ========================================
+   FAQ
+   ======================================== */
+.faq {
+  background: #fff;
+}
+
+.faq-list {
+  max-width: 760px;
+  margin: 48px auto 0;
+}
+
+.faq-item {
+  border-bottom: 1px solid var(--border-warm);
+}
+
+.faq-question {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px 0;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--brown);
+  line-height: 1.7;
+  transition: color var(--transition);
+  gap: 16px;
+}
+
+.faq-question:hover {
+  color: var(--terracotta);
+}
+
+.faq-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid var(--border-warm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 1.1rem;
+  color: var(--text-muted);
+  transition: all var(--transition);
+}
+
+.faq-item.active .faq-icon {
+  background: var(--terracotta);
+  border-color: var(--terracotta);
+  color: #fff;
+  transform: rotate(45deg);
+}
+
+.faq-answer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease, padding 0.4s ease;
+}
+
+.faq-answer-inner {
+  padding: 0 0 24px;
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  line-height: 2;
+  font-weight: 300;
+}
+
+/* ========================================
+   Final CTA & Contact Form
+   ======================================== */
+.contact {
+  background: var(--cream);
+  padding: var(--section-padding) 0;
+}
+
+.contact-wrapper {
+  max-width: 640px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.contact-accent {
+  font-family: var(--font-accent);
+  font-size: 1.5rem;
+  color: var(--terracotta);
+  margin-bottom: 12px;
+}
+
+.contact-title {
+  font-family: var(--font-heading);
+  font-size: 2rem;
+  color: var(--brown);
+  margin-bottom: 16px;
+}
+
+.contact-sub {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  margin-bottom: 48px;
+  line-height: 2;
+  font-weight: 300;
+}
+
+.form-group {
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.form-label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--brown);
+  margin-bottom: 8px;
+}
+
+.form-label .required {
+  font-size: 0.72rem;
+  color: var(--terracotta);
+  margin-left: 6px;
+  font-weight: 400;
+}
+
+.form-input,
+.form-textarea {
+  width: 100%;
+  padding: 14px 18px;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: var(--text-primary);
+  background: #fff;
+  border: 1px solid var(--border-warm);
+  border-radius: 4px;
+  transition: all var(--transition);
+  outline: none;
+}
+
+.form-input:focus,
+.form-textarea:focus {
+  border-color: var(--terracotta);
+  box-shadow: 0 0 0 3px rgba(200, 90, 58, 0.08);
+}
+
+.form-textarea {
+  min-height: 140px;
+  resize: vertical;
+  line-height: 1.8;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.form-note {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-top: 24px;
+  text-align: center;
+  line-height: 1.8;
+}
+
+.form-submit {
+  margin-top: 32px;
+}
+
+.form-submit .btn-primary {
+  width: 100%;
+  justify-content: center;
+  font-size: 1.05rem;
+  padding: 18px 36px;
+}
+
+/* ========================================
+   Footer
+   ======================================== */
+.footer {
+  background: var(--brown);
+  color: rgba(255,255,255,0.7);
+  padding: 64px 32px 40px;
+}
+
+.footer-inner {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 40px;
+}
+
+.footer-brand {}
+
+.footer-brand-name {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 8px;
+}
+
+.footer-brand-sub {
+  font-size: 0.78rem;
+  color: rgba(255,255,255,0.5);
+  line-height: 1.8;
+}
+
+.footer-info {
+  font-size: 0.82rem;
+  line-height: 2;
+}
+
+.footer-info dt {
+  color: rgba(255,255,255,0.5);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  margin-top: 12px;
+}
+
+.footer-info dt:first-child {
+  margin-top: 0;
+}
+
+.footer-info dd {
+  color: rgba(255,255,255,0.8);
+}
+
+.footer-bottom {
+  max-width: var(--max-width);
+  margin: 40px auto 0;
+  padding-top: 24px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  text-align: center;
+  font-size: 0.72rem;
+  color: rgba(255,255,255,0.35);
+  letter-spacing: 0.05em;
+}
+
+/* ========================================
+   Responsive
+   ======================================== */
+@media (max-width: 900px) {
+  :root {
+    --section-padding: 80px;
+  }
+
+  .founder-layout {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .founder-visual {
+    display: flex;
+    justify-content: center;
+  }
+
+  .landscape-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .pillar {
+    grid-template-columns: 48px 1fr;
+    gap: 24px;
+  }
+
+  .pillar-number {
+    font-size: 2.5rem;
+  }
+}
+
+@media (max-width: 640px) {
+  :root {
+    --section-padding: 64px;
+  }
+
+  .container, .container--narrow {
+    padding: 0 20px;
+  }
+
+  .hero {
+    padding: 100px 20px 60px;
+  }
+
+  .hero-title {
+    font-size: 1.8rem;
+  }
+
+  .hero-cta-group {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .btn-primary, .btn-secondary {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .hero-scroll-hint {
+    display: none;
+  }
+
+  .stat-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .pillar {
+    grid-template-columns: 1fr;
+  }
+
+  .pillar-number {
+    font-size: 2rem;
+    opacity: 0.15;
+  }
+
+  .service-journey {
+    padding-left: 24px;
+  }
+
+  .service-journey::before {
+    left: 7px;
+  }
+
+  .service-item::before {
+    left: -25px;
+    width: 10px;
+    height: 10px;
+  }
+
+  .service-header {
+    flex-direction: column;
+  }
+
+  .service-price {
+    text-align: left;
+  }
+
+  .process-step {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .footer-inner {
+    flex-direction: column;
+    gap: 28px;
+  }
+
+  .founder-portrait {
+    width: 220px;
+    height: 280px;
+  }
+
+  .pull-quote {
+    padding: 24px 24px 24px 28px;
+    margin: 32px 0;
+  }
+
+  .mid-cta {
+    padding: 72px 20px;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- ======================================
+     Header
+     ====================================== -->
+<header class="header" id="header">
+  <div class="header-inner">
+    <div class="logo">
+      <span class="logo-main">弁護士法人 東京新橋法律事務所</span>
+      <span class="logo-sub">法務AI活用支援事業</span>
+    </div>
+    <a href="#contact" class="header-cta">無料診断を予約する &#8594;</a>
+  </div>
+</header>
+
+<!-- ======================================
+     Chapter 0 - Hero
+     ====================================== -->
+<section class="hero" id="hero">
+  <div class="hero-content">
+    <div class="hero-chapter">Prologue</div>
+    <div class="hero-label">法務AI活用支援事業</div>
+    <h1 class="hero-title">
+      あなたの法務部は、<br>AIの<em>「嘘」</em>に気づけますか？
+    </h1>
+    <p class="hero-lead">
+      生成AIは、法務の生産性を劇的に変えます。<br>
+      しかし、その出力を「正しい」と信じた瞬間、<br>
+      企業は見えないリスクを抱え込むことになります。
+    </p>
+    <div class="hero-cta-group">
+      <a href="#contact" class="btn-primary">30分の無料診断を予約する &#8594;</a>
+      <a href="#reality" class="btn-secondary">まずはストーリーを読む &#8595;</a>
+    </div>
+  </div>
+  <div class="hero-scroll-hint">
+    <span>SCROLL</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- ======================================
+     Chapter 1 - 現実
+     ====================================== -->
+<section class="reality section" id="reality">
+  <div class="container--narrow">
+    <div class="fade-in">
+      <span class="chapter-number">Chapter 1</span>
+      <h2 class="section-title">52.9%の企業が直面する、<br>静かな壁</h2>
+    </div>
+
+    <div class="fade-in">
+      <p class="narrative-text">
+        2025年、日本企業の約80%が生成AIを何らかの形で導入しました。法務部門も例外ではありません。契約書のレビュー、法令調査、社内規程のドラフト&#8212;&#8212;AIの活用範囲は急速に広がっています。
+      </p>
+      <p class="narrative-text">
+        しかし、ここに不都合な事実があります。導入した企業の<span class="stat-inline">52.9%</span>が「AIの効果はまだ不明」と回答しているのです。さらに踏み込めば、収益面での成果を実感している企業はごく一部に留まっています。
+      </p>
+    </div>
+
+    <div class="stat-cards fade-in">
+      <div class="stat-card">
+        <div class="stat-card-number">52.9<span class="stat-card-unit">%</span></div>
+        <div class="stat-card-label">「AI導入の効果は<br>まだ不明」と回答</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-number">~80<span class="stat-card-unit">%</span></div>
+        <div class="stat-card-label">生成AI導入済みも<br>「収益面の成果なし」</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-number">~70<span class="stat-card-unit">%</span></div>
+        <div class="stat-card-label">法務担当者が契約書の<br>見落としを経験</div>
+      </div>
+    </div>
+
+    <div class="fade-in">
+      <p class="narrative-text">
+        なぜ、これほど導入が進んでいるのに、効果が出ないのか。答えは「使い方」ではなく「管理の仕組み」にあります。
+      </p>
+
+      <div class="pull-quote">
+        AIを導入することはできた。しかし、その出力を誰がどう検証し、どの業務に使ってよいかの基準がない&#8212;&#8212;多くの法務部が直面しているのは、この「品質管理の不在」という構造的な問題です。
+      </div>
+
+      <p class="narrative-text">
+        法務AIのハルシネーション（もっともらしい嘘）は、一般的な文章生成のそれとは質が異なります。存在しない判例を引用し、誤った条文番号を提示し、法改正前の情報を最新として出力する&#8212;&#8212;しかも、その文体は極めて自然です。法務の専門家でさえ、注意深く確認しなければ見抜けないケースがあります。
+      </p>
+
+      <div class="margin-note">
+        グローバル法務AI市場は2030年に108億ドル規模に成長すると予測されています。市場は急成長する一方、品質管理の仕組みは追いついていません。
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================================
+     Chapter 2 - 構造的な空白
+     ====================================== -->
+<section class="gap-section section" id="gap">
+  <div class="container">
+    <div class="fade-in">
+      <span class="chapter-number">Chapter 2</span>
+      <h2 class="section-title">誰も埋められなかった<br>「構造的な空白」</h2>
+      <p class="section-subtitle">
+        法務AIの導入支援を謳うプレイヤーは存在します。しかし、企業が本当に必要としているものを、誰も提供できていませんでした。
+      </p>
+    </div>
+
+    <div class="landscape-grid fade-in">
+      <div class="landscape-card landscape-card--dim">
+        <div class="landscape-card-icon" style="background: rgba(45, 90, 61, 0.08); color: var(--forest);">&#9878;</div>
+        <div class="landscape-card-title">AIベンダー</div>
+        <div class="landscape-card-text">
+          ツールは提供できる。しかし、法務の業務プロセスへの深い理解がなく、「導入後の品質管理」まで設計できない。技術は一流でも、法的リスクの評価はスコープ外。
+        </div>
+      </div>
+      <div class="landscape-card landscape-card--dim">
+        <div class="landscape-card-icon" style="background: rgba(212, 168, 75, 0.1); color: var(--gold);">&#9881;</div>
+        <div class="landscape-card-title">ITコンサルティングファーム</div>
+        <div class="landscape-card-text">
+          業務改革の方法論は持っている。しかし、法務特有のリスク感覚&#8212;&#8212;ハルシネーションの法的影響、弁護士法との関係&#8212;&#8212;を肌感覚で理解していない。
+        </div>
+      </div>
+      <div class="landscape-card landscape-card--dim">
+        <div class="landscape-card-icon" style="background: rgba(92, 61, 46, 0.08); color: var(--brown);">&#9733;</div>
+        <div class="landscape-card-title">法律事務所のDX支援</div>
+        <div class="landscape-card-text">
+          法務の専門知識はある。しかし、AI技術の実装力が不足しがちで、「理論としてのAI活用」に留まることが多い。実際のプロンプト設計やRAG構築までは踏み込めない。
+        </div>
+      </div>
+      <div class="landscape-card landscape-card--highlight">
+        <div class="landscape-card-icon">&#9827;</div>
+        <div class="landscape-card-title">必要とされていたもの</div>
+        <div class="landscape-card-text">
+          法務の実務を深く理解し、AI技術の実装ができ、かつ導入効果を数字で証明できる&#8212;&#8212;この3つを兼ね備えた支援者。それが「構造的な空白」でした。
+        </div>
+      </div>
+    </div>
+
+    <div class="gap-conclusion fade-in">
+      <p class="gap-conclusion-text">
+        法務 &#215; AI &#215; 経営数字。<br>
+        この3領域を横断できるプロフェッショナルが、<br>
+        今、求められています。
+      </p>
+      <p class="gap-conclusion-sub">弁護士資格を持ったAI実装者という、唯一のポジション</p>
+    </div>
+  </div>
+</section>
+
+<!-- ======================================
+     Chapter 3 - 3つの処方箋
+     ====================================== -->
+<section class="pillars section" id="pillars">
+  <div class="container">
+    <div class="fade-in">
+      <span class="chapter-number">Chapter 3</span>
+      <h2 class="section-title">3つの処方箋</h2>
+      <p class="section-subtitle">
+        法務部が「安心して、効果を測って、自社の資産として」AIを使える状態を作る。そのための3つのアプローチです。
+      </p>
+    </div>
+
+    <div style="margin-top: 56px;">
+      <!-- Pillar 1 -->
+      <div class="pillar fade-in-left">
+        <div class="pillar-number">01</div>
+        <div class="pillar-content">
+          <span class="pillar-tag">Pillar 1 &#8212; 品質統制</span>
+          <h3 class="pillar-title">ハルシネーション統制</h3>
+          <p class="pillar-text">
+            AIの「嘘」を仕組みとして防ぐ。弁護士がAI出力の品質基準を設計し、法務AIが生成する情報の正確性を担保するフレームワークを構築します。プロンプトエンジニアリングの最適化、出力検証プロセスの設計、エラーパターンの体系化を通じて、法務部が安心してAIを活用できる土台を作ります。
+          </p>
+          <div class="pillar-scenario">
+            <div class="pillar-scenario-label">&#9670; 想定シナリオ</div>
+            <p class="pillar-scenario-text">
+              契約書レビューAIが「民法第548条の2」を根拠に定型約款の有効性を説明&#8212;&#8212;しかし実際には該当条文の解釈が異なっていた。ハルシネーション統制の仕組みがあれば、出力段階で自動的にフラグが立ち、弁護士の確認プロセスに回されます。
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pillar 2 -->
+      <div class="pillar fade-in-left">
+        <div class="pillar-number">02</div>
+        <div class="pillar-content">
+          <span class="pillar-tag">Pillar 2 &#8212; 運用設計</span>
+          <h3 class="pillar-title">運用基準策定</h3>
+          <p class="pillar-text">
+            「何にAIを使ってよいか」を明確にする。グリーン（自由利用可）・イエロー（条件付き利用可）・レッド（利用禁止）の3段階で、法務業務ごとのAI利用基準書を策定・納品します。曖昧な運用ルールを、誰もが判断できる明確な基準に変えます。
+          </p>
+          <div class="traffic-light">
+            <div class="traffic-item">
+              <span class="traffic-dot traffic-dot--green"></span>
+              <span>グリーン：自由利用可</span>
+            </div>
+            <div class="traffic-item">
+              <span class="traffic-dot traffic-dot--yellow"></span>
+              <span>イエロー：条件付き利用</span>
+            </div>
+            <div class="traffic-item">
+              <span class="traffic-dot traffic-dot--red"></span>
+              <span>レッド：利用禁止</span>
+            </div>
+          </div>
+          <div class="pillar-scenario">
+            <div class="pillar-scenario-label">&#9670; 想定シナリオ</div>
+            <p class="pillar-scenario-text">
+              社内の法務担当者が「この契約書のドラフトにAIを使ってよいか」と迷った時、基準書を参照するだけで即座に判断できる。秘密保持契約のドラフト補助はグリーン、M&AのDDレポートはレッド&#8212;&#8212;といった具合に。
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pillar 3 -->
+      <div class="pillar fade-in-left">
+        <div class="pillar-number">03</div>
+        <div class="pillar-content">
+          <span class="pillar-tag">Pillar 3 &#8212; 効果測定</span>
+          <h3 class="pillar-title">定量ROI管理</h3>
+          <p class="pillar-text">
+            「なんとなく便利」を「数字で証明」に変える。リクルートで培ったKPI設計の方法論を法務AI領域に適用し、導入効果を定量的に可視化します。工数削減率、品質向上指標、コスト対効果を継続的にモニタリングし、経営層への報告に耐えるデータを提供します。
+          </p>
+          <div class="pillar-scenario">
+            <div class="pillar-scenario-label">&#9670; 想定シナリオ</div>
+            <p class="pillar-scenario-text">
+              四半期レビューで法務部長が経営会議に報告：「AI導入により契約書レビューの平均所要時間が40%短縮。月間処理件数は1.6倍に。品質スコアは導入前と同水準を維持。」&#8212;&#8212;数字があるから、投資の継続判断ができる。
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================================
+     Chapter 4 - サービス
+     ====================================== -->
+<section class="services section" id="services">
+  <div class="container">
+    <div class="fade-in">
+      <span class="chapter-number">Chapter 4</span>
+      <h2 class="section-title">4つのサービス</h2>
+      <p class="section-subtitle">
+        初めての接点から長期的なパートナーシップまで。貴社の段階に合わせた最適なエントリーポイントをご用意しています。
+      </p>
+    </div>
+
+    <div class="service-journey fade-in" style="margin-top: 56px;">
+
+      <!-- Product A -->
+      <div class="service-item">
+        <div class="service-header">
+          <div>
+            <div class="service-label">Product A &#8212; Entry</div>
+            <h3 class="service-title">法務AI研修</h3>
+          </div>
+          <div class="service-price">
+            <div class="service-price-value">50<span class="service-price-unit">万円</span></div>
+            <div class="service-price-unit">単発</div>
+          </div>
+        </div>
+        <p class="service-desc">
+          12時間の実践型研修プログラム。法務AIの基礎知識から、ハルシネーションの見抜き方、プロンプト設計の実務まで。座学ではなく、実際のAIツールを使いながら体得するワークショップ形式で提供します。
+        </p>
+        <div class="service-features">
+          <span class="service-feature">12時間集中研修</span>
+          <span class="service-feature">ハンズオン形式</span>
+          <span class="service-feature">オリジナル教材付き</span>
+          <span class="service-feature">研修後フォローアップ1回</span>
+        </div>
+      </div>
+
+      <div class="service-arrow">
+        <span class="service-arrow-text">&#8595; next step</span>
+      </div>
+
+      <!-- Product B -->
+      <div class="service-item">
+        <div class="service-header">
+          <div>
+            <div class="service-label">Product B &#8212; Standard</div>
+            <h3 class="service-title">法務AI導入プログラム</h3>
+          </div>
+          <div class="service-price">
+            <div class="service-price-value">150<span class="service-price-unit">万円</span></div>
+            <div class="service-price-unit">3ヶ月</div>
+          </div>
+        </div>
+        <p class="service-desc">
+          診断・実装・定着の3フェーズで、法務部のAI活用を本格的に立ち上げます。現状の業務フロー分析から、運用基準書の策定、KPIダッシュボードの構築まで。3ヶ月後には、自走できる体制が整います。
+        </p>
+        <div class="service-features">
+          <span class="service-feature">現状診断レポート</span>
+          <span class="service-feature">運用基準書策定</span>
+          <span class="service-feature">KPI設計・ダッシュボード</span>
+          <span class="service-feature">隔週定例ミーティング</span>
+        </div>
+        <div class="service-period">&#128337; 期間：3ヶ月（月2回の定例 + 随時チャット対応）</div>
+      </div>
+
+      <div class="service-arrow">
+        <span class="service-arrow-text">&#8595; deep dive</span>
+      </div>
+
+      <!-- Product C -->
+      <div class="service-item">
+        <div class="service-header">
+          <div>
+            <div class="service-label">Product C &#8212; Advanced</div>
+            <h3 class="service-title">法務AIエージェント構築</h3>
+          </div>
+          <div class="service-price">
+            <div class="service-price-value">300-500<span class="service-price-unit">万円</span></div>
+            <div class="service-price-unit">3-6ヶ月</div>
+          </div>
+        </div>
+        <p class="service-desc">
+          貴社専用の法務AIエージェントを構築します。RAG（検索拡張生成）による社内法務ナレッジベースの構築、QA対応エージェント、法令調査エージェントなど、法務業務を根本から変革するAIシステムを実装します。
+        </p>
+        <div class="service-features">
+          <span class="service-feature">RAGシステム構築</span>
+          <span class="service-feature">法務QAエージェント</span>
+          <span class="service-feature">法令調査自動化</span>
+          <span class="service-feature">カスタムUI開発</span>
+        </div>
+        <div class="service-period">&#128337; 期間：3-6ヶ月（要件定義の規模により変動）</div>
+      </div>
+
+      <div class="service-arrow">
+        <span class="service-arrow-text">&#8595; long-term partnership</span>
+      </div>
+
+      <!-- Product D -->
+      <div class="service-item">
+        <div class="service-header">
+          <div>
+            <div class="service-label">Product D &#8212; Ongoing</div>
+            <h3 class="service-title">法務AI運用顧問</h3>
+          </div>
+          <div class="service-price">
+            <div class="service-price-value">20-35<span class="service-price-unit">万円/月</span></div>
+            <div class="service-price-unit">月額</div>
+          </div>
+        </div>
+        <p class="service-desc">
+          継続的なAI活用の伴走支援。AIの技術進化への対応、運用基準のアップデート、新しいユースケースの探索、KPIモニタリングを月額顧問契約で提供します。法務AIが「一時的なプロジェクト」で終わらず、継続的に価値を生み出す体制を維持します。
+        </p>
+        <div class="service-features">
+          <span class="service-feature">月次レポート</span>
+          <span class="service-feature">運用基準アップデート</span>
+          <span class="service-feature">新技術キャッチアップ</span>
+          <span class="service-feature">随時チャット相談</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ======================================
+     Chapter 5 - 前田祥夢
+     ====================================== -->
+<section class="founder section" id="founder">
+  <div class="container">
+    <div class="fade-in">
+      <span class="chapter-number">Chapter 5</span>
+      <h2 class="section-title">前田祥夢という存在</h2>
+    </div>
+
+    <div class="founder-layout" style="margin-top: 48px;">
+      <div class="founder-visual fade-in-left">
+        <div class="founder-portrait" style="padding:0;">
+          <img src="maeda_web.jpg" alt="代表弁護士 前田祥夢" style="width:100%;height:100%;object-fit:cover;object-position:center top;border-radius:6px;">
+        </div>
+        <div style="text-align:center;margin-top:16px;">
+          <div class="founder-portrait-name">前田 祥夢</div>
+          <div class="founder-portrait-role">まえだ よしむ</div>
+          <div class="founder-badges" style="justify-content:center;">
+            <span class="founder-badge founder-badge--law">弁護士</span>
+            <span class="founder-badge founder-badge--tech">AI実装者</span>
+            <span class="founder-badge founder-badge--biz">リクルート出身</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="founder-story fade-in-right">
+        <h3>なぜ、弁護士がAI実装をするのか</h3>
+
+        <p class="founder-narrative">
+          弁護士法人 東京新橋法律事務所 代表弁護士の前田祥夢（まえだ よしむ）は、法務とAIと経営数字&#8212;&#8212;この3つの領域を横断するキャリアを歩んできました。
+        </p>
+
+        <p class="founder-narrative">
+          リクルート出身。法人営業として、提案書の作り方からKPIの設計まで、「数字で語る」ビジネスの基本を徹底的に叩き込まれました。その後、弁護士資格を取得し、法律実務の世界へ。
+        </p>
+
+        <p class="founder-narrative">
+          法律事務所を経営する中で、自らAIシステムの実装に取り組み始めます。プロンプトエンジニアリング、RAG構築、AIエージェント開発&#8212;&#8212;法務の現場で本当に使えるAIとは何かを、手を動かしながら追求してきました。
+        </p>
+
+        <ul class="founder-timeline">
+          <li><strong>リクルート時代</strong> &#8212; 法人営業の型、KPI設計、提案書作成を体得</li>
+          <li><strong>弁護士資格取得</strong> &#8212; 弁護士として日夜クライアント企業様の法務、法的紛争解決に伴走</li>
+          <li><strong>事務所経営</strong> &#8212; 経営者として事務所運営の全領域を統括</li>
+          <li><strong>AI実装開始</strong> &#8212; 自事務所のAIシステムを自ら設計・構築</li>
+          <li><strong>法務AI支援事業</strong> &#8212; 法務部のAI活用を包括的に支援</li>
+        </ul>
+
+        <div class="pull-quote">
+          法務AIの品質を担保するには、法律の知識だけでは足りない。AIの技術を理解し、自分で実装できることが必要です。そして、その効果を経営の言葉&#8212;&#8212;つまり数字で語れることが、企業の意思決定を動かします。
+        </div>
+
+        <p class="founder-narrative">
+          「弁護士資格を持ったAI実装者」。このポジションから、法務部が本当に必要としている支援を提供します。
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================================
+     Mid-page CTA
+     ====================================== -->
+<section class="mid-cta" id="mid-cta">
+  <div class="container--narrow fade-in">
+    <div class="mid-cta-accent">Let's start here.</div>
+    <h2 class="mid-cta-title">まずは30分の無料診断から</h2>
+    <p class="mid-cta-sub">
+      貴社の法務AI活用状況をヒアリングし、<br>
+      具体的な改善ポイントと推奨プランをご提案します。<br>
+      オンラインで30分、お気軽にどうぞ。
+    </p>
+    <a href="#contact" class="btn-white">無料診断を予約する &#8594;</a>
+  </div>
+</section>
+
+<!-- ======================================
+     Chapter 6 - 導入の流れ
+     ====================================== -->
+<section class="process section" id="process">
+  <div class="container">
+    <div class="fade-in">
+      <span class="chapter-number">Chapter 6</span>
+      <h2 class="section-title">導入の流れ</h2>
+      <p class="section-subtitle">
+        初回のご相談からサービス開始まで、シンプルなステップで進みます。
+      </p>
+    </div>
+
+    <div class="process-steps">
+      <div class="process-step fade-in">
+        <div class="process-step-num">01</div>
+        <div>
+          <h3 class="process-step-title">無料診断（30分）</h3>
+          <p class="process-step-text">
+            オンラインで貴社の法務AI活用状況をヒアリング。現在の課題、目指したい姿、社内体制を伺い、最適なアプローチの方向性をお伝えします。
+          </p>
+          <span class="process-step-duration">所要時間：30分 / オンライン</span>
+        </div>
+      </div>
+
+      <div class="process-step fade-in">
+        <div class="process-step-num">02</div>
+        <div>
+          <h3 class="process-step-title">現状診断レポート</h3>
+          <p class="process-step-text">
+            ヒアリング内容をもとに、貴社の法務AI活用における課題と機会を整理した診断レポートを作成。具体的な改善ポイントと推奨プランを提示します。
+          </p>
+          <span class="process-step-duration">約1週間で納品</span>
+        </div>
+      </div>
+
+      <div class="process-step fade-in">
+        <div class="process-step-num">03</div>
+        <div>
+          <h3 class="process-step-title">ご提案・お見積り</h3>
+          <p class="process-step-text">
+            診断結果に基づき、最適なサービスプランとお見積りをご提案。貴社の予算感やスケジュールに合わせて柔軟に調整します。
+          </p>
+          <span class="process-step-duration">診断レポート提出後、1-2週間</span>
+        </div>
+      </div>
+
+      <div class="process-step fade-in">
+        <div class="process-step-num">04</div>
+        <div>
+          <h3 class="process-step-title">サービス開始</h3>
+          <p class="process-step-text">
+            契約締結後、速やかにプロジェクトを開始。キックオフミーティングで体制・スケジュール・コミュニケーション方法を確認し、着実に成果へ向かいます。
+          </p>
+          <span class="process-step-duration">ご契約後、最短1週間でスタート</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================================
+     FAQ
+     ====================================== -->
+<section class="faq section" id="faq">
+  <div class="container">
+    <div class="fade-in">
+      <span class="chapter-number">Appendix</span>
+      <h2 class="section-title" style="text-align:center;">よくあるご質問</h2>
+    </div>
+
+    <div class="faq-list">
+      <div class="faq-item fade-in">
+        <button class="faq-question" aria-expanded="false">
+          <span>法務部にAIの専門知識がなくても導入できますか？</span>
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            はい。法務AI研修（Product A）から始めていただくことで、AIの基礎知識からハルシネーションの見抜き方まで、実務に必要な知識を体系的に習得いただけます。専門知識がない状態からのスタートを前提にプログラムを設計しています。
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item fade-in">
+        <button class="faq-question" aria-expanded="false">
+          <span>既に社内でAIを導入していますが、効果が出ていません。それでも相談できますか？</span>
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            むしろ、そのような状況こそ本サービスが最も価値を発揮する場面です。導入済みのAIツールの活用状況を診断し、運用基準の策定やKPIの再設計を通じて、「使っているだけ」の状態から「成果が出ている」状態への転換を支援します。
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item fade-in">
+        <button class="faq-question" aria-expanded="false">
+          <span>社内の機密情報の取り扱いはどうなりますか？</span>
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            弁護士法に基づく守秘義務を遵守いたします。契約時にNDAを締結し、プロジェクト中に取り扱う情報は厳格に管理します。また、AIシステム構築においても、社内データの外部流出を防ぐアーキテクチャを採用します。
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item fade-in">
+        <button class="faq-question" aria-expanded="false">
+          <span>どのようなAIツールを使用しますか？特定のツールに縛られますか？</span>
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            特定のAIツールへのロックインは行いません。貴社の環境、セキュリティ要件、予算に応じて最適なツール・プラットフォームを選定します。既に導入済みのツールがある場合は、その活用最適化から着手することも可能です。
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item fade-in">
+        <button class="faq-question" aria-expanded="false">
+          <span>対象は大企業のみですか？中小企業でも利用できますか？</span>
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            法務部を持つ中堅企業（従業員500名程度〜）を主な対象としていますが、法務機能をお持ちの企業であれば規模を問わずご相談いただけます。まずは無料診断で貴社の状況をお聞かせください。
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item fade-in">
+        <button class="faq-question" aria-expanded="false">
+          <span>導入効果はどのくらいの期間で実感できますか？</span>
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            サービス内容によりますが、法務AI研修（Product A）では研修直後から業務への適用が可能です。導入プログラム（Product B）では、3ヶ月のプログラム完了時点でKPIによる効果測定が始まり、具体的な数値としての効果を確認いただけます。
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================================
+     Contact Form
+     ====================================== -->
+<section class="contact" id="contact">
+  <div class="container">
+    <div class="contact-wrapper fade-in">
+      <div class="contact-accent">Get in touch</div>
+      <h2 class="contact-title">お気軽にご相談ください</h2>
+      <p class="contact-sub">
+        30分の無料診断、サービスに関するご質問など、<br>
+        どのようなことでもお気軽にお問い合わせください。<br>
+        原則として2営業日以内にご返信いたします。
+      </p>
+
+      <form id="contactForm" novalidate>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="company">会社名<span class="required">必須</span></label>
+            <input type="text" id="company" name="company" class="form-input" placeholder="株式会社〇〇" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="name">お名前<span class="required">必須</span></label>
+            <input type="text" id="name" name="name" class="form-input" placeholder="山田 太郎" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="email">メールアドレス<span class="required">必須</span></label>
+            <input type="email" id="email" name="email" class="form-input" placeholder="example@company.co.jp" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="phone">電話番号</label>
+            <input type="tel" id="phone" name="phone" class="form-input" placeholder="03-0000-0000">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="message">ご相談内容<span class="required">必須</span></label>
+          <textarea id="message" name="message" class="form-textarea" placeholder="現在のAI活用状況やお悩み、ご検討中のサービスなど、何でもお聞かせください。" required></textarea>
+        </div>
+        <p class="form-note">
+          ご入力いただいた情報は、お問い合わせへの対応のみに使用いたします。<br>
+          詳細はプライバシーポリシーをご確認ください。
+        </p>
+        <div class="form-submit">
+          <button type="submit" class="btn-primary">送信する &#8594;</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ======================================
+     Footer
+     ====================================== -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="footer-brand-name">弁護士法人 東京新橋法律事務所</div>
+      <div class="footer-brand-sub">
+        法務AI活用支援事業<br>
+        代表弁護士 前田 祥夢（まえだ よしむ）
+      </div>
+    </div>
+    <dl class="footer-info">
+      <dt>ADDRESS</dt>
+      <dd>東京都港区新橋</dd>
+      <dt>HOURS</dt>
+      <dd>平日 9:00 - 18:00</dd>
+    </dl>
+  </div>
+  <div class="footer-bottom">
+    &copy; 2025 弁護士法人 東京新橋法律事務所. All rights reserved.
+  </div>
+</footer>
+
+<!-- ======================================
+     JavaScript
+     ====================================== -->
+<script>
+(function() {
+  'use strict';
+
+  // --- Header scroll effect ---
+  const header = document.getElementById('header');
+  let lastScroll = 0;
+
+  function handleHeaderScroll() {
+    const scrollY = window.scrollY;
+    if (scrollY > 60) {
+      header.classList.add('scrolled');
+    } else {
+      header.classList.remove('scrolled');
+    }
+    lastScroll = scrollY;
+  }
+
+  window.addEventListener('scroll', handleHeaderScroll, { passive: true });
+
+  // --- Scroll-triggered fade-in animations ---
+  const observerOptions = {
+    threshold: 0.1,
+    rootMargin: '0px 0px -40px 0px'
+  };
+
+  const observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, observerOptions);
+
+  document.querySelectorAll('.fade-in, .fade-in-left, .fade-in-right').forEach(function(el) {
+    observer.observe(el);
+  });
+
+  // --- FAQ Accordion ---
+  document.querySelectorAll('.faq-question').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var item = this.closest('.faq-item');
+      var answer = item.querySelector('.faq-answer');
+      var inner = item.querySelector('.faq-answer-inner');
+      var isActive = item.classList.contains('active');
+
+      // Close all
+      document.querySelectorAll('.faq-item.active').forEach(function(openItem) {
+        openItem.classList.remove('active');
+        openItem.querySelector('.faq-answer').style.maxHeight = '0';
+        openItem.querySelector('.faq-question').setAttribute('aria-expanded', 'false');
+      });
+
+      // Open clicked (if it was closed)
+      if (!isActive) {
+        item.classList.add('active');
+        answer.style.maxHeight = inner.scrollHeight + 32 + 'px';
+        this.setAttribute('aria-expanded', 'true');
+      }
+    });
+  });
+
+  // --- Smooth scroll for anchor links ---
+  document.querySelectorAll('a[href^="#"]').forEach(function(link) {
+    link.addEventListener('click', function(e) {
+      var targetId = this.getAttribute('href');
+      if (targetId === '#') return;
+      var target = document.querySelector(targetId);
+      if (target) {
+        e.preventDefault();
+        var offset = 80;
+        var top = target.getBoundingClientRect().top + window.scrollY - offset;
+        window.scrollTo({ top: top, behavior: 'smooth' });
+      }
+    });
+  });
+
+  // --- Contact form basic validation ---
+  var form = document.getElementById('contactForm');
+  if (form) {
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      var valid = true;
+      var requiredFields = form.querySelectorAll('[required]');
+
+      requiredFields.forEach(function(field) {
+        field.style.borderColor = '';
+        if (!field.value.trim()) {
+          field.style.borderColor = '#C85A3A';
+          valid = false;
+        }
+        if (field.type === 'email' && field.value.trim()) {
+          var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          if (!emailRegex.test(field.value.trim())) {
+            field.style.borderColor = '#C85A3A';
+            valid = false;
+          }
+        }
+      });
+
+      if (valid) {
+        var btn = form.querySelector('button[type="submit"]');
+        btn.textContent = '送信しました';
+        btn.disabled = true;
+        btn.style.background = '#2D5A3D';
+        btn.style.cursor = 'default';
+
+        setTimeout(function() {
+          btn.textContent = '送信する \u2192';
+          btn.disabled = false;
+          btn.style.background = '';
+          btn.style.cursor = '';
+          form.reset();
+        }, 3000);
+      }
+    });
+  }
+
+})();
+</script>
+</body>
+</html>

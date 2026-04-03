@@ -1,0 +1,1301 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>法務AI活用支援 | 弁護士法人 東京新橋法律事務所</title>
+<meta name="description" content="弁護士が設計する法務AI活用支援。ハルシネーション統制、運用基準策定、定量ROI管理で、法務部のAI活用を確かなものに。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Noto+Sans+JP:wght@200;300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --white: #FFFFFF;
+  --black: #111111;
+  --gold: #B8860B;
+  --gold-light: rgba(184, 134, 11, 0.12);
+  --gray-light: #F8F8F8;
+  --gray-mid: #999999;
+  --gray-border: #E0E0E0;
+  --font-serif: 'Cormorant Garamond', 'Georgia', serif;
+  --font-sans: 'Noto Sans JP', 'Hiragino Kaku Gothic ProN', sans-serif;
+  --ease-out: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --ease-luxe: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-sans);
+  font-weight: 300;
+  color: var(--black);
+  background: var(--white);
+  line-height: 2.0;
+  letter-spacing: 0.02em;
+  overflow-x: hidden;
+}
+
+/* ===== UTILITY ===== */
+.reveal {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-delay-1 { transition-delay: 0.2s; }
+.reveal-delay-2 { transition-delay: 0.4s; }
+.reveal-delay-3 { transition-delay: 0.6s; }
+
+/* ===== HERO ===== */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 2rem;
+  position: relative;
+}
+
+.hero-headline {
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: clamp(2rem, 5vw, 4.5rem);
+  line-height: 1.4;
+  letter-spacing: 0.08em;
+  color: var(--black);
+  margin-bottom: 3rem;
+}
+
+.hero-sub {
+  font-weight: 300;
+  font-size: 0.8125rem;
+  letter-spacing: 0.3em;
+  color: var(--gray-mid);
+  margin-bottom: 2rem;
+}
+
+.hero-line {
+  width: 0;
+  height: 1px;
+  background: var(--gold);
+  transition: width 2s var(--ease-luxe);
+}
+.hero-line.visible {
+  width: 60px;
+}
+
+.scroll-indicator {
+  position: absolute;
+  bottom: 3rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  opacity: 0;
+  animation: fadeInScroll 1.5s var(--ease-out) 2s forwards;
+}
+
+.scroll-indicator span {
+  font-size: 0.625rem;
+  letter-spacing: 0.3em;
+  color: var(--gray-mid);
+  text-transform: uppercase;
+}
+
+.scroll-line {
+  width: 1px;
+  height: 40px;
+  background: var(--gray-border);
+  position: relative;
+  overflow: hidden;
+}
+.scroll-line::after {
+  content: '';
+  position: absolute;
+  top: -100%;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--gold);
+  animation: scrollDown 2s ease-in-out infinite;
+}
+
+@keyframes scrollDown {
+  0% { top: -100%; }
+  50% { top: 100%; }
+  100% { top: 100%; }
+}
+
+@keyframes fadeInScroll {
+  to { opacity: 1; }
+}
+
+/* ===== NUMBERS ===== */
+.numbers {
+  padding: 0;
+}
+
+.number-block {
+  min-height: 70vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 4rem 2rem;
+}
+
+.number-value {
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: clamp(4rem, 12vw, 10rem);
+  line-height: 1;
+  color: var(--black);
+  letter-spacing: -0.02em;
+}
+
+.number-unit {
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: clamp(1.5rem, 4vw, 3rem);
+  color: var(--gray-mid);
+}
+
+.number-caption {
+  margin-top: 2rem;
+  font-size: 0.875rem;
+  font-weight: 300;
+  color: var(--gray-mid);
+  letter-spacing: 0.05em;
+  max-width: 400px;
+  line-height: 2.0;
+}
+
+.number-source {
+  margin-top: 0.75rem;
+  font-size: 0.6875rem;
+  color: #BBBBBB;
+  letter-spacing: 0.02em;
+}
+
+/* ===== PHILOSOPHY ===== */
+.philosophy {
+  min-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 6rem 2rem;
+}
+
+.philosophy-quote {
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: clamp(1.5rem, 3.5vw, 2.8rem);
+  line-height: 1.8;
+  letter-spacing: 0.1em;
+  color: var(--black);
+  max-width: 800px;
+}
+
+.philosophy-caption {
+  margin-top: 3rem;
+  font-size: 0.8125rem;
+  font-weight: 300;
+  color: var(--gray-mid);
+  letter-spacing: 0.15em;
+  max-width: 560px;
+  line-height: 2.2;
+}
+
+/* ===== PROFILE ===== */
+.profile {
+  padding: 8rem 2rem;
+}
+
+.profile-inner {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.profile-photo-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 560px;
+  margin: 0 auto 3rem;
+  overflow: hidden;
+}
+
+.profile-photo-wrap::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--gold);
+}
+
+.profile-photo {
+  width: 100%;
+  height: auto;
+  display: block;
+  filter: grayscale(1);
+  transition: filter 1.2s var(--ease-out);
+}
+
+.profile-photo:hover {
+  filter: grayscale(0.3);
+}
+
+.profile-name {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+  letter-spacing: 0.1em;
+  margin-bottom: 0.75rem;
+}
+
+.profile-title {
+  font-size: 0.8125rem;
+  font-weight: 300;
+  color: var(--gray-mid);
+  letter-spacing: 0.12em;
+  line-height: 2.0;
+}
+
+/* ===== PILLARS ===== */
+.pillars {
+  padding: 8rem 0;
+}
+
+.pillar {
+  display: grid;
+  grid-template-columns: 100px 1fr;
+  gap: 2rem;
+  align-items: start;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 4rem 2rem;
+  border-top: 1px solid var(--gray-border);
+}
+.pillar:last-child {
+  border-bottom: 1px solid var(--gray-border);
+}
+
+.pillar-number {
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: 1.25rem;
+  color: var(--gold);
+  letter-spacing: 0.1em;
+  padding-top: 0.15em;
+}
+
+.pillar-title {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+  letter-spacing: 0.06em;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.pillar-text {
+  font-size: 0.875rem;
+  font-weight: 300;
+  color: var(--gray-mid);
+  line-height: 2.2;
+  max-width: 500px;
+}
+
+.pillar-detail {
+  margin-top: 1.25rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--gray-border);
+}
+
+.pillar-detail-item {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  font-size: 0.8125rem;
+  font-weight: 300;
+  color: #666;
+  line-height: 2.0;
+}
+
+.pillar-detail-item::before {
+  content: '';
+  display: inline-block;
+  width: 4px;
+  height: 4px;
+  background: var(--gold);
+  border-radius: 50%;
+  flex-shrink: 0;
+  position: relative;
+  top: -2px;
+}
+
+/* ===== SERVICES ===== */
+.services {
+  padding: 8rem 2rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.section-label {
+  font-size: 0.6875rem;
+  letter-spacing: 0.4em;
+  color: var(--gray-mid);
+  text-transform: uppercase;
+  margin-bottom: 4rem;
+  text-align: center;
+}
+
+.service-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.service-row {
+  border-top: 1px solid var(--gray-border);
+  display: grid;
+  grid-template-columns: 3fr 1.2fr 1.5fr;
+  align-items: center;
+  padding: 2.5rem 0;
+}
+.service-row:last-child {
+  border-bottom: 1px solid var(--gray-border);
+}
+
+.service-name {
+  font-family: var(--font-serif);
+  font-size: clamp(1rem, 1.8vw, 1.25rem);
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  line-height: 1.6;
+}
+
+.service-name-sub {
+  display: block;
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 300;
+  color: var(--gray-mid);
+  margin-top: 0.25rem;
+  letter-spacing: 0.02em;
+}
+
+.service-desc {
+  display: block;
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 300;
+  color: #888;
+  margin-top: 0.5rem;
+  line-height: 1.8;
+}
+
+.service-duration {
+  font-size: 0.8125rem;
+  font-weight: 300;
+  color: var(--gray-mid);
+  letter-spacing: 0.05em;
+  text-align: center;
+}
+
+.service-price {
+  font-family: var(--font-serif);
+  font-size: clamp(1rem, 1.5vw, 1.125rem);
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.service-price-note {
+  display: block;
+  font-family: var(--font-sans);
+  font-size: 0.6875rem;
+  font-weight: 300;
+  color: var(--gray-mid);
+  margin-top: 0.15rem;
+}
+
+.services-note {
+  margin-top: 3rem;
+  font-size: 0.75rem;
+  color: #BBBBBB;
+  text-align: right;
+  letter-spacing: 0.02em;
+}
+
+/* ===== POSITION ===== */
+.position {
+  padding: 10rem 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.position-headline {
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: clamp(1.5rem, 3vw, 2.5rem);
+  letter-spacing: 0.08em;
+  line-height: 1.6;
+  margin-bottom: 3rem;
+  text-align: center;
+}
+
+.position-text {
+  font-size: 0.9375rem;
+  font-weight: 300;
+  line-height: 2.4;
+  color: #444;
+  margin-bottom: 4rem;
+  text-align: center;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.position-table-wrap {
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.position-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.position-table th,
+.position-table td {
+  padding: 1.25rem 1rem;
+  font-size: 0.8125rem;
+  font-weight: 300;
+  text-align: center;
+  border-bottom: 1px solid var(--gray-border);
+  line-height: 1.8;
+}
+
+.position-table thead th {
+  font-size: 0.6875rem;
+  letter-spacing: 0.15em;
+  color: var(--gray-mid);
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--black);
+}
+
+.position-table td:first-child {
+  text-align: left;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+}
+
+.position-table .check {
+  color: var(--gold);
+}
+
+.position-table .dash {
+  color: #CCCCCC;
+}
+
+/* ===== PROCESS ===== */
+.process {
+  padding: 8rem 2rem;
+  background: var(--gray-light);
+}
+
+.process-inner {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.process-steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 3rem;
+  margin-top: 4rem;
+}
+
+.process-step {
+  text-align: center;
+}
+
+.step-number {
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: clamp(2.5rem, 5vw, 3.5rem);
+  color: var(--gold);
+  line-height: 1;
+  margin-bottom: 2rem;
+}
+
+.step-title {
+  font-weight: 400;
+  font-size: 0.9375rem;
+  letter-spacing: 0.08em;
+  margin-bottom: 1rem;
+}
+
+.step-text {
+  font-size: 0.8125rem;
+  font-weight: 300;
+  color: var(--gray-mid);
+  line-height: 2.0;
+}
+
+/* ===== FAQ ===== */
+.faq {
+  padding: 8rem 2rem;
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.faq-item {
+  border-top: 1px solid var(--gray-border);
+  padding: 2rem 0;
+}
+.faq-item:last-child {
+  border-bottom: 1px solid var(--gray-border);
+}
+
+.faq-question {
+  font-weight: 400;
+  font-size: 0.9375rem;
+  letter-spacing: 0.04em;
+  line-height: 1.8;
+  cursor: pointer;
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  user-select: none;
+}
+
+.faq-question::before {
+  content: 'Q.';
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: 1.125rem;
+  color: var(--gold);
+  flex-shrink: 0;
+}
+
+.faq-answer {
+  margin-top: 1.25rem;
+  padding-left: 2.5rem;
+  font-size: 0.8125rem;
+  font-weight: 300;
+  color: #666;
+  line-height: 2.2;
+}
+
+/* ===== CONTACT ===== */
+.contact {
+  padding: 10rem 2rem;
+  max-width: 560px;
+  margin: 0 auto;
+}
+
+.contact-headline {
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  letter-spacing: 0.1em;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.contact-sub {
+  font-size: 0.8125rem;
+  font-weight: 300;
+  color: var(--gray-mid);
+  text-align: center;
+  margin-bottom: 4rem;
+  letter-spacing: 0.05em;
+}
+
+.form-group {
+  margin-bottom: 2.5rem;
+}
+
+.form-label {
+  display: block;
+  font-size: 0.6875rem;
+  letter-spacing: 0.2em;
+  color: var(--gray-mid);
+  margin-bottom: 0.5rem;
+}
+
+.form-label .required {
+  color: var(--gold);
+  margin-left: 0.25rem;
+  font-size: 0.625rem;
+}
+
+.form-input {
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid var(--gray-border);
+  padding: 0.75rem 0;
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  font-weight: 300;
+  color: var(--black);
+  background: transparent;
+  outline: none;
+  transition: border-color 0.6s var(--ease-out);
+  letter-spacing: 0.02em;
+  min-height: 48px;
+}
+
+.form-input:focus {
+  border-bottom-color: var(--gold);
+}
+
+.form-input::placeholder {
+  color: #DDDDDD;
+  font-weight: 200;
+}
+
+.form-select {
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid var(--gray-border);
+  padding: 0.75rem 0;
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  font-weight: 300;
+  color: var(--black);
+  background: transparent;
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  transition: border-color 0.6s var(--ease-out);
+  min-height: 48px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23999' stroke-width='1'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0 center;
+}
+
+.form-select:focus {
+  border-bottom-color: var(--gold);
+}
+
+.form-textarea {
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid var(--gray-border);
+  padding: 0.75rem 0;
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  font-weight: 300;
+  color: var(--black);
+  background: transparent;
+  outline: none;
+  resize: vertical;
+  min-height: 80px;
+  transition: border-color 0.6s var(--ease-out);
+  letter-spacing: 0.02em;
+}
+
+.form-textarea:focus {
+  border-bottom-color: var(--gold);
+}
+
+.submit-btn {
+  display: block;
+  width: 100%;
+  margin-top: 3rem;
+  padding: 1.25rem 0;
+  background: var(--gold);
+  color: var(--white);
+  border: none;
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  font-weight: 400;
+  letter-spacing: 0.3em;
+  cursor: pointer;
+  transition: background 0.6s var(--ease-out), opacity 0.6s var(--ease-out);
+  min-height: 52px;
+}
+
+.submit-btn:hover {
+  background: #9A7209;
+}
+
+.form-note {
+  margin-top: 1.5rem;
+  font-size: 0.6875rem;
+  color: #BBBBBB;
+  text-align: center;
+  line-height: 2.0;
+}
+
+/* ===== MOBILE STICKY CTA ===== */
+.mobile-cta {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: var(--white);
+  border-top: 1px solid var(--gray-border);
+  padding: 0.75rem 1rem;
+  transform: translateY(100%);
+  transition: transform 0.4s var(--ease-out);
+}
+
+.mobile-cta.show {
+  transform: translateY(0);
+}
+
+.mobile-cta-btn {
+  display: block;
+  width: 100%;
+  padding: 0.875rem 0;
+  background: var(--gold);
+  color: var(--white);
+  border: none;
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  min-height: 48px;
+}
+
+/* ===== FOOTER ===== */
+.footer {
+  padding: 4rem 2rem 6rem;
+  text-align: center;
+  border-top: 1px solid var(--gray-border);
+}
+
+.footer-name {
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  color: var(--gray-mid);
+  margin-bottom: 0.5rem;
+}
+
+.footer-copy {
+  font-size: 0.625rem;
+  letter-spacing: 0.15em;
+  color: #CCCCCC;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .pillar {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+    padding: 3rem 1.5rem;
+  }
+
+  .pillar-number {
+    font-size: 1rem;
+  }
+
+  .service-row {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+    padding: 2rem 0;
+  }
+
+  .service-duration,
+  .service-price {
+    text-align: left;
+  }
+
+  .process-steps {
+    grid-template-columns: 1fr;
+    gap: 4rem;
+  }
+
+  .position-table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .position-table {
+    min-width: 480px;
+  }
+
+  .number-value {
+    font-size: clamp(3.5rem, 15vw, 8rem);
+  }
+
+  .number-block {
+    min-height: 50vh;
+    padding: 3rem 1.5rem;
+  }
+
+  .hero {
+    padding: 2rem 1.5rem;
+  }
+
+  .philosophy {
+    padding: 4rem 1.5rem;
+  }
+
+  .services {
+    padding: 6rem 1.5rem;
+  }
+
+  .position {
+    padding: 6rem 1.5rem;
+  }
+
+  .contact {
+    padding: 6rem 1.5rem 8rem;
+  }
+
+  .profile {
+    padding: 6rem 1.5rem;
+  }
+
+  .profile-photo-wrap {
+    max-width: 100%;
+  }
+
+  .faq {
+    padding: 6rem 1.5rem;
+  }
+
+  .mobile-cta {
+    display: block;
+  }
+
+  .footer {
+    padding-bottom: 6rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-headline {
+    font-size: clamp(1.5rem, 7vw, 2rem);
+    letter-spacing: 0.04em;
+  }
+
+  .philosophy-quote {
+    font-size: clamp(1.125rem, 5vw, 1.5rem);
+  }
+
+  .position-headline {
+    font-size: clamp(1.125rem, 5vw, 1.5rem);
+  }
+
+  .number-value {
+    font-size: clamp(3rem, 18vw, 6rem);
+  }
+
+  .number-unit {
+    font-size: clamp(1.25rem, 5vw, 2rem);
+  }
+
+  .pillar-title {
+    font-size: 1.125rem;
+  }
+
+  .step-number {
+    font-size: 2.5rem;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- ===== HERO ===== -->
+<section class="hero">
+  <h1 class="hero-headline reveal">法務におけるAI活用、<br>進んでいますか？</h1>
+  <p class="hero-sub reveal reveal-delay-1" style="font-size:1.1rem;color:#888;margin-top:24px;font-weight:300;letter-spacing:0.05em;">少しでも「安全」に効率化したい事業者様へ</p>
+  <p class="hero-sub reveal reveal-delay-1">弁護士法人 東京新橋法律事務所</p>
+  <div class="hero-line reveal-delay-2"></div>
+  <div class="scroll-indicator">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- ===== NUMBERS ===== -->
+<section class="numbers">
+  <div class="number-block">
+    <div class="reveal">
+      <span class="number-value">52.9</span><span class="number-unit">%</span>
+      <p class="number-caption">AI導入企業の過半数が<br>「効果はまだ不明」と回答</p>
+      <p class="number-source">出典: 総務省「情報通信白書」(2024)</p>
+    </div>
+  </div>
+  <div class="number-block">
+    <div class="reveal">
+      <span class="number-value">~80</span><span class="number-unit">%</span>
+      <p class="number-caption">AI導入企業のうち<br>収益面での成果がないと回答した割合</p>
+      <p class="number-source">出典: BCG「Where's the Value in AI?」(2024)</p>
+    </div>
+  </div>
+  <div class="number-block">
+    <div class="reveal">
+      <span class="number-value">~70</span><span class="number-unit">%</span>
+      <p class="number-caption">法務担当者が契約書レビューにおいて<br>見落としを経験した割合</p>
+      <p class="number-source">出典: 経済産業省「法務機能の在り方研究会」報告より</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PHILOSOPHY ===== -->
+<section class="philosophy">
+  <p class="philosophy-quote reveal">安心して、効果を測って、<br>自社の資産として。</p>
+  <p class="philosophy-caption reveal reveal-delay-1">法務部がAIを「使える状態」にするために、<br>弁護士が品質基準を設計し、運用を定義し、<br>数字で効果を証明する。<br>それが私たちの支援です。</p>
+</section>
+
+<!-- ===== PROFILE ===== -->
+<section class="profile">
+  <div class="profile-inner reveal">
+    <div class="profile-photo-wrap">
+      <img src="maeda_web.jpg" alt="代表弁護士 前田祥夢" class="profile-photo" width="560" height="400" loading="lazy">
+    </div>
+    <p class="profile-name">前田 祥夢</p>
+    <p class="profile-title">代表弁護士 / 弁護士として日夜クライアント企業様の法務、法的紛争解決に伴走</p>
+  </div>
+</section>
+
+<!-- ===== PILLARS ===== -->
+<section class="pillars">
+  <p class="section-label reveal">Three Pillars</p>
+  <div class="pillar reveal">
+    <div class="pillar-number">01</div>
+    <div>
+      <h3 class="pillar-title">ハルシネーション統制</h3>
+      <p class="pillar-text">弁護士が品質基準を設計し、法務AIの誤出力を仕組みとして防ぎます。プロンプト設計、出力検証フロー、エスカレーション基準を法的観点から構築します。</p>
+      <div class="pillar-detail">
+        <div class="pillar-detail-item">法的正確性チェックリストの設計・運用</div>
+        <div class="pillar-detail-item">判例・条文参照の自動検証フロー構築</div>
+        <div class="pillar-detail-item">誤出力時のエスカレーション基準策定</div>
+        <div class="pillar-detail-item">プロンプトテンプレートの法的最適化</div>
+      </div>
+    </div>
+  </div>
+  <div class="pillar reveal">
+    <div class="pillar-number">02</div>
+    <div>
+      <h3 class="pillar-title">運用基準策定</h3>
+      <p class="pillar-text">グリーン（AI単独可）、イエロー（人間確認必須）、レッド（AI使用不可）の3段階で業務を分類。貴社専用の運用基準書を策定・納品します。</p>
+      <div class="pillar-detail">
+        <div class="pillar-detail-item">業務リスクレベルの分類マトリクス作成</div>
+        <div class="pillar-detail-item">AI利用ガイドラインの文書化・社内展開</div>
+        <div class="pillar-detail-item">担当者向け判断フローチャートの整備</div>
+        <div class="pillar-detail-item">定期的な基準見直し・アップデート体制</div>
+      </div>
+    </div>
+  </div>
+  <div class="pillar reveal">
+    <div class="pillar-number">03</div>
+    <div>
+      <h3 class="pillar-title">定量ROI管理</h3>
+      <p class="pillar-text">導入効果を数字で証明します。処理時間、コスト削減率、品質スコアをKPIとして設計し、月次レポートで可視化。投資対効果を明確にします。</p>
+      <div class="pillar-detail">
+        <div class="pillar-detail-item">導入前後の業務時間・コスト比較分析</div>
+        <div class="pillar-detail-item">AI出力品質スコアの定点観測</div>
+        <div class="pillar-detail-item">月次ROIレポートの自動生成・提出</div>
+        <div class="pillar-detail-item">経営層向けダッシュボードの構築</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SERVICES ===== -->
+<section class="services">
+  <p class="section-label reveal">Services</p>
+  <div class="service-table">
+    <div class="service-row reveal">
+      <div class="service-name">
+        法務AI研修
+        <span class="service-name-sub">法務部向けAIリテラシーと活用実践</span>
+        <span class="service-desc">生成AIの基礎から法務特有のリスク・活用法まで。ハルシネーションの実例と対策をハンズオン形式で学べます。</span>
+      </div>
+      <div class="service-duration">単発</div>
+      <div class="service-price">
+        50万円
+        <span class="service-price-note">税別</span>
+      </div>
+    </div>
+    <div class="service-row reveal">
+      <div class="service-name">
+        法務AI導入プログラム
+        <span class="service-name-sub">運用基準策定・パイロット導入・効果測定</span>
+        <span class="service-desc">現状診断から運用基準書の策定、パイロット運用、効果測定まで。貴社の法務業務に最適化したAI活用の土台を構築します。</span>
+      </div>
+      <div class="service-duration">3ヶ月</div>
+      <div class="service-price">
+        150万円
+        <span class="service-price-note">税別</span>
+      </div>
+    </div>
+    <div class="service-row reveal">
+      <div class="service-name">
+        法務AIエージェント構築
+        <span class="service-name-sub">貴社専用AI法務アシスタントの設計・実装</span>
+        <span class="service-desc">契約書レビュー、法令調査、社内規程チェックなど、貴社の業務に特化したAIエージェントを設計・構築・テストします。</span>
+      </div>
+      <div class="service-duration">3-6ヶ月</div>
+      <div class="service-price">
+        300-500万円
+        <span class="service-price-note">税別</span>
+      </div>
+    </div>
+    <div class="service-row reveal">
+      <div class="service-name">
+        法務AI運用顧問
+        <span class="service-name-sub">継続的な品質管理・アップデート・相談対応</span>
+        <span class="service-desc">導入後の品質モニタリング、AI技術の進化に合わせたアップデート、日常的な法務AI相談に月額で対応します。</span>
+      </div>
+      <div class="service-duration">月額</div>
+      <div class="service-price">
+        20-35万円
+        <span class="service-price-note">税別 / 月</span>
+      </div>
+    </div>
+  </div>
+  <p class="services-note reveal">※ 費用は目安です。貴社の規模・要件により個別にお見積りいたします。</p>
+</section>
+
+<!-- ===== POSITION ===== -->
+<section class="position">
+  <p class="section-label reveal">The Only Position</p>
+  <h2 class="position-headline reveal">弁護士資格を持つAI実装者<br>という立ち位置</h2>
+  <p class="position-text reveal">法律の専門知識とAI実装の技術を<br>同一人物が兼ね備えるからこそ、<br>法務AIの品質設計が可能になります。</p>
+  <div class="position-table-wrap reveal">
+    <table class="position-table">
+      <thead>
+        <tr>
+          <th></th>
+          <th>法律知識</th>
+          <th>AI実装力</th>
+          <th>品質設計</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>AIベンダー</td>
+          <td class="dash">&mdash;</td>
+          <td class="check">&#10003;</td>
+          <td class="dash">&mdash;</td>
+        </tr>
+        <tr>
+          <td>法律事務所</td>
+          <td class="check">&#10003;</td>
+          <td class="dash">&mdash;</td>
+          <td class="dash">&mdash;</td>
+        </tr>
+        <tr>
+          <td>コンサル会社</td>
+          <td class="dash">&mdash;</td>
+          <td class="dash">&mdash;</td>
+          <td class="check">&#10003;</td>
+        </tr>
+        <tr>
+          <td style="font-weight:500;">当事務所</td>
+          <td class="check">&#10003;</td>
+          <td class="check">&#10003;</td>
+          <td class="check">&#10003;</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ===== PROCESS ===== -->
+<section class="process">
+  <div class="process-inner">
+    <p class="section-label reveal">Process</p>
+    <div class="process-steps">
+      <div class="process-step reveal">
+        <div class="step-number">01</div>
+        <h3 class="step-title">現状診断</h3>
+        <p class="step-text">法務業務の棚卸し、AI適用領域の特定、リスク評価を行います。現在の業務フローとコストを可視化し、改善余地を明確にします。</p>
+      </div>
+      <div class="process-step reveal reveal-delay-1">
+        <div class="step-number">02</div>
+        <h3 class="step-title">設計・導入</h3>
+        <p class="step-text">運用基準書の策定、ツール選定・構築、パイロット運用を実施します。小規模から始めて成功体験を積み上げます。</p>
+      </div>
+      <div class="process-step reveal reveal-delay-2">
+        <div class="step-number">03</div>
+        <h3 class="step-title">効果測定・定着</h3>
+        <p class="step-text">KPIモニタリング、月次レポート、継続改善で投資対効果を証明します。社内への展開・定着を支援します。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FAQ ===== -->
+<section class="faq" id="faq">
+  <p class="section-label reveal">FAQ</p>
+  <div class="faq-item reveal">
+    <div class="faq-question">法務AIの導入にはどのくらいの期間がかかりますか?</div>
+    <div class="faq-answer">現状診断に約2週間、運用基準策定・パイロット導入に約2ヶ月、効果測定・定着に約1ヶ月が標準的な目安です。貴社の業務規模や既存システムの状況に応じて調整いたします。</div>
+  </div>
+  <div class="faq-item reveal">
+    <div class="faq-question">自社にAIの知識がある社員がいませんが大丈夫ですか?</div>
+    <div class="faq-answer">はい。弁護士が法務部の視点でAIの活用方法を設計するため、貴社側にAI技術の専門知識は不要です。研修プログラムで実務レベルのリテラシーも習得いただけます。</div>
+  </div>
+  <div class="faq-item reveal">
+    <div class="faq-question">ハルシネーション（AIの誤出力）は完全に防げますか?</div>
+    <div class="faq-answer">現時点で完全にゼロにすることは困難ですが、業務のリスクレベルに応じた3段階の運用基準と出力検証フローにより、リスクを大幅に低減できます。特に高リスク業務にはAI単独判断をさせない仕組みを構築します。</div>
+  </div>
+  <div class="faq-item reveal">
+    <div class="faq-question">どのようなAIツールを導入するのですか?</div>
+    <div class="faq-answer">特定のツールに依存せず、貴社の業務要件・予算・既存システムに最適なツールを選定します。ChatGPT、Claude、国産LLMなど、ベンダーニュートラルな立場で助言いたします。</div>
+  </div>
+  <div class="faq-item reveal">
+    <div class="faq-question">顧問契約をしていなくても依頼できますか?</div>
+    <div class="faq-answer">はい。研修やAI導入プログラムは単発でのご依頼も可能です。導入後に継続的な品質管理が必要な場合は、月額の運用顧問プランをご検討ください。</div>
+  </div>
+</section>
+
+<!-- ===== CONTACT ===== -->
+<section class="contact" id="contact">
+  <h2 class="contact-headline reveal">お問い合わせ</h2>
+  <p class="contact-sub reveal">まずはお気軽にご相談ください。</p>
+  <form class="reveal" onsubmit="handleSubmit(event)">
+    <div class="form-group">
+      <label class="form-label">貴社名 <span class="required">*</span></label>
+      <input type="text" class="form-input" name="company" placeholder="株式会社" required>
+    </div>
+    <div class="form-group">
+      <label class="form-label">お名前 <span class="required">*</span></label>
+      <input type="text" class="form-input" name="name" placeholder="山田 太郎" required>
+    </div>
+    <div class="form-group">
+      <label class="form-label">メールアドレス <span class="required">*</span></label>
+      <input type="email" class="form-input" name="email" placeholder="example@company.co.jp" required>
+    </div>
+    <div class="form-group">
+      <label class="form-label">お電話番号</label>
+      <input type="tel" class="form-input" name="phone" placeholder="03-0000-0000">
+    </div>
+    <div class="form-group">
+      <label class="form-label">ご関心のあるサービス</label>
+      <select class="form-select" name="service">
+        <option value="" disabled selected>選択してください</option>
+        <option value="training">法務AI研修</option>
+        <option value="program">法務AI導入プログラム</option>
+        <option value="agent">法務AIエージェント構築</option>
+        <option value="advisory">法務AI運用顧問</option>
+        <option value="other">その他・まずは相談したい</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">ご相談内容</label>
+      <textarea class="form-textarea" name="message" rows="4" placeholder="お気軽にご記入ください"></textarea>
+    </div>
+    <button type="submit" class="submit-btn">送信する</button>
+    <p class="form-note">通常2営業日以内にご返信いたします。</p>
+  </form>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer class="footer">
+  <p class="footer-name">弁護士法人 東京新橋法律事務所</p>
+  <p class="footer-copy">&copy; 2026 Tokyo Shimbashi Law Office. All rights reserved.</p>
+</footer>
+
+<!-- ===== MOBILE STICKY CTA ===== -->
+<div class="mobile-cta" id="mobileCta">
+  <a href="#contact" class="mobile-cta-btn">無料相談はこちら</a>
+</div>
+
+<script>
+(function() {
+  // Scroll reveal
+  var reveals = document.querySelectorAll('.reveal');
+  var heroLine = document.querySelector('.hero-line');
+
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, {
+    threshold: 0.15,
+    rootMargin: '0px 0px -60px 0px'
+  });
+
+  reveals.forEach(function(el) {
+    observer.observe(el);
+  });
+
+  // Fix: Make elements already in viewport visible on initial load
+  reveals.forEach(function(el) {
+    var rect = el.getBoundingClientRect();
+    if (rect.top < window.innerHeight && rect.bottom > 0) {
+      el.classList.add('visible');
+    }
+  });
+
+  // Hero line animation on load
+  setTimeout(function() {
+    if (heroLine) heroLine.classList.add('visible');
+  }, 1200);
+
+  // Mobile sticky CTA - show after scrolling past hero
+  var mobileCta = document.getElementById('mobileCta');
+  var contactSection = document.getElementById('contact');
+
+  function updateMobileCta() {
+    if (!mobileCta) return;
+    var scrollY = window.pageYOffset || document.documentElement.scrollTop;
+    var contactTop = contactSection ? contactSection.getBoundingClientRect().top + scrollY : Infinity;
+    var show = scrollY > window.innerHeight * 0.5 && (scrollY + window.innerHeight) < contactTop + 200;
+    if (show) {
+      mobileCta.classList.add('show');
+    } else {
+      mobileCta.classList.remove('show');
+    }
+  }
+
+  window.addEventListener('scroll', updateMobileCta, { passive: true });
+  updateMobileCta();
+
+  // Form submission handler (placeholder)
+  window.handleSubmit = function(e) {
+    e.preventDefault();
+    var btn = e.target.querySelector('.submit-btn');
+    btn.textContent = '送信しました';
+    btn.style.opacity = '0.6';
+    btn.disabled = true;
+    setTimeout(function() {
+      btn.textContent = '送信する';
+      btn.style.opacity = '1';
+      btn.disabled = false;
+      e.target.reset();
+    }, 3000);
+  };
+})();
+</script>
+</body>
+</html>
