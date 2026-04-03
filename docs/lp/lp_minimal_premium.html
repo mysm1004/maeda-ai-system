@@ -78,6 +78,15 @@ body {
   margin-bottom: 3rem;
 }
 
+@keyframes heroFadeSlide {
+  0% { opacity: 0; transform: translateY(20px); letter-spacing: 0.2em; }
+  100% { opacity: 1; transform: translateY(0); letter-spacing: 0.08em; }
+}
+
+.hero-typewriter {
+  animation: heroFadeSlide 2.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.3s both;
+}
+
 .hero-sub {
   font-weight: 300;
   font-size: 0.8125rem;
@@ -1063,7 +1072,7 @@ body {
 <section class="hero">
   <div class="hero-bg-line"></div>
   <div class="hero-gold-rule"></div>
-  <h1 class="hero-headline reveal">法務におけるAI活用、<br>進んでいますか？</h1>
+  <h1 class="hero-headline reveal hero-typewriter">法務におけるAI活用、<br>進んでいますか？</h1>
   <p class="hero-sub reveal reveal-delay-1" style="font-size:1.1rem;color:#888;margin-top:24px;font-weight:300;letter-spacing:0.05em;">少しでも「安全」に効率化したい事業者様へ</p>
   <p class="hero-tagline">弁護士 &times; AI実装 &times; ROI管理</p>
   <p class="hero-sub reveal reveal-delay-1">弁護士法人 東京新橋法律事務所</p>
@@ -1132,8 +1141,8 @@ body {
 
     <div class="profile-message">
       <p>リクルートで叩き込まれたのは、「数字で語る」という徹底した思考法でした。提案書の一行一行に根拠を持たせ、KPIで成果を証明する。その原体験が、今の法務AI支援の土台になっています。</p>
-      <p>弁護士として独立してからは、日々クライアント企業の法務課題と向き合ってきました。契約書のレビュー、法令調査、紛争解決——法務の現場が何に時間を使い、どこで判断に迷うのか。その解像度は、外部のコンサルタントには持ち得ないものだと自負しています。</p>
-      <p>そしてAI。私は自分の事務所の法務業務にAIを全面導入し、自ら設計・実装・運用を行う実践者です。理論やレポートではなく、実際に法務の現場でAIを使い倒してきた経験がある。だからこそ、ハルシネーションの怖さも、正しく使えた時の生産性向上も、肌感覚でわかっています。</p>
+      <p>弁護士として独立し、気づけば事務所は総勢50人近い組織になりました。代表弁護士として50社を超える企業様のリーガル面を常時支援し、伴走する日々の中で、法務の現場が何に時間を使い、どこで判断に迷うのかを肌で感じ続けています。その解像度は、外部のコンサルタントには持ち得ないものだと自負しています。</p>
+      <p>そしてAI。私は自分の事務所の法務業務にAIを全面導入し、自ら設計・実装・運用を行う実践者です。50人規模の事務所運営において、まさに法務におけるAI活用を自分事として推進する当事者です。理論やレポートではなく、実際に法務の現場でAIを使い倒してきた経験がある。だからこそ、ハルシネーションの怖さも、正しく使えた時の生産性向上も、肌感覚でわかっています。</p>
       <p>法務部が「安心して、効果を測って、自社の資産として」AIを活用できる状態を作る——それが、私がこの事業で実現したいことです。</p>
     </div>
 
@@ -1199,19 +1208,19 @@ body {
       </div>
       <div class="service-duration">単発</div>
       <div class="service-price">
-        <span class="count-up" data-target="50" data-suffix="万円">50万円</span>
+        <span class="count-up" data-target="20" data-suffix="万円〜">20万円〜</span>
         <span class="service-price-note">税別</span>
       </div>
     </div>
     <div class="service-row reveal">
       <div class="service-name">
         法務AI導入プログラム
-        <span class="service-name-sub">運用基準策定・パイロット導入・効果測定</span>
-        <span class="service-desc">現状診断から運用基準書の策定、パイロット運用、効果測定まで。貴社の法務業務に最適化したAI活用の土台を構築します。</span>
+        <span class="service-name-sub">ツール選定・運用基準策定・パイロット導入・効果測定</span>
+        <span class="service-desc">高額な法務SaaSが本当に必要かの見極めから始めます。貴社の業務規模・課題に応じた最適なツール選定、運用基準書の策定、パイロット運用、効果測定まで。不要な投資を防ぎ、本当に必要な仕組みだけを構築します。</span>
       </div>
-      <div class="service-duration">3ヶ月</div>
+      <div class="service-duration">3ヶ月〜</div>
       <div class="service-price">
-        <span class="count-up" data-target="150" data-suffix="万円">150万円</span>
+        <span class="count-up" data-target="100" data-suffix="万円〜">100万円〜</span>
         <span class="service-price-note">税別</span>
       </div>
     </div>
@@ -1219,24 +1228,36 @@ body {
       <div class="service-name">
         法務AIエージェント構築
         <span class="service-name-sub">貴社専用AI法務アシスタントの設計・実装</span>
-        <span class="service-desc">契約書レビュー、法令調査、社内規程チェックなど、貴社の業務に特化したAIエージェントを設計・構築・テストします。</span>
+        <span class="service-desc">契約書レビュー、法令調査、社内規程チェックに加え、内容証明・督促状の自動作成、支払督促・少額訴訟等の書面作成など、弁護士が実務で使う書面ひな形をベースにしたAIエージェントを構築します。</span>
       </div>
       <div class="service-duration">3-6ヶ月</div>
       <div class="service-price">
-        300-500万円
+        <span class="count-up" data-target="200" data-suffix="万円〜">200万円〜</span>
         <span class="service-price-note">税別</span>
       </div>
     </div>
     <div class="service-row reveal">
       <div class="service-name">
         法務AI運用顧問
-        <span class="service-name-sub">継続的な品質管理・アップデート・相談対応</span>
-        <span class="service-desc">導入後の品質モニタリング、AI技術の進化に合わせたアップデート、日常的な法務AI相談に月額で対応します。</span>
+        <span class="service-name-sub">継続的な品質管理・アップデート・法務相談対応</span>
+        <span class="service-desc">導入後の品質モニタリング、AI技術の進化に合わせたアップデート、日常的な法務AI相談に月額で対応。弁護士としての法務顧問も含みます。</span>
       </div>
       <div class="service-duration">月額</div>
       <div class="service-price">
-        20-35万円
+        <span class="count-up" data-target="10" data-suffix="万円〜">10万円〜</span>
         <span class="service-price-note">税別 / 月</span>
+      </div>
+    </div>
+    <div class="service-row reveal">
+      <div class="service-name">
+        自社専用法務AI開発支援
+        <span class="service-name-sub">貴社固有の法務課題に特化したAIの受託開発</span>
+        <span class="service-desc">AIエージェントの導入に留まらず、貴社固有の法務課題に対して回答・処理できる自社専用AIを開発します。ファインチューニングを含む本格的な受託開発。提携開発パートナーと連携して対応いたします。</span>
+      </div>
+      <div class="service-duration">要相談</div>
+      <div class="service-price">
+        ASK
+        <span class="service-price-note">個別見積</span>
       </div>
     </div>
   </div>
@@ -1443,8 +1464,8 @@ body {
   updateMobileCta();
 
   // Count-up animation
-  function easeOutExpo(t) {
-    return t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
+  function easeOutCubic(t) {
+    return 1 - Math.pow(1 - t, 3);
   }
 
   function animateCountUp(el) {
@@ -1453,13 +1474,13 @@ body {
     var prefix = el.getAttribute('data-prefix') || '';
     var isDecimal = String(target).indexOf('.') !== -1;
     var decimals = isDecimal ? String(target).split('.')[1].length : 0;
-    var duration = 2000;
+    var duration = 3500;
     var startTime = null;
 
     function step(timestamp) {
       if (!startTime) startTime = timestamp;
       var progress = Math.min((timestamp - startTime) / duration, 1);
-      var easedProgress = easeOutExpo(progress);
+      var easedProgress = easeOutCubic(progress);
       var current = easedProgress * target;
       if (isDecimal) {
         el.textContent = prefix + current.toFixed(decimals) + suffix;
@@ -1507,4 +1528,3 @@ body {
 </script>
 </body>
 </html>
-<!-- deploy trigger 1775221287 -->

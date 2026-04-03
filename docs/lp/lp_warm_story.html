@@ -814,6 +814,7 @@ h1, h2, h3, h4 {
 .service-item:nth-child(2)::before { border-color: var(--gold); }
 .service-item:nth-child(3)::before { border-color: var(--forest); }
 .service-item:nth-child(4)::before { border-color: var(--brown); }
+.service-item:nth-child(5)::before { border-color: var(--terracotta-dark); }
 
 .service-header {
   display: flex;
@@ -1818,7 +1819,7 @@ h1, h2, h3, h4 {
             <h3 class="service-title">法務AI研修</h3>
           </div>
           <div class="service-price">
-            <div class="service-price-value"><span class="count-up" data-target="50">0</span><span class="service-price-unit">万円</span></div>
+            <div class="service-price-value"><span class="count-up" data-target="20" data-suffix="万円〜">0</span></div>
             <div class="service-price-unit">単発</div>
           </div>
         </div>
@@ -1845,12 +1846,12 @@ h1, h2, h3, h4 {
             <h3 class="service-title">法務AI導入プログラム</h3>
           </div>
           <div class="service-price">
-            <div class="service-price-value"><span class="count-up" data-target="150">0</span><span class="service-price-unit">万円</span></div>
+            <div class="service-price-value"><span class="count-up" data-target="100" data-suffix="万円〜">0</span></div>
             <div class="service-price-unit">3ヶ月</div>
           </div>
         </div>
         <p class="service-desc">
-          診断・実装・定着の3フェーズで、法務部のAI活用を本格的に立ち上げます。現状の業務フロー分析から、運用基準書の策定、KPIダッシュボードの構築まで。3ヶ月後には、自走できる体制が整います。
+          高額な法務SaaSが本当に必要か――その見極めから始めます。貴社の業務規模・課題を丁寧に診断し、不要な投資を防いだうえで、本当に必要な仕組みだけを選定・構築。現状の業務フロー分析から、最適なツール導入、運用基準書の策定、KPIダッシュボードの構築まで。3ヶ月後には、過剰投資なく自走できる体制が整います。
         </p>
         <div class="service-features">
           <span class="service-feature">現状診断レポート</span>
@@ -1873,18 +1874,18 @@ h1, h2, h3, h4 {
             <h3 class="service-title">法務AIエージェント構築</h3>
           </div>
           <div class="service-price">
-            <div class="service-price-value"><span class="count-up" data-target="300" data-suffix="-500">0</span><span class="service-price-unit">万円</span></div>
+            <div class="service-price-value"><span class="count-up" data-target="200" data-suffix="万円〜">0</span></div>
             <div class="service-price-unit">3-6ヶ月</div>
           </div>
         </div>
         <p class="service-desc">
-          貴社専用の法務AIエージェントを構築します。RAG（検索拡張生成）による社内法務ナレッジベースの構築、QA対応エージェント、法令調査エージェントなど、法務業務を根本から変革するAIシステムを実装します。
+          貴社専用の法務AIエージェントを構築します。内容証明・督促状の自動作成、支払督促・少額訴訟等の裁判書面作成、RAG（検索拡張生成）による社内法務ナレッジベースの構築、QA対応エージェントなど、法務業務を根本から変革するAIシステムを実装します。弁護士が実務で使う書面ひな形をベースにしているため、精度の高いアウトプットを実現します。
         </p>
         <div class="service-features">
+          <span class="service-feature">内容証明・督促状自動作成</span>
+          <span class="service-feature">裁判書面作成AI</span>
           <span class="service-feature">RAGシステム構築</span>
           <span class="service-feature">法務QAエージェント</span>
-          <span class="service-feature">法令調査自動化</span>
-          <span class="service-feature">カスタムUI開発</span>
         </div>
         <div class="service-period">&#128337; 期間：3-6ヶ月（要件定義の規模により変動）</div>
       </div>
@@ -1901,12 +1902,12 @@ h1, h2, h3, h4 {
             <h3 class="service-title">法務AI運用顧問</h3>
           </div>
           <div class="service-price">
-            <div class="service-price-value"><span class="count-up" data-target="20" data-suffix="-35">0</span><span class="service-price-unit">万円/月</span></div>
+            <div class="service-price-value">月額<span class="count-up" data-target="10" data-suffix="万円〜">0</span></div>
             <div class="service-price-unit">月額</div>
           </div>
         </div>
         <p class="service-desc">
-          継続的なAI活用の伴走支援。AIの技術進化への対応、運用基準のアップデート、新しいユースケースの探索、KPIモニタリングを月額顧問契約で提供します。法務AIが「一時的なプロジェクト」で終わらず、継続的に価値を生み出す体制を維持します。
+          継続的なAI活用の伴走支援。AIの技術進化への対応、運用基準のアップデート、新しいユースケースの探索、KPIモニタリングを月額顧問契約で提供します。法務AIが「一時的なプロジェクト」で終わらず、継続的に価値を生み出す体制を維持します。弁護士としての法務顧問も含むため、AI活用と日常の法務相談をワンストップで対応可能です。
         </p>
         <div class="service-features">
           <span class="service-feature">月次レポート</span>
@@ -1914,6 +1915,34 @@ h1, h2, h3, h4 {
           <span class="service-feature">新技術キャッチアップ</span>
           <span class="service-feature">随時チャット相談</span>
         </div>
+      </div>
+
+      <div class="service-arrow">
+        <span class="service-arrow-text">&#8595; full custom</span>
+      </div>
+
+      <!-- Product E -->
+      <div class="service-item">
+        <div class="service-header">
+          <div>
+            <div class="service-label">Product E &#8212; Custom Development</div>
+            <h3 class="service-title">自社専用法務AI開発支援</h3>
+          </div>
+          <div class="service-price">
+            <div class="service-price-value" style="font-size: 1.1rem;">個別見積</div>
+            <div class="service-price-unit">要相談</div>
+          </div>
+        </div>
+        <p class="service-desc">
+          AIエージェントの導入に留まらず、貴社固有の法務課題に対して回答・処理できる自社専用AIを開発します。ファインチューニングを含む本格的な受託開発で、提携開発パートナーと連携して対応します。
+        </p>
+        <div class="service-features">
+          <span class="service-feature">自社専用AI開発</span>
+          <span class="service-feature">ファインチューニング</span>
+          <span class="service-feature">提携パートナー連携</span>
+          <span class="service-feature">完全カスタム仕様</span>
+        </div>
+        <div class="service-period">&#128337; 期間：要相談（要件定義後にお見積り）</div>
       </div>
 
     </div>
@@ -2262,22 +2291,20 @@ h1, h2, h3, h4 {
   });
 
   // --- Count-up animation ---
-  function easeOutExpo(t) {
-    return t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
-  }
+  function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
 
   function animateCountUp(el) {
     var target = parseFloat(el.getAttribute('data-target'));
     var suffix = el.getAttribute('data-suffix') || '';
     var prefix = el.getAttribute('data-prefix') || '';
     var decimals = parseInt(el.getAttribute('data-decimals')) || 0;
-    var duration = 2000;
+    var duration = 3500;
     var startTime = null;
 
     function step(timestamp) {
       if (!startTime) startTime = timestamp;
       var progress = Math.min((timestamp - startTime) / duration, 1);
-      var easedProgress = easeOutExpo(progress);
+      var easedProgress = easeOutCubic(progress);
       var current = easedProgress * target;
 
       if (decimals > 0) {
@@ -2390,4 +2417,4 @@ h1, h2, h3, h4 {
 })();
 </script>
 </body>
-</html><!-- deploy trigger 1775221287 -->
+</html>

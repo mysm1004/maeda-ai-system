@@ -1459,7 +1459,7 @@ textarea.form-input {
     <div class="text-center">
       <span class="section-label fade-in">Services</span>
       <h2 class="section-title fade-in">サービスラインナップ</h2>
-      <p class="section-subtitle mx-auto fade-in">研修から導入、エージェント構築、運用顧問まで。法務AI活用の段階に応じた4つのプログラムをご用意しています。</p>
+      <p class="section-subtitle mx-auto fade-in">研修から導入、エージェント構築、運用顧問、自社専用AI開発まで。法務AI活用の段階に応じた5つのプログラムをご用意しています。</p>
     </div>
     <div class="services-grid">
       <!-- Product A -->
@@ -1470,8 +1470,8 @@ textarea.form-input {
           <h3 class="service-name">法務AI研修</h3>
           <div class="service-sub">単発 / 12時間実践プログラム</div>
           <div class="service-price">
-            <span class="service-price-amount">50</span>
-            <span class="service-price-unit">万円（税別）</span>
+            <span class="service-price-amount count-up" data-target="20" data-suffix="万円〜" data-prefix="">20</span>
+            <span class="service-price-unit">（税別）</span>
           </div>
           <ul class="service-features">
             <li>法務AI概論と最新動向の解説</li>
@@ -1494,14 +1494,14 @@ textarea.form-input {
           <h3 class="service-name">法務AI活用導入プログラム</h3>
           <div class="service-sub">3ヶ月 / 診断 → 実装 → 定着</div>
           <div class="service-price">
-            <span class="service-price-amount">150</span>
-            <span class="service-price-unit">万円（税別）</span>
+            <span class="service-price-amount count-up" data-target="100" data-suffix="万円〜" data-prefix="">100</span>
+            <span class="service-price-unit">（税別）</span>
           </div>
           <ul class="service-features">
-            <li>法務業務の現状診断・AI適用領域特定</li>
-            <li>ツール選定・導入環境構築</li>
+            <li>高額法務SaaS（LegalOn・MNTSQ等）が本当に必要かの見極めから開始</li>
+            <li>貴社の業務規模・課題に応じた最適なツール選定</li>
+            <li>不要な投資を防ぎ、本当に必要な仕組みだけを構築</li>
             <li>運用基準書（3段階ルール）の策定・納品</li>
-            <li>パイロット運用とPDCAサイクル構築</li>
             <li>ROIレポート作成・経営層向け報告支援</li>
           </ul>
           <div class="service-metric">
@@ -1518,13 +1518,15 @@ textarea.form-input {
           <h3 class="service-name">法務AIエージェント構築</h3>
           <div class="service-sub">3-6ヶ月 / カスタムAI開発</div>
           <div class="service-price">
-            <span class="service-price-amount">300-500</span>
-            <span class="service-price-unit">万円（税別）</span>
+            <span class="service-price-amount count-up" data-target="200" data-suffix="万円〜" data-prefix="">200</span>
+            <span class="service-price-unit">（税別）</span>
           </div>
           <ul class="service-features">
             <li>RAG（社内法務ナレッジ検索）構築</li>
             <li>法務Q&Aエージェント開発</li>
-            <li>法令調査・判例検索エージェント</li>
+            <li>内容証明・督促状の自動作成エージェント</li>
+            <li>支払督促・少額訴訟等の裁判書面作成エージェント</li>
+            <li>弁護士が実務で使う書面ひな形をベースにした高精度AI</li>
             <li>契約書レビュー自動化システム</li>
             <li>自社専用の法務AIプラットフォーム納品</li>
           </ul>
@@ -1542,8 +1544,8 @@ textarea.form-input {
           <h3 class="service-name">法務AI運用顧問</h3>
           <div class="service-sub">月額ストック型 / 継続伴走支援</div>
           <div class="service-price">
-            <span class="service-price-amount">20-35</span>
-            <span class="service-price-unit">万円/月（税別）</span>
+            <span class="service-price-amount count-up" data-target="10" data-suffix="万円〜" data-prefix="月額">10</span>
+            <span class="service-price-unit">（税別）</span>
           </div>
           <ul class="service-features">
             <li>月次のAI活用状況レビュー</li>
@@ -1551,10 +1553,35 @@ textarea.form-input {
             <li>運用基準の改定・最適化</li>
             <li>新規AI機能の検証・導入支援</li>
             <li>法務DX推進のアドバイザリー</li>
+            <li>弁護士としての法務顧問業務も含む</li>
           </ul>
           <div class="service-metric">
             <div class="service-metric-label">月間サポート</div>
             <div class="service-metric-value">月2回の定例MTG + 随時相談</div>
+          </div>
+        </div>
+      </div>
+      <!-- Product E -->
+      <div class="service-card fade-in fade-in-delay-4">
+        <div class="service-card-top grad-mix"></div>
+        <div class="service-card-body">
+          <div class="service-label">Product E</div>
+          <h3 class="service-name">自社専用法務AI開発支援</h3>
+          <div class="service-sub">要相談 / 受託開発</div>
+          <div class="service-price">
+            <span class="service-price-amount" style="font-size:1.6rem;">ASK</span>
+            <span class="service-price-unit">（個別見積）</span>
+          </div>
+          <ul class="service-features">
+            <li>AIエージェントの導入に留まらない、貴社固有の法務課題に対応する自社専用AI開発</li>
+            <li>ファインチューニングを含む本格的な受託開発</li>
+            <li>貴社の法務データ・ナレッジを学習した専用モデル構築</li>
+            <li>提携開発パートナーと連携した高度な開発体制</li>
+            <li>開発後の運用・保守サポート</li>
+          </ul>
+          <div class="service-metric">
+            <div class="service-metric-label">対象</div>
+            <div class="service-metric-value">高度な法務AI活用を目指す企業</div>
           </div>
         </div>
       </div>
@@ -1990,15 +2017,15 @@ textarea.form-input {
   });
 
   // --- Count-Up Animation ---
-  function easeOutExpo(t) {
-    return t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
+  function easeOutCubic(t) {
+    return 1 - Math.pow(1 - t, 3);
   }
 
   function animateCountUp(el) {
     var target = parseFloat(el.getAttribute('data-target'));
     var suffix = el.getAttribute('data-suffix') || '';
     var prefix = el.getAttribute('data-prefix') || '';
-    var duration = 2000;
+    var duration = 3500;
     var startTime = null;
     var isDecimal = String(target).indexOf('.') !== -1;
     var decimalPlaces = isDecimal ? String(target).split('.')[1].length : 0;
@@ -2011,7 +2038,7 @@ textarea.form-input {
       if (!startTime) startTime = timestamp;
       var elapsed = timestamp - startTime;
       var progress = Math.min(elapsed / duration, 1);
-      var easedProgress = easeOutExpo(progress);
+      var easedProgress = easeOutCubic(progress);
       var current = target * easedProgress;
 
       var displayValue;

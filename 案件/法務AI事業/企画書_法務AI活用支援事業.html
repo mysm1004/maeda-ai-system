@@ -1,0 +1,1273 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>企画書 | 法務AI活用支援事業</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700;900&display=swap');
+
+  :root {
+    --navy: #0A1628;
+    --dark: #132038;
+    --blue: #1B4FD8;
+    --blue-light: #3B82F6;
+    --accent: #06D6A0;
+    --accent2: #FFD166;
+    --white: #FFFFFF;
+    --gray-50: #F8FAFC;
+    --gray-100: #F1F5F9;
+    --gray-200: #E2E8F0;
+    --gray-400: #94A3B8;
+    --gray-600: #475569;
+    --gray-800: #1E293B;
+    --red: #EF4444;
+    --orange: #F97316;
+    --gradient-main: linear-gradient(135deg, #1B4FD8, #06D6A0);
+    --gradient-dark: linear-gradient(135deg, #0A1628, #132038);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Noto Sans JP', sans-serif;
+    color: var(--gray-800);
+    background: var(--gray-50);
+    line-height: 1.8;
+    font-size: 15px;
+  }
+
+  /* ===== HERO ===== */
+  .hero {
+    background: var(--gradient-dark);
+    color: var(--white);
+    padding: 80px 40px 60px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    background: radial-gradient(circle at 30% 50%, rgba(27,79,216,0.15) 0%, transparent 50%),
+                radial-gradient(circle at 70% 80%, rgba(6,214,160,0.1) 0%, transparent 50%);
+    animation: float 20s ease-in-out infinite;
+  }
+  @keyframes float {
+    0%, 100% { transform: translate(0,0); }
+    50% { transform: translate(-2%,-1%); }
+  }
+  .hero-content { position: relative; z-index: 1; max-width: 900px; margin: 0 auto; }
+  .hero-badge {
+    display: inline-block;
+    background: rgba(6,214,160,0.15);
+    border: 1px solid rgba(6,214,160,0.3);
+    color: var(--accent);
+    padding: 6px 20px;
+    border-radius: 30px;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    margin-bottom: 24px;
+  }
+  .hero h1 {
+    font-size: 42px;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    line-height: 1.3;
+    margin-bottom: 16px;
+  }
+  .hero h1 span {
+    background: var(--gradient-main);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .hero-sub {
+    font-size: 16px;
+    color: var(--gray-400);
+    margin-bottom: 8px;
+  }
+  .hero-author {
+    font-size: 14px;
+    color: var(--gray-400);
+    margin-top: 24px;
+  }
+  .hero-author strong { color: var(--white); font-weight: 600; }
+
+  /* ===== CONTAINER ===== */
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+  /* ===== SECTION ===== */
+  .section { padding: 60px 0; }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 36px;
+  }
+  .section-num {
+    width: 44px; height: 44px;
+    background: var(--gradient-main);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--white);
+    flex-shrink: 0;
+  }
+  .section-title {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--navy);
+  }
+
+  /* ===== KPI CARDS ===== */
+  .kpi-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-bottom: 40px;
+  }
+  .kpi-card {
+    background: var(--white);
+    border-radius: 16px;
+    padding: 28px;
+    text-align: center;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    border: 1px solid var(--gray-200);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .kpi-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  }
+  .kpi-label { font-size: 13px; color: var(--gray-600); margin-bottom: 8px; font-weight: 500; }
+  .kpi-value {
+    font-size: 36px;
+    font-weight: 900;
+    background: var(--gradient-main);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .kpi-unit { font-size: 14px; color: var(--gray-600); margin-top: 4px; }
+
+  /* ===== CONCEPT BOX ===== */
+  .concept-box {
+    background: linear-gradient(135deg, #0A1628 0%, #1B4FD8 100%);
+    border-radius: 20px;
+    padding: 40px;
+    color: var(--white);
+    margin-bottom: 36px;
+    position: relative;
+    overflow: hidden;
+  }
+  .concept-box::after {
+    content: '"';
+    position: absolute;
+    top: -20px; right: 20px;
+    font-size: 180px;
+    opacity: 0.05;
+    font-family: serif;
+  }
+  .concept-box p {
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 1.8;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ===== PILLAR CARDS ===== */
+  .pillar-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-bottom: 40px;
+  }
+  .pillar-card {
+    background: var(--white);
+    border-radius: 16px;
+    padding: 32px 24px;
+    border: 1px solid var(--gray-200);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    position: relative;
+    overflow: hidden;
+  }
+  .pillar-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+  }
+  .pillar-card:nth-child(1)::before { background: var(--blue); }
+  .pillar-card:nth-child(2)::before { background: var(--accent); }
+  .pillar-card:nth-child(3)::before { background: var(--accent2); }
+  .pillar-icon {
+    width: 48px; height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    margin-bottom: 16px;
+  }
+  .pillar-card:nth-child(1) .pillar-icon { background: rgba(27,79,216,0.1); }
+  .pillar-card:nth-child(2) .pillar-icon { background: rgba(6,214,160,0.1); }
+  .pillar-card:nth-child(3) .pillar-icon { background: rgba(255,209,102,0.15); }
+  .pillar-card h3 { font-size: 17px; font-weight: 700; margin-bottom: 10px; color: var(--navy); }
+  .pillar-card p { font-size: 14px; color: var(--gray-600); line-height: 1.7; }
+
+  /* ===== STAT GRID ===== */
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    margin-bottom: 24px;
+  }
+  .stat-card {
+    background: var(--white);
+    border-radius: 14px;
+    padding: 24px;
+    border: 1px solid var(--gray-200);
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
+  .stat-num {
+    font-size: 32px;
+    font-weight: 900;
+    color: var(--blue);
+    line-height: 1;
+    flex-shrink: 0;
+  }
+  .stat-card p { font-size: 14px; color: var(--gray-600); line-height: 1.6; }
+  .stat-card strong { color: var(--gray-800); }
+
+  /* ===== MARKET EMPTY ===== */
+  .market-empty {
+    background: linear-gradient(135deg, rgba(6,214,160,0.08), rgba(27,79,216,0.08));
+    border: 2px dashed var(--accent);
+    border-radius: 16px;
+    padding: 32px;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--navy);
+    margin-top: 24px;
+  }
+  .market-empty span { color: var(--blue); }
+
+  /* ===== COMPETE TABLE ===== */
+  .compete-table-wrap {
+    overflow-x: auto;
+    margin-bottom: 32px;
+  }
+  .compete-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: 12px;
+    overflow: hidden;
+    font-size: 14px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  }
+  .compete-table th {
+    background: var(--navy);
+    color: var(--white);
+    padding: 14px 16px;
+    font-weight: 600;
+    text-align: left;
+    white-space: nowrap;
+  }
+  .compete-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--gray-200);
+    vertical-align: top;
+  }
+  .compete-table tr:nth-child(even) td { background: var(--gray-50); }
+  .compete-table tr:last-child td { border-bottom: none; }
+  .compete-table .limit { color: var(--red); font-weight: 500; }
+
+  /* ===== POSITION BOX ===== */
+  .position-box {
+    background: var(--white);
+    border: 2px solid var(--blue);
+    border-radius: 16px;
+    padding: 32px;
+    text-align: center;
+    margin: 32px 0;
+  }
+  .position-box h3 {
+    font-size: 20px;
+    color: var(--blue);
+    margin-bottom: 12px;
+  }
+  .position-box p { color: var(--gray-600); font-size: 14px; max-width: 700px; margin: 0 auto; }
+
+  /* ===== ZERO BADGES ===== */
+  .zero-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-top: 24px;
+  }
+  .zero-card {
+    background: var(--white);
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid var(--gray-200);
+    text-align: center;
+  }
+  .zero-card .badge {
+    display: inline-block;
+    background: rgba(239,68,68,0.1);
+    color: var(--red);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 20px;
+    margin-bottom: 8px;
+  }
+  .zero-card .ours {
+    background: rgba(6,214,160,0.1);
+    color: #059669;
+  }
+  .zero-card h4 { font-size: 14px; color: var(--navy); margin-bottom: 6px; }
+  .zero-card p { font-size: 12px; color: var(--gray-600); }
+
+  /* ===== PRODUCT CARDS ===== */
+  .product-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+    margin-bottom: 32px;
+  }
+  .product-card {
+    background: var(--white);
+    border-radius: 16px;
+    padding: 0;
+    overflow: hidden;
+    border: 1px solid var(--gray-200);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  }
+  .product-header {
+    padding: 20px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .product-card:nth-child(1) .product-header { background: linear-gradient(135deg, #E0E7FF, #DBEAFE); }
+  .product-card:nth-child(2) .product-header { background: linear-gradient(135deg, #D1FAE5, #CFFAFE); }
+  .product-card:nth-child(3) .product-header { background: linear-gradient(135deg, #FEF3C7, #FDE68A); }
+  .product-card:nth-child(4) .product-header { background: linear-gradient(135deg, #EDE9FE, #E0E7FF); }
+  .product-tag {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--white);
+    background: var(--navy);
+    padding: 4px 12px;
+    border-radius: 20px;
+  }
+  .product-name { font-size: 16px; font-weight: 700; color: var(--navy); }
+  .product-price { font-size: 20px; font-weight: 900; color: var(--blue); }
+  .product-body { padding: 20px 24px; }
+  .product-body ul { list-style: none; }
+  .product-body li {
+    font-size: 13px;
+    color: var(--gray-600);
+    padding: 5px 0;
+    padding-left: 20px;
+    position: relative;
+  }
+  .product-body li::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 12px;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+  .product-metrics {
+    display: flex;
+    gap: 16px;
+    padding: 16px 24px;
+    background: var(--gray-50);
+    border-top: 1px solid var(--gray-200);
+    font-size: 12px;
+  }
+  .product-metric { flex: 1; text-align: center; }
+  .product-metric .label { color: var(--gray-400); margin-bottom: 2px; }
+  .product-metric .val { font-weight: 700; color: var(--navy); font-size: 14px; }
+
+  /* ===== TARGET ===== */
+  .target-main {
+    background: var(--white);
+    border-radius: 16px;
+    padding: 32px;
+    border: 2px solid var(--blue-light);
+    text-align: center;
+    margin-bottom: 24px;
+  }
+  .target-main h3 { font-size: 22px; color: var(--blue); margin-bottom: 8px; }
+  .target-main p { font-size: 15px; color: var(--gray-600); }
+  .target-tags {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 16px;
+    flex-wrap: wrap;
+  }
+  .target-tag {
+    background: rgba(27,79,216,0.08);
+    color: var(--blue);
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+  }
+  .target-compare {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .target-seg {
+    background: var(--white);
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid var(--gray-200);
+    text-align: center;
+  }
+  .target-seg .rating { font-size: 28px; margin-bottom: 8px; }
+  .target-seg h4 { font-size: 15px; color: var(--navy); margin-bottom: 6px; }
+  .target-seg p { font-size: 12px; color: var(--gray-600); }
+
+  /* ===== FUNNEL ===== */
+  .funnel { margin-bottom: 32px; }
+  .funnel-step {
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: 12px;
+    padding: 18px 24px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .funnel-num {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--white);
+    font-weight: 700;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+  .funnel-step:nth-child(1) .funnel-num { background: #1B4FD8; }
+  .funnel-step:nth-child(2) .funnel-num { background: #2563EB; }
+  .funnel-step:nth-child(3) .funnel-num { background: #3B82F6; }
+  .funnel-step:nth-child(4) .funnel-num { background: #06D6A0; }
+  .funnel-step:nth-child(5) .funnel-num { background: #059669; }
+  .funnel-step:nth-child(1) { border-left: 4px solid #1B4FD8; }
+  .funnel-step:nth-child(2) { border-left: 4px solid #2563EB; }
+  .funnel-step:nth-child(3) { border-left: 4px solid #3B82F6; }
+  .funnel-step:nth-child(4) { border-left: 4px solid #06D6A0; }
+  .funnel-step:nth-child(5) { border-left: 4px solid #059669; }
+  .funnel-text { flex: 1; }
+  .funnel-text h4 { font-size: 15px; color: var(--navy); margin-bottom: 2px; }
+  .funnel-text p { font-size: 13px; color: var(--gray-600); }
+  .funnel-kpi {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--blue);
+    white-space: nowrap;
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  /* ===== TIMELINE ===== */
+  .timeline { position: relative; padding-left: 40px; margin: 32px 0; }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 15px; top: 0; bottom: 0;
+    width: 2px;
+    background: var(--gray-200);
+  }
+  .timeline-item { position: relative; margin-bottom: 24px; }
+  .timeline-dot {
+    position: absolute;
+    left: -32px; top: 4px;
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    border: 3px solid var(--blue);
+    background: var(--white);
+  }
+  .timeline-item h4 { font-size: 15px; color: var(--navy); margin-bottom: 4px; }
+  .timeline-item p { font-size: 13px; color: var(--gray-600); }
+
+  /* ===== REVENUE TABLE ===== */
+  .rev-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: 12px;
+    overflow: hidden;
+    font-size: 14px;
+    margin-bottom: 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  }
+  .rev-table th {
+    background: var(--navy);
+    color: var(--white);
+    padding: 12px 16px;
+    font-weight: 600;
+    text-align: left;
+  }
+  .rev-table td {
+    padding: 11px 16px;
+    border-bottom: 1px solid var(--gray-200);
+    background: var(--white);
+  }
+  .rev-table tr:last-child td { border-bottom: none; }
+  .rev-table .total td {
+    background: var(--gray-50);
+    font-weight: 700;
+    color: var(--navy);
+  }
+  .rev-table .highlight { color: var(--blue); font-weight: 700; }
+  .rev-table .cost { color: var(--red); }
+
+  /* ===== YEAR COMPARE ===== */
+  .year-compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 32px;
+  }
+  .year-card {
+    background: var(--white);
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid var(--gray-200);
+  }
+  .year-card-header {
+    padding: 20px 24px;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--white);
+  }
+  .year-card:nth-child(1) .year-card-header { background: var(--blue); }
+  .year-card:nth-child(2) .year-card-header { background: var(--accent); color: var(--navy); }
+  .year-card-body { padding: 24px; }
+  .year-metric { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--gray-100); }
+  .year-metric:last-child { border-bottom: none; }
+  .year-metric .label { font-size: 14px; color: var(--gray-600); }
+  .year-metric .val { font-size: 16px; font-weight: 700; color: var(--navy); }
+
+  /* ===== RISK ===== */
+  .risk-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  .risk-card {
+    background: var(--white);
+    border-radius: 12px;
+    padding: 24px;
+    border: 1px solid var(--gray-200);
+  }
+  .risk-card h4 {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--red);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .risk-card h4::before {
+    content: '!';
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px; height: 22px;
+    background: rgba(239,68,68,0.1);
+    border-radius: 50%;
+    font-size: 12px;
+    font-weight: 900;
+    flex-shrink: 0;
+  }
+  .risk-card p { font-size: 13px; color: var(--gray-600); }
+  .risk-card .solution {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid var(--gray-100);
+    color: #059669;
+    font-weight: 500;
+  }
+
+  /* ===== SUBSIDY ===== */
+  .subsidy-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .subsidy-card {
+    background: var(--white);
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid var(--gray-200);
+  }
+  .subsidy-card h4 { font-size: 14px; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+  .subsidy-card p { font-size: 12px; color: var(--gray-600); }
+  .subsidy-card .rate { font-size: 22px; font-weight: 900; color: var(--blue); margin-top: 8px; }
+
+  /* ===== ACTION ===== */
+  .action-list { counter-reset: action; }
+  .action-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: var(--white);
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 10px;
+    border: 1px solid var(--gray-200);
+    counter-increment: action;
+    transition: transform 0.15s;
+  }
+  .action-item:hover { transform: translateX(4px); }
+  .action-item::before {
+    content: counter(action);
+    width: 32px; height: 32px;
+    background: var(--gradient-main);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--white);
+    font-weight: 700;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+  .action-item span { font-size: 15px; color: var(--navy); font-weight: 500; }
+
+  /* ===== DIVIDER ===== */
+  .divider {
+    height: 1px;
+    background: var(--gray-200);
+    margin: 0;
+  }
+
+  /* ===== FOOTER ===== */
+  .footer {
+    background: var(--navy);
+    color: var(--gray-400);
+    text-align: center;
+    padding: 32px;
+    font-size: 13px;
+  }
+  .footer strong { color: var(--white); }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 768px) {
+    .hero h1 { font-size: 28px; }
+    .kpi-row, .pillar-row, .product-grid, .stat-grid,
+    .year-compare, .risk-grid, .zero-row, .target-compare,
+    .subsidy-cards { grid-template-columns: 1fr; }
+    .funnel-content { flex-direction: column; align-items: flex-start; }
+    .funnel-kpi { margin-left: 0; margin-top: 4px; }
+  }
+
+  /* ===== PHASE BAR ===== */
+  .phase-bar {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin: 24px 0;
+  }
+  .phase-item {
+    background: var(--white);
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid var(--gray-200);
+    text-align: center;
+  }
+  .phase-item .period {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--blue);
+    margin-bottom: 4px;
+  }
+  .phase-item h4 { font-size: 15px; color: var(--navy); margin-bottom: 6px; }
+  .phase-item p { font-size: 12px; color: var(--gray-600); }
+  .phase-item .goal { font-weight: 700; color: var(--accent); margin-top: 8px; font-size: 13px; }
+</style>
+</head>
+<body>
+
+<!-- ============================== HERO ============================== -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-badge">BUSINESS PLAN 2026</div>
+    <h1><span>法務AI活用支援</span>事業<br>企画書</h1>
+    <p class="hero-sub">「安心して、効果を測って、自社の資産として」<br>AIを使える状態を、弁護士が一緒に作る</p>
+    <p class="hero-author"><strong>弁護士法人 東京新橋法律事務所</strong> ｜ 代表弁護士 前田 祥夢 ｜ 2026年4月</p>
+  </div>
+</section>
+
+<!-- ============================== 1. EXECUTIVE SUMMARY ============================== -->
+<div class="container">
+<section class="section">
+  <div class="section-header">
+    <div class="section-num">1</div>
+    <h2 class="section-title">エグゼクティブサマリー</h2>
+  </div>
+
+  <div class="concept-box">
+    <p>法務部が<strong>「安心して、効果を測って、自社の資産として」</strong>AIを使える状態を作る、<br>弁護士による法務AI活用支援事業。</p>
+  </div>
+
+  <div class="pillar-row">
+    <div class="pillar-card">
+      <div class="pillar-icon">&#x1F6E1;</div>
+      <h3>ハルシネーション統制</h3>
+      <p>弁護士が品質基準を設計し、法務AIの「もっともらしい嘘」を<strong>仕組みとして防ぐ</strong></p>
+    </div>
+    <div class="pillar-card">
+      <div class="pillar-icon">&#x1F4CB;</div>
+      <h3>運用基準策定</h3>
+      <p>自社完結と弁護士相談の線引きを明確化。<strong>グリーン/イエロー/レッド</strong>の3段階で運用基準書を策定・納品</p>
+    </div>
+    <div class="pillar-card">
+      <div class="pillar-icon">&#x1F4CA;</div>
+      <h3>定量ROI管理</h3>
+      <p>リクルート式KPIで導入効果を数字で証明。<strong>ベースライン計測→月次ダッシュボード→経営報告</strong>まで一気通貫</p>
+    </div>
+  </div>
+
+  <div class="kpi-row">
+    <div class="kpi-card">
+      <div class="kpi-label">初年度売上目標</div>
+      <div class="kpi-value">3,000<span style="font-size:20px">万円</span></div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">初年度粗利</div>
+      <div class="kpi-value">2,200<span style="font-size:20px">万円</span></div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">月額顧問ストック</div>
+      <div class="kpi-value">4〜6<span style="font-size:20px">社</span></div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ============================== 2. 市場環境 ============================== -->
+<section class="section">
+  <div class="section-header">
+    <div class="section-num">2</div>
+    <h2 class="section-title">市場環境</h2>
+  </div>
+
+  <div class="stat-grid">
+    <div class="stat-card">
+      <div class="stat-num">52.9%</div>
+      <div><p><strong>「AI導入の効果はまだ不明」</strong>と回答する企業の割合（DirectCloud調査）</p></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">~80%</div>
+      <div><p>生成AIを導入済みだが<strong>「収益面の成果なし」</strong>と回答（マッキンゼー）</p></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">~70%</div>
+      <div><p>法務担当者が<strong>契約書の見落としを経験</strong>（LegalOn調査）</p></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">108億$</div>
+      <div><p>グローバル法務AI市場の<strong>2030年予測</strong>（CAGR 28.3%）</p></div>
+    </div>
+  </div>
+
+  <div class="market-empty">
+    &#x1F4A1; 空白地帯: <span>「法務AIを"事故なく・基準を持って・数字で効果を証明しながら"運用する」</span>を弁護士が一緒に作るプレイヤーは市場にゼロ
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ============================== 3. 競合分析 ============================== -->
+<section class="section">
+  <div class="section-header">
+    <div class="section-num">3</div>
+    <h2 class="section-title">競合分析</h2>
+  </div>
+
+  <div class="compete-table-wrap">
+    <table class="compete-table">
+      <thead>
+        <tr><th>カテゴリ</th><th>代表プレイヤー</th><th>売っているもの</th><th>本質的な限界</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>SaaSツール</td><td>LegalOn, MNTSQ, GVA</td><td>高精度なAIツール</td><td class="limit">使いこなし・検証・運用基準は顧客任せ</td></tr>
+        <tr><td>法務BPO</td><td>Authense法務クラウド</td><td>弁護士リソース</td><td class="limit">AI活用の設計がない。AI時代と逆行</td></tr>
+        <tr><td>大手コンサル</td><td>PwC, デロイト</td><td>AI戦略の絵</td><td class="limit">絵を描いて終わり。実装しない</td></tr>
+        <tr><td>AI専業コンサル</td><td>AI総研, AVILEN等</td><td>汎用AI導入の技術</td><td class="limit">法務の専門性ゼロ</td></tr>
+        <tr><td>AI研修会社</td><td>SHIFT AI等</td><td>AI活用の知識</td><td class="limit">教えて終わり。定着・効果測定なし</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="position-box">
+    <h3>「弁護士資格を持ったAI実装者」という唯一のポジション</h3>
+    <p>弁護士法72条の壁、ビジネスモデルの矛盾、ケイパビリティの不足 &mdash; いずれかが競合の参入障壁となり、構造的に真似できない</p>
+  </div>
+
+  <div class="zero-row">
+    <div class="zero-card">
+      <div class="badge">競合ゼロ</div><div class="badge ours">当社提供</div>
+      <h4>ハルシネーション統制</h4>
+      <p>弁護士が法務特化で検証プロセスを構築</p>
+    </div>
+    <div class="zero-card">
+      <div class="badge">競合ゼロ</div><div class="badge ours">当社提供</div>
+      <h4>運用基準策定</h4>
+      <p>弁護士が運用基準書を策定・納品</p>
+    </div>
+    <div class="zero-card">
+      <div class="badge">競合ゼロ</div><div class="badge ours">当社提供</div>
+      <h4>定量ROI管理</h4>
+      <p>リクルート式KPIで月次レポート</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ============================== 4. サービス設計 ============================== -->
+<section class="section">
+  <div class="section-header">
+    <div class="section-num">4</div>
+    <h2 class="section-title">サービス設計（4層構造）</h2>
+  </div>
+
+  <div class="product-grid">
+    <!-- 商品A -->
+    <div class="product-card">
+      <div class="product-header">
+        <div><span class="product-tag">商品 A</span></div>
+        <div class="product-price">50万円</div>
+      </div>
+      <div class="product-body">
+        <div class="product-name" style="margin-bottom:12px;">法務AI研修（単発）</div>
+        <ul>
+          <li>法務部員向け実践研修 12時間（半日x4回）</li>
+          <li>生成AI基礎 + 法務活用 + プロンプト実践</li>
+          <li>ハルシネーション対策 + 運用ルール</li>
+          <li>人材開発支援助成金（リスキリング）対応可</li>
+        </ul>
+      </div>
+      <div class="product-metrics">
+        <div class="product-metric"><div class="label">工数</div><div class="val">20h</div></div>
+        <div class="product-metric"><div class="label">粗利率</div><div class="val">100%</div></div>
+        <div class="product-metric"><div class="label">時間単価</div><div class="val">2.5万/h</div></div>
+      </div>
+    </div>
+
+    <!-- 商品B -->
+    <div class="product-card">
+      <div class="product-header">
+        <div><span class="product-tag">商品 B</span></div>
+        <div class="product-price">150万円</div>
+      </div>
+      <div class="product-body">
+        <div class="product-name" style="margin-bottom:12px;">法務AI導入プログラム（3ヶ月）</div>
+        <ul>
+          <li>Phase1: 診断・設計（業務フロー診断・KPI設計）</li>
+          <li>Phase2: 実装（プロンプト設計・検証プロセス構築）</li>
+          <li>Phase3: 定着・計測（運用基準書Fix・効果レポート）</li>
+          <li>納品: 運用基準書・テンプレ集・検証マニュアル</li>
+        </ul>
+      </div>
+      <div class="product-metrics">
+        <div class="product-metric"><div class="label">工数</div><div class="val">45h</div></div>
+        <div class="product-metric"><div class="label">粗利率</div><div class="val">100%</div></div>
+        <div class="product-metric"><div class="label">時間単価</div><div class="val">3.3万/h</div></div>
+      </div>
+    </div>
+
+    <!-- 商品C -->
+    <div class="product-card">
+      <div class="product-header">
+        <div><span class="product-tag">商品 C</span></div>
+        <div class="product-price">300〜500万円</div>
+      </div>
+      <div class="product-body">
+        <div class="product-name" style="margin-bottom:12px;">法務AIエージェント構築（3〜6ヶ月）</div>
+        <ul>
+          <li>契約レビューエージェント（RAG + リスク自動分類）</li>
+          <li>法務QAエージェント（自信度スコア付き自動回答）</li>
+          <li>法令調査エージェント（法改正の自動収集・要約）</li>
+          <li>ハルシネーション統制レイヤー + KPIダッシュボード</li>
+        </ul>
+      </div>
+      <div class="product-metrics">
+        <div class="product-metric"><div class="label">工数</div><div class="val">60〜80h</div></div>
+        <div class="product-metric"><div class="label">粗利率</div><div class="val">50〜55%</div></div>
+        <div class="product-metric"><div class="label">外注費</div><div class="val">150〜250万</div></div>
+      </div>
+    </div>
+
+    <!-- 商品D -->
+    <div class="product-card">
+      <div class="product-header">
+        <div><span class="product-tag">商品 D</span></div>
+        <div class="product-price">月額20〜35万円</div>
+      </div>
+      <div class="product-body">
+        <div class="product-name" style="margin-bottom:12px;">法務AI運用顧問（月額ストック）</div>
+        <ul>
+          <li>AI運用相談（無制限） / プロンプト月次更新</li>
+          <li>ハルシネーションサンプルレビュー</li>
+          <li>月次KPIレポート / 法務相談</li>
+          <li>プレミアム: 月1回定例 + 四半期経営報告</li>
+        </ul>
+      </div>
+      <div class="product-metrics">
+        <div class="product-metric"><div class="label">工数(S)</div><div class="val">月6h</div></div>
+        <div class="product-metric"><div class="label">工数(P)</div><div class="val">月12h</div></div>
+        <div class="product-metric"><div class="label">粗利率</div><div class="val">100%</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ============================== 5. ターゲット ============================== -->
+<section class="section">
+  <div class="section-header">
+    <div class="section-num">5</div>
+    <h2 class="section-title">ターゲット</h2>
+  </div>
+
+  <div class="target-main">
+    <h3>従業員500〜5,000人の中堅企業</h3>
+    <p>法務部5〜20人 / AIツール導入済みor検討中だが成果が出ていない企業</p>
+    <div class="target-tags">
+      <span class="target-tag">予算がある</span>
+      <span class="target-tag">意思決定が速い</span>
+      <span class="target-tag">ツールを入れたが使いこなせていない</span>
+    </div>
+  </div>
+
+  <div class="target-compare">
+    <div class="target-seg">
+      <div class="rating" style="filter: grayscale(0.5);">&#9651;</div>
+      <h4>大企業（法務50人+）</h4>
+      <p>既に導入済み。意思決定が遅い</p>
+    </div>
+    <div class="target-seg" style="border: 2px solid var(--blue);">
+      <div class="rating">&#9678;</div>
+      <h4>中堅企業（法務5〜20人）</h4>
+      <p>最有望。予算あり。即決可能</p>
+    </div>
+    <div class="target-seg">
+      <div class="rating">&#9675;</div>
+      <h4>スタートアップ（法務1〜2人）</h4>
+      <p>予算厳しいが経営者判断で即決あり</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ============================== 6. 販売・集客戦略 ============================== -->
+<section class="section">
+  <div class="section-header">
+    <div class="section-num">6</div>
+    <h2 class="section-title">販売・集客戦略</h2>
+  </div>
+
+  <h3 style="font-size:18px; color:var(--navy); margin-bottom:16px;">セールスファネル</h3>
+
+  <!-- ファネル全体フロー図 -->
+  <div style="background:var(--white); border-radius:16px; border:1px solid var(--gray-200); padding:32px; margin-bottom:24px; overflow-x:auto;">
+    <div style="display:flex; align-items:center; justify-content:center; gap:0; min-width:700px;">
+      <div style="text-align:center; flex:1;">
+        <div style="background:#1B4FD8; color:#fff; border-radius:12px; padding:12px 8px; font-weight:700; font-size:14px;">認知</div>
+        <div style="font-size:20px; font-weight:900; color:#1B4FD8; margin-top:6px;">3,000〜5,000</div>
+        <div style="font-size:11px; color:var(--gray-400);">月間リーチ</div>
+      </div>
+      <div style="color:var(--gray-400); font-size:24px; flex-shrink:0; padding:0 4px;">&#x276F;</div>
+      <div style="text-align:center; flex:1;">
+        <div style="background:#2563EB; color:#fff; border-radius:12px; padding:12px 8px; font-weight:700; font-size:14px;">リード獲得</div>
+        <div style="font-size:20px; font-weight:900; color:#2563EB; margin-top:6px;">50〜100</div>
+        <div style="font-size:11px; color:var(--gray-400);">件/月</div>
+      </div>
+      <div style="color:var(--gray-400); font-size:24px; flex-shrink:0; padding:0 4px;">&#x276F;</div>
+      <div style="text-align:center; flex:1;">
+        <div style="background:#3B82F6; color:#fff; border-radius:12px; padding:12px 8px; font-weight:700; font-size:14px;">無料診断</div>
+        <div style="font-size:20px; font-weight:900; color:#3B82F6; margin-top:6px;">10〜15</div>
+        <div style="font-size:11px; color:var(--gray-400);">件/月</div>
+      </div>
+      <div style="color:var(--gray-400); font-size:24px; flex-shrink:0; padding:0 4px;">&#x276F;</div>
+      <div style="text-align:center; flex:1;">
+        <div style="background:#06D6A0; color:#fff; border-radius:12px; padding:12px 8px; font-weight:700; font-size:14px;">フロント受注</div>
+        <div style="font-size:20px; font-weight:900; color:#06D6A0; margin-top:6px;">1.5〜2</div>
+        <div style="font-size:11px; color:var(--gray-400);">件/月</div>
+      </div>
+      <div style="color:var(--gray-400); font-size:24px; flex-shrink:0; padding:0 4px;">&#x276F;</div>
+      <div style="text-align:center; flex:1;">
+        <div style="background:#059669; color:#fff; border-radius:12px; padding:12px 8px; font-weight:700; font-size:14px;">バックエンド移行</div>
+        <div style="font-size:20px; font-weight:900; color:#059669; margin-top:6px;">50〜70%</div>
+        <div style="font-size:11px; color:var(--gray-400);">移行率</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 各ステップ詳細 -->
+  <div class="funnel">
+    <div class="funnel-step">
+      <div class="funnel-num">1</div>
+      <div class="funnel-text">
+        <h4>認知 &mdash; 月間リーチ 3,000〜5,000人</h4>
+        <p style="margin-top:6px;">法務メディア寄稿で専門家ポジションを確立し、ウェビナーとSNSで接点を作る</p>
+        <div style="display:flex; flex-wrap:wrap; gap:8px; margin-top:10px;">
+          <span style="background:rgba(27,79,216,0.08); color:#1B4FD8; padding:4px 12px; border-radius:20px; font-size:12px; font-weight:500;">BUSINESS LAWYERS寄稿（会員12万人）</span>
+          <span style="background:rgba(27,79,216,0.08); color:#1B4FD8; padding:4px 12px; border-radius:20px; font-size:12px; font-weight:500;">ウェビナー月1回（50〜100名）</span>
+          <span style="background:rgba(27,79,216,0.08); color:#1B4FD8; padding:4px 12px; border-radius:20px; font-size:12px; font-weight:500;">LinkedIn / X / note発信</span>
+        </div>
+      </div>
+    </div>
+    <div class="funnel-step">
+      <div class="funnel-num">2</div>
+      <div class="funnel-text">
+        <h4>リード獲得 &mdash; 月間 50〜100件</h4>
+        <p style="margin-top:6px;">セミナー参加＋ホワイトペーパーDLで連絡先を取得。3種のHPで網を張る</p>
+        <div style="display:flex; flex-wrap:wrap; gap:8px; margin-top:10px;">
+          <span style="background:rgba(37,99,235,0.08); color:#2563EB; padding:4px 12px; border-radius:20px; font-size:12px; font-weight:500;">HP1: AI活用度チェックリスト</span>
+          <span style="background:rgba(37,99,235,0.08); color:#2563EB; padding:4px 12px; border-radius:20px; font-size:12px; font-weight:500;">HP2: 運用基準テンプレート</span>
+          <span style="background:rgba(37,99,235,0.08); color:#2563EB; padding:4px 12px; border-radius:20px; font-size:12px; font-weight:500;">HP3: ROI計算シート</span>
+        </div>
+      </div>
+    </div>
+    <div class="funnel-step">
+      <div class="funnel-num">3</div>
+      <div class="funnel-text">
+        <h4>無料診断 &mdash; 月間 10〜15件</h4>
+        <p style="margin-top:6px;">30分オンライン「法務AI活用度チェック」で商談化。5段階スコア＋ROI試算を無料で提供し、課題を可視化する</p>
+        <div style="display:flex; flex-wrap:wrap; gap:8px; margin-top:10px;">
+          <span style="background:rgba(59,130,246,0.08); color:#3B82F6; padding:4px 12px; border-radius:20px; font-size:12px; font-weight:500;">30分オンライン面談</span>
+          <span style="background:rgba(59,130,246,0.08); color:#3B82F6; padding:4px 12px; border-radius:20px; font-size:12px; font-weight:500;">5段階スコアリング</span>
+          <span style="background:rgba(59,130,246,0.08); color:#3B82F6; padding:4px 12px; border-radius:20px; font-size:12px; font-weight:500;">ROI試算を無料提供</span>
+        </div>
+      </div>
+    </div>
+    <div class="funnel-step">
+      <div class="funnel-num">4</div>
+      <div class="funnel-text">
+        <h4>フロント受注 &mdash; 月間 1.5〜2件</h4>
+        <p style="margin-top:6px;">ROIで投資の正当性を証明。月50万x3回払いで<strong>部長決裁圏内</strong>に設定し、稟議のハードルを下げる</p>
+        <div style="display:flex; flex-wrap:wrap; gap:8px; margin-top:10px;">
+          <span style="background:rgba(6,214,160,0.1); color:#059669; padding:4px 12px; border-radius:20px; font-size:12px; font-weight:500;">ROI数値で稟議資料まで用意</span>
+          <span style="background:rgba(6,214,160,0.1); color:#059669; padding:4px 12px; border-radius:20px; font-size:12px; font-weight:500;">月50万x3回 = 部長決裁圏内</span>
+        </div>
+      </div>
+    </div>
+    <div class="funnel-step">
+      <div class="funnel-num">5</div>
+      <div class="funnel-text">
+        <h4>バックエンド移行 &mdash; 受注の 50〜70%</h4>
+        <p style="margin-top:6px;">フロント完了時の<strong>導入効果レポート</strong>で自然移行。顧問契約（商品D）またはエージェント構築（商品C）へストック化</p>
+        <div style="display:flex; flex-wrap:wrap; gap:8px; margin-top:10px;">
+          <span style="background:rgba(5,150,105,0.08); color:#059669; padding:4px 12px; border-radius:20px; font-size:12px; font-weight:500;">導入効果レポートが営業ツール</span>
+          <span style="background:rgba(5,150,105,0.08); color:#059669; padding:4px 12px; border-radius:20px; font-size:12px; font-weight:500;">月額顧問 or エージェント構築へ</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 初動アクションプラン -->
+  <h3 style="font-size:18px; color:var(--navy); margin:32px 0 16px;">初動4週間アクションプラン</h3>
+  <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:36px;">
+    <div style="background:var(--white); border-radius:12px; padding:20px; border:1px solid var(--gray-200); border-top:4px solid #1B4FD8;">
+      <div style="font-size:12px; font-weight:700; color:#1B4FD8; margin-bottom:6px;">WEEK 1</div>
+      <p style="font-size:13px; color:var(--gray-800); font-weight:600; margin-bottom:4px;">紹介営業</p>
+      <p style="font-size:12px; color:var(--gray-600);">リクルート人脈に連絡。法務部長と繋がる紹介を依頼</p>
+    </div>
+    <div style="background:var(--white); border-radius:12px; padding:20px; border:1px solid var(--gray-200); border-top:4px solid #2563EB;">
+      <div style="font-size:12px; font-weight:700; color:#2563EB; margin-bottom:6px;">WEEK 2</div>
+      <p style="font-size:13px; color:var(--gray-800); font-weight:600; margin-bottom:4px;">既存顧問先提案</p>
+      <p style="font-size:12px; color:var(--gray-600);">既存顧問先にAI活用支援の追加提案</p>
+    </div>
+    <div style="background:var(--white); border-radius:12px; padding:20px; border:1px solid var(--gray-200); border-top:4px solid #3B82F6;">
+      <div style="font-size:12px; font-weight:700; color:#3B82F6; margin-bottom:6px;">WEEK 3</div>
+      <p style="font-size:13px; color:var(--gray-800); font-weight:600; margin-bottom:4px;">SNS発信開始</p>
+      <p style="font-size:12px; color:var(--gray-600);">LinkedIn発信開始（弁護士xAI活用の実践ネタ）</p>
+    </div>
+    <div style="background:var(--white); border-radius:12px; padding:20px; border:1px solid var(--gray-200); border-top:4px solid #06D6A0;">
+      <div style="font-size:12px; font-weight:700; color:#06D6A0; margin-bottom:6px;">WEEK 4</div>
+      <p style="font-size:13px; color:var(--gray-800); font-weight:600; margin-bottom:4px;">メディア寄稿打診</p>
+      <p style="font-size:12px; color:var(--gray-600);">BUSINESS LAWYERSに寄稿打診メール</p>
+    </div>
+  </div>
+
+  <h3 style="font-size:18px; color:var(--navy); margin-bottom:16px;">3フェーズ時系列計画</h3>
+  <div class="phase-bar">
+    <div class="phase-item">
+      <div class="period">1〜3ヶ月目</div>
+      <h4>A: 仕込み期</h4>
+      <p>コンテンツ制作 / SNS発信開始 / 紹介営業</p>
+      <div class="goal">受注目標: 1件</div>
+    </div>
+    <div class="phase-item">
+      <div class="period">4〜6ヶ月目</div>
+      <h4>B: 立ち上げ期</h4>
+      <p>ウェビナー開始 / 寄稿公開 / リード育成</p>
+      <div class="goal">受注目標: 月1〜2件</div>
+    </div>
+    <div class="phase-item">
+      <div class="period">7〜12ヶ月目</div>
+      <h4>C: 成長期</h4>
+      <p>ウェビナー月2回 / 事例蓄積 / 紹介の連鎖</p>
+      <div class="goal">受注目標: 月2件+ストック10社</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ============================== 7. 収支計画 ============================== -->
+<section class="section">
+  <div class="section-header">
+    <div class="section-num">7</div>
+    <h2 class="section-title">収支計画</h2>
+  </div>
+
+  <div class="year-compare">
+    <div class="year-card">
+      <div class="year-card-header">初年度（保守的）</div>
+      <div class="year-card-body">
+        <div class="year-metric"><span class="label">商品B: 導入PG x8件</span><span class="val">1,200万円</span></div>
+        <div class="year-metric"><span class="label">商品A: 研修 x4件</span><span class="val">200万円</span></div>
+        <div class="year-metric"><span class="label">商品C: エージェント x2件</span><span class="val">800万円</span></div>
+        <div class="year-metric"><span class="label">商品D: 月額顧問 平均4社</span><span class="val">800万円</span></div>
+        <div class="year-metric" style="border-top: 2px solid var(--blue);"><span class="label" style="font-weight:700; color:var(--navy);">売上合計</span><span class="val" style="color:var(--blue); font-size:20px;">3,000万円</span></div>
+        <div class="year-metric"><span class="label" style="color:var(--red);">マーケ投資 + 外注費</span><span class="val" style="color:var(--red);">▲800万円</span></div>
+        <div class="year-metric" style="background:var(--gray-50); border-radius:8px; padding:12px;"><span class="label" style="font-weight:700; color:var(--navy);">粗利</span><span class="val" style="color:var(--accent); font-size:22px;">2,200万円</span></div>
+      </div>
+    </div>
+    <div class="year-card">
+      <div class="year-card-header">2年目（成長期）</div>
+      <div class="year-card-body">
+        <div class="year-metric"><span class="label">商品B: 導入PG</span><span class="val">1,800万円</span></div>
+        <div class="year-metric"><span class="label">商品A: 研修</span><span class="val">300万円</span></div>
+        <div class="year-metric"><span class="label">商品C: エージェント</span><span class="val">1,800万円</span></div>
+        <div class="year-metric"><span class="label">商品D: 月額顧問</span><span class="val">3,240万円</span></div>
+        <div class="year-metric" style="border-top: 2px solid var(--accent);"><span class="label" style="font-weight:700; color:var(--navy);">売上合計</span><span class="val" style="color:var(--blue); font-size:20px;">7,140万円</span></div>
+        <div class="year-metric"><span class="label" style="color:var(--red);">外注 + マーケ + 人件費</span><span class="val" style="color:var(--red);">▲1,880万円</span></div>
+        <div class="year-metric" style="background:var(--gray-50); border-radius:8px; padding:12px;"><span class="label" style="font-weight:700; color:var(--navy);">粗利</span><span class="val" style="color:var(--accent); font-size:22px;">5,260万円</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ============================== 8. リスクと対策 ============================== -->
+<section class="section">
+  <div class="section-header">
+    <div class="section-num">8</div>
+    <h2 class="section-title">リスクと対策</h2>
+  </div>
+
+  <div class="risk-grid">
+    <div class="risk-card">
+      <h4>LegalOn等がコンサル参入</h4>
+      <p>SaaSベンダーが導入支援を内製化するリスク</p>
+      <p class="solution">&#x2192; 「ツール非依存」のポジションを堅持。複数ツール横断の設計力で差別化</p>
+    </div>
+    <div class="risk-card">
+      <h4>AI進化でノウハウ陳腐化</h4>
+      <p>AIの急速な進化で導入支援の価値が低下</p>
+      <p class="solution">&#x2192; エージェント構築（商品C）に重心を移す。AIが進化するほど構築需要は増える</p>
+    </div>
+    <div class="risk-card">
+      <h4>スケーラビリティの壁</h4>
+      <p>前田一人のリソースに依存する構造</p>
+      <p class="solution">&#x2192; 2年目にアシスタント採用 + エンジニアパートナーの固定化</p>
+    </div>
+    <div class="risk-card">
+      <h4>「弁護士がAI？」の信頼性ギャップ</h4>
+      <p>弁護士=AIに詳しくないという先入観</p>
+      <p class="solution">&#x2192; 自事務所のAI活用実績をデモで見せる。ウェビナーでライブ実演</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ============================== 9. 助成金 ============================== -->
+<section class="section">
+  <div class="section-header">
+    <div class="section-num">9</div>
+    <h2 class="section-title">助成金・補助金の活用</h2>
+  </div>
+
+  <div class="subsidy-cards">
+    <div class="subsidy-card">
+      <h4>人材開発支援助成金</h4>
+      <p>商品Aに適用可。10h以上のOFF-JT。経費上限30万円</p>
+      <div class="rate">中小企業 75%助成</div>
+    </div>
+    <div class="subsidy-card">
+      <h4>デジタル化・AI導入補助金</h4>
+      <p>顧客が中小企業なら適用可。IT導入支援事業者登録が必要</p>
+      <div class="rate">補助率 1/2〜4/5</div>
+    </div>
+    <div class="subsidy-card">
+      <h4>東京都DX推進助成金</h4>
+      <p>都内中小企業なら有力。DXコンサル費対象</p>
+      <div class="rate">上限300万円</div>
+    </div>
+  </div>
+  <p style="font-size:13px; color:var(--gray-400); text-align:center;">※ 助成金はオプション扱い。メインの売り方はROI訴求。</p>
+</section>
+
+<div class="divider"></div>
+
+<!-- ============================== 10. 今後のアクション ============================== -->
+<section class="section">
+  <div class="section-header">
+    <div class="section-num">10</div>
+    <h2 class="section-title">今後のアクション</h2>
+  </div>
+
+  <div class="action-list">
+    <div class="action-item"><span>サービスLP制作（3パターン）</span></div>
+    <div class="action-item"><span>ホワイトペーパー3本の制作（チェックリスト / 運用基準テンプレ / ROI計算シート）</span></div>
+    <div class="action-item"><span>ウェビナー資料の制作</span></div>
+    <div class="action-item"><span>BUSINESS LAWYERS寄稿記事の執筆（3本シリーズ）</span></div>
+    <div class="action-item"><span>エンジニアパートナーの選定</span></div>
+    <div class="action-item"><span>紹介営業の開始（リクルート人脈 + 既存顧問先）</span></div>
+  </div>
+</section>
+</div>
+
+<!-- ============================== FOOTER ============================== -->
+<footer class="footer">
+  <strong>弁護士法人 東京新橋法律事務所</strong><br>
+  代表弁護士 前田 祥夢 ｜ 2026年4月
+</footer>
+
+</body>
+</html>
